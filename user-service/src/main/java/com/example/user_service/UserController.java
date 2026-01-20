@@ -1,5 +1,6 @@
 package com.example.user_service;
 
+import com.example.user_service.dto.UserDto;
 import com.example.user_service.dto.UserRegistrationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,16 @@ public class UserController {
 
     private final UserService userService;
 
+    private final UserRepository userRepository;
+    /// не трогать во фронт, это для post-service и дальнейшей работы
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@RequestParam Long id) {
+        return ResponseEntity.ok(userService.getInfoById(id));
+    }
+    @GetMapping("/email")
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
     @GetMapping("/current")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {

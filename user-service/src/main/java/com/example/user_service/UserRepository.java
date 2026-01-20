@@ -10,4 +10,5 @@ public interface UserRepository extends JpaRepository<Users , Long> {
     Optional<Users> findByConfirmationCode(String code);
 
     Optional<Users> findByPendingEmail(String pendingEmail);
+    Optional<Users> getUserByEmail(String email);
 }

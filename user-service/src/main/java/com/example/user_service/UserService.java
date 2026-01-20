@@ -1,7 +1,9 @@
 package com.example.user_service;
 
+import com.example.user_service.dto.UserDto;
 import com.example.user_service.dto.UserRegistrationDTO;
 import com.example.user_service.dto.mapping.UserMapper;
+import com.example.user_service.dto.mapping.UserMapperNew;
 import com.example.user_service.dto.mapping.UserMapping;
 import com.example.user_service.image.Image;
 import com.example.user_service.image.ImageRepository;
@@ -9,9 +11,11 @@ import com.example.user_service.image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,7 +33,20 @@ public class UserService {
     private final ImageRepository imageRepository;
     private final UserMapper userMapper;
     private final SessionRegistry sessionRegistry;
+    private final UserMapperNew  userMapperNew;
     // private final UserMapping userMapping;//добавил , пока не юзал. На будущее мб пока оставлю
+
+
+
+    public UserDto getInfoById(Long id) {
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("паштетус лохетус"));
+        return userMapperNew.toDto(user);
+    }
+    public UserDto getUserByEmail(String email) {
+        Users user = userRepository.getUserByEmail(email).orElseThrow(() -> new RuntimeException("паштетус лохетус"));
+        return userMapperNew.toDto(user);
+    }
 
     public void createUsers(UserRegistrationDTO userDto) {
         if (userRepository.findByEmail((userDto.getEmail())).isPresent()) {
