@@ -8,5 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface EmailClient {
 
     @PostMapping("/api/email/code")
-    void senConfirmationCode(@RequestParam String to, @RequestParam String code);
+    void sendConfirmationCode(@RequestParam String to, @RequestParam String code);
+    @PostMapping("/api/email/resetPassCode")
+    void sendPasswordResetCode(@RequestParam String to, @RequestParam String code);
 }

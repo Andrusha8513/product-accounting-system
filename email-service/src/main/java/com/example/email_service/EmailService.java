@@ -10,11 +10,18 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void senConfirmationEmail(String to, String code){
+    public void sendConfirmationEmail(String to, String code){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Подтверждении регистрации");
         message.setText("Код для регистрации" + code);
+        mailSender.send(message);
+    }
+    public void sendPasswordResetCode(String to , String code){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject("Код для смены пароля");
+        message.setText(code);
         mailSender.send(message);
     }
 }

@@ -48,9 +48,9 @@ public class WebSecurityConfig {
     public JdbcUserDetailsManager userDetailsManager(){
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
         manager.setUsersByUsernameQuery(
-                "select email, password from users where email=?");
+                "select email, password , enable from users where email=?");
         manager.setAuthoritiesByUsernameQuery(
-                "select u.email, ur.roles from users u inner join users_role ur on u.id = ur.users_id where u.email=?");
+                "select u.email, ur.roles from users u inner join users_role ur on u.users_id = ur.users_id where u.email=?");
         return manager;
     }
 
@@ -76,7 +76,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(request ->  request
                         .anyRequest().permitAll())
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .permitAll())
