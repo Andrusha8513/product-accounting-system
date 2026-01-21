@@ -1,0 +1,57 @@
+package org.example.postservice.Controller;
+
+import com.example.user_service.dto.UserDto;
+import org.example.postservice.Model.Post;
+import org.example.postservice.UserClient;
+import org.example.postservice.dto.PostDto;
+import org.example.postservice.repository.PostRepository;
+import org.example.postservice.service.PostService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/post")
+public class PostController {
+    private final UserClient userClient;
+    private final PostService postService;
+    public PostController(PostService postService, UserClient userClient) {
+        this.postService = postService;
+        this.userClient = userClient;
+    }
+    @GetMapping
+    public ResponseEntity<List<PostDto>> findAllPosts() {
+        List<PostDto> postDto = postService.findAllPosts();
+        return ResponseEntity.ok(postDto);
+    }
+    @GetMapping("/api/post/userPost/{userId}")
+    public ResponseEntity<List<PostDto>> findAllPostsByUserId(@PathVariable Long userId) {
+        List<PostDto> postDto = postService.findAllPostsByUserId(userId);
+        return ResponseEntity.ok(postDto);
+    }
+    @GetMapping("/findPostById/{id}")
+    public ResponseEntity<PostDto> findPostById(@PathVariable Long id){
+        PostDto postDto = postService.findPostById(id);
+        return ResponseEntity.ok(postDto);
+    }
+    @PostMapping("/createpost")
+    public ResponseEntity<?> createPost(@ModelAttribute PostDto postDto,
+                                              @RequestPart(required = false) MultipartFile file1,
+                                              @RequestPart(required = false) MultipartFile file2, @RequestPart(required = false)MultipartFile file3 , UserDto userDto) {
+        PostDto createdpost = postService.createPost(postDto,file1,file2,file3,userDto);
+        return ResponseEntity.ok(createdpost);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?>  deletePostById(@PathVariable Long id){
+        postService.deletePostById(id);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/update/{id}")
+    public ResponseEntity<?> updatePostById(@PathVariable  Long id, @ModelAttribute PostDto postDto ,
+                                            @RequestPart(required = false) MultipartFile file1,@RequestPart(required = false) MultipartFile file2,@RequestPart(required = false) MultipartFile file3){
+        PostDto post = postService.updatePost(id , postDto,file1,file2,file3);
+        return ResponseEntity.ok(post);
+    }
+}

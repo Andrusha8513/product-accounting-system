@@ -1,10 +1,12 @@
 package com.example.user_service;
 
+import com.example.user_service.dto.UserDto;
 import com.example.user_service.dto.JwtAuthenticationDto;
 import com.example.user_service.dto.RefreshTokenDto;
 import com.example.user_service.dto.UserCredentialsDto;
 import com.example.user_service.dto.UserRegistrationDTO;
 import com.example.user_service.dto.mapping.UserMapper;
+import com.example.user_service.dto.mapping.UserMapperNew;
 import com.example.user_service.dto.mapping.UserMapping;
 import com.example.user_service.image.Image;
 import com.example.user_service.image.ImageRepository;
@@ -13,9 +15,11 @@ import com.example.user_service.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.AuthenticationException;
@@ -33,10 +37,29 @@ public class UserService {
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final UserMapper userMapper;
+    private final UserMapperNew userMapperNew;
     private final JwtService jwtService;
 
-    // private final SessionRegistry sessionRegistry;
+
     // private final UserMapping userMapping;//добавил , пока не юзал. На будущее мб пока оставлю
+
+
+    public UserDto getUserBySecondName(String secondName) {
+        Users user = userRepository.getUserBySecondName(secondName).orElseThrow();
+        return userMapperNew.toDto(user);
+    }
+
+
+    public UserDto getInfoById(Long id) {
+        Users user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("паштетус лохетус"));
+        return userMapperNew.toDto(user);
+    }
+
+    public UserDto getUserByEmail(String email) {
+        Users user = userRepository.getUserByEmail(email).orElseThrow(() -> new RuntimeException("паштетус лохетус"));
+        return userMapperNew.toDto(user);
+    }
 
     public void createUsers(UserRegistrationDTO userDto) {
         if (userRepository.findByEmail((userDto.getEmail())).isPresent()) {
@@ -77,9 +100,9 @@ public class UserService {
 
     public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
         String refreshToken = refreshTokenDto.getRefreshToken();
-        if(refreshToken != null && jwtService.validateJwtToken(refreshToken)){
+        if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getEmail() , refreshToken);
+            return jwtService.refreshBaseToken(users.getEmail(), refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
@@ -234,14 +257,9 @@ public class UserService {
         userRepository.save(users);
     }
 
-//    public UserRegistrationDTO findByEmail(String email) {
-//        Users users = userRepository.findByEmail(email)
-//                .orElseThrow(() -> new IllegalArgumentException("Пользователь с такой почтой " + email + " не найден"));
-//        return userMapper.toDto(users);
-//    }
 
-    private Users findByEmail(String email) throws Exception{
-        return userRepository.findByEmail(email).orElseThrow(() -> new Exception(String.format("Пользователя с такой почтой %s не найдено" , email)));
+    private Users findByEmail(String email) throws Exception {
+        return userRepository.findByEmail(email).orElseThrow(() -> new Exception(String.format("Пользователя с такой почтой %s не найдено", email)));
     }
 
     @Transactional
@@ -270,45 +288,9 @@ public class UserService {
         }
         users.setRoles(newRole);
         userRepository.save(users);
-//        expireUserSessions(users.getEmail());
+
     }
 
-//    public void expireUserSessions(String username) {
-//        System.out.println("Попытка завершить сеансы для: " + username);
-//        // Прохожу  по всем принципалам в реестре сессий
-//        for (Object principal : sessionRegistry.getAllPrincipals()) {
-//            String principalName;
-//
-//            // Определяю  тип принципала и получаю    имя пользователя
-//            if (principal instanceof org.springframework.security.core.userdetails.User) {
-//                principalName = ((org.springframework.security.core.userdetails.User) principal).getUsername();
-//            } else if (principal instanceof String) {
-//                principalName = (String) principal;
-//            } else if (principal instanceof Users) {
-//                principalName = ((Users) principal).getEmail();
-//            } else {
-//
-//                continue;
-//            }
-//            System.out.println("Ищем principiall: " + principalName);
-//
-//            // если нашёл нужного пользователя
-//            if (principalName.equals(username)) {
-//                List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
-//                System.out.println("Ищем " + sessions.size() + " сессии для юзера: " + username);
-//
-//                // Завершаем все сессии
-//                sessions.forEach(session -> {
-//                    System.out.println("Завершаем сессии: " + session.getSessionId());
-//                    session.expireNow();
-//                });
-//
-//                return; //выход после обработки
-//            }
-//        }
-//
-//        System.out.println("Для пользователя не найдено ни одной сессии: " + username);
-//    }
 
     public List<UserRegistrationDTO> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::toDto).toList();
@@ -316,15 +298,14 @@ public class UserService {
 
     private Users findByCredentials(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Optional<Users> optionalUsers = userRepository.findByEmail(userCredentialsDto.getEmail());
-        if(optionalUsers.isPresent()){
+        if (optionalUsers.isPresent()) {
             Users users = optionalUsers.get();
-            if(passwordEncoder.matches(userCredentialsDto.getPassword(), users.getPassword())){
+            if (passwordEncoder.matches(userCredentialsDto.getPassword(), users.getPassword())) {
                 return users;
+
+
             }
         }
         throw new AuthenticationException("Почта или пароль неверны");
     }
-
-
-
 }
