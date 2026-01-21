@@ -1,12 +1,13 @@
-package com.example.user_service;
+package com.example.user_service.controller;
 
+import com.example.user_service.Role;
+import com.example.user_service.UserService;
 import com.example.user_service.dto.UserRegistrationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,19 +22,19 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/current")
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        try {
-            UserRegistrationDTO userRegistrationDTO = userService.findByEmail(userDetails.getUsername());
-            return ResponseEntity.ok(userRegistrationDTO);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    @GetMapping("/current")
+//    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+//        if (userDetails == null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//
+//        try {
+//            UserRegistrationDTO userRegistrationDTO = userService.findByEmail(userDetails.getUsername());
+//            return ResponseEntity.ok(userRegistrationDTO);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 
     @PostMapping("/registration")
     public ResponseEntity<?> registrationUser (@RequestBody UserRegistrationDTO usersDto) {
@@ -191,7 +192,7 @@ public ResponseEntity<?> confirmEmailChange(@PathVariable Long id,
 
     @GetMapping("get-all-users")
     public ResponseEntity<?> getAllUsers(){
-      List <Users> users =  userService.getAllUsers();
+      List <UserRegistrationDTO> users =  userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 }

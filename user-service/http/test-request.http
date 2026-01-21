@@ -32,7 +32,7 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=B048C6
+POST http://localhost:8765/users/api/users/confirm-registration?code=3A89A9
 
 ###
 
@@ -175,3 +175,26 @@ Content-Type: application/json
 
 ### 21. Проверка защищенного эндпоинта (требует аутентификации)
 GET http://localhost:8765/users/api/users/get-all-users
+
+###
+POST http://localhost:8765/users/auth/sing-in
+Content-Type: application/json
+
+{
+  "email": "4057163@mail.ru",
+  "password": "11111111"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+    client.global.set("refresh_token", response.body.refreshToken);
+    client.log("Access Token: " + response.body.token);
+    client.log("Refresh Token: " + response.body.refreshToken);
+%}
+
+###
+POST http://localhost:8765/users/auth/refresh
+Content-Type: application/json
+
+{"refreshToken":"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NjkxMDAwNjF9.7-9J9Qj6AIY_RYac6dNtpmOgGffHgaPIRr_HRwdvZRpWDilo8OzncGRJCt-AcVsm"}
+###
