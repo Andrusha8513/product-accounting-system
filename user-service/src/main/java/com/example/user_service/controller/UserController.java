@@ -1,7 +1,9 @@
 package com.example.user_service.controller;
 
 import com.example.user_service.Role;
+import com.example.user_service.UserRepository;
 import com.example.user_service.UserService;
+import com.example.user_service.dto.UserDto;
 import com.example.user_service.dto.UserRegistrationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,19 +24,21 @@ public class UserController {
 
     private final UserService userService;
 
-//    @GetMapping("/current")
-//    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-//        if (userDetails == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//
-//        try {
-//            UserRegistrationDTO userRegistrationDTO = userService.findByEmail(userDetails.getUsername());
-//            return ResponseEntity.ok(userRegistrationDTO);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    private final UserRepository userRepository;
+    /// не трогать во фронт, это для post-service и дальнейшей работы
+    @GetMapping("/secondName")
+    public ResponseEntity<UserDto> getUserBySecondName(@RequestParam String secondName) {
+        return ResponseEntity.ok(userService.getUserBySecondName(secondName));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@RequestParam Long id) {
+        return ResponseEntity.ok(userService.getInfoById(id));
+    }
+    @GetMapping("/email")
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
 
     @PostMapping("/registration")
     public ResponseEntity<?> registrationUser (@RequestBody UserRegistrationDTO usersDto) {
