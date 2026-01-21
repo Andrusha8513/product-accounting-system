@@ -24,6 +24,10 @@ public class UserController {
 
     private final UserRepository userRepository;
     /// не трогать во фронт, это для post-service и дальнейшей работы
+    @GetMapping("/secondName")
+    public ResponseEntity<UserDto> getUserBySecondName(@RequestParam String secondName) {
+        return ResponseEntity.ok(userService.getUserBySecondName(secondName));
+    }
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@RequestParam Long id) {
         return ResponseEntity.ok(userService.getInfoById(id));

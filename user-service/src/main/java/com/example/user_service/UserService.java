@@ -37,6 +37,11 @@ public class UserService {
     // private final UserMapping userMapping;//добавил , пока не юзал. На будущее мб пока оставлю
 
 
+    public UserDto getUserBySecondName( String secondName) {
+        Users user = userRepository.getUserBySecondName(secondName).orElseThrow();
+        return userMapperNew.toDto(user);
+    }
+
 
     public UserDto getInfoById(Long id) {
         Users user = userRepository.findById(id)
