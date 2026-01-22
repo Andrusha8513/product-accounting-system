@@ -1,17 +1,20 @@
 package org.example.postservice.service.impl;
 
-import com.example.user_service.dto.UserDto;
+
 import org.example.postservice.Model.Comment;
 import org.example.postservice.Model.Post;
 import org.example.postservice.Model.SubComment;
 import org.example.postservice.UserClient;
 import org.example.postservice.dto.SubCommentDto;
+import org.example.postservice.dto.UserDto;
 import org.example.postservice.mapper.CommentMapper;
 import org.example.postservice.mapper.SubCommentMapper;
 import org.example.postservice.repository.CommentRepository;
 import org.example.postservice.repository.SubCommentRepository;
 import org.example.postservice.service.SubCommentsService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SubCommentsServiceImpl implements SubCommentsService {
@@ -28,9 +31,11 @@ public class SubCommentsServiceImpl implements SubCommentsService {
         this.subCommentRepository = subCommentRepository;
         this.userClient = userClient;
     }
-    public SubCommentDto addSubComment(Long postId, String text, Long userId) {
-        Comment comment = commentRepository.findById(postId).orElseThrow();
-        UserDto userDto = userClient.getInfoById(userId);
+
+
+    public SubCommentDto addSubComment(Long commentId, String text, String email) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        UserDto userDto = userClient.getUserByEmail(email);
         SubComment subComment = new SubComment();
         subComment.setComment(comment);
         subComment.setUserId(userDto.getId());

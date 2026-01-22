@@ -1,12 +1,13 @@
 package org.example.postservice.service.impl;
 
 import com.example.user_service.UserRepository;
-import com.example.user_service.dto.UserDto;
+
 import org.example.postservice.Model.Comment;
 import org.example.postservice.Model.Post;
 import org.example.postservice.UserClient;
 import org.example.postservice.dto.CommentDto;
 import org.example.postservice.dto.PostDto;
+import org.example.postservice.dto.UserDto;
 import org.example.postservice.mapper.CommentMapper;
 import org.example.postservice.repository.CommentRepository;
 import org.example.postservice.repository.PostRepository;
@@ -35,10 +36,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-    public CommentDto addComment(Long postId,CommentDto commentDto, String text, String email) {
+    public CommentDto addComment(Long postId, String text, String email) {
         Post post = postRepository.findById(postId).orElseThrow();
         UserDto userDto = userClient.getUserByEmail(email);
-        Comment comment = commentMapper.toEntity(commentDto);
+        Comment comment = new Comment();
         comment.setPost(post);
         comment.setText(text);
         comment.setUserID(userDto.getId());
@@ -52,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-    public CommentDto updateComment(Long id,CommentDto commentDto, String text, String username) {
+    public CommentDto updateComment(Long id, String text, String email) {
         Comment comment = commentRepository.findById(id).orElseThrow();
         comment.setText(text);
         return commentMapper.toDto(commentRepository.save(comment));
