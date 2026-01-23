@@ -29,9 +29,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/users/registration",
-                                "/api/users/confirm-registration", // ← ДОБАВЬТЕ ЭТО
+                                "/api/users/confirm-registration",
                                 "/api/users/resend-confirm-registration",
-                                "/api/users/send-password-resetCode", // тоже добавьте для публичных эндпоинтов
+                                "/api/users/send-password-resetCode",
                                 "/api/users/reset-password-with-code",
                                 "/api/users/send-email-reset-code",
                                 "/api/users/resend-email-resetCode",

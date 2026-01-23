@@ -35,12 +35,15 @@ public class Users {
     private String passwordResetCode;
     private LocalDate birthDay;
     private Long avatarId;
+    private LocalDateTime ttlEmailCode;
     private LocalDateTime passwordResetCodeExpiryDate;
+    private boolean isAccountNonLocked;
+    private Integer loginAttempts = 0;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
     private List<Image> photos  = new ArrayList<>();
 
-    @ElementCollection(targetClass = Role.class , fetch = FetchType.LAZY)
+    @ElementCollection(targetClass = Role.class , fetch = FetchType.EAGER)
     @CollectionTable(name = "users_role" , joinColumns = @JoinColumn(name = "users_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;

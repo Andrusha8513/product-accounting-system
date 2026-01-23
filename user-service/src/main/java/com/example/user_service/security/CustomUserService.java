@@ -13,8 +13,8 @@ public class CustomUserService implements UserDetailsService {
 private final UserRepository userRepository;
 
     @Override
-    public CustomUserDerails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).map(CustomUserDerails::new)
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByEmail(username).map(CustomUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

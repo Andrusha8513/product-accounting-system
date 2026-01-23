@@ -1,25 +1,17 @@
 package com.example.user_service;
 
-import com.example.user_service.dto.UserDto;
-import com.example.user_service.dto.JwtAuthenticationDto;
-import com.example.user_service.dto.RefreshTokenDto;
-import com.example.user_service.dto.UserCredentialsDto;
-import com.example.user_service.dto.UserRegistrationDTO;
+import com.example.user_service.dto.*;
 import com.example.user_service.dto.mapping.UserMapper;
 import com.example.user_service.dto.mapping.UserMapperNew;
-import com.example.user_service.dto.mapping.UserMapping;
 import com.example.user_service.image.Image;
 import com.example.user_service.image.ImageRepository;
 import com.example.user_service.image.ImageService;
 import com.example.user_service.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.AuthenticationException;
@@ -70,20 +62,25 @@ public class UserService {
         }
         Users users = userMapper.toEntity(userDto);
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-        LocalDateTime expireDate = LocalDateTime.now().plusMinutes(15);
-        users.setPasswordResetCodeExpiryDate(expireDate);
+
+        LocalDateTime expireDate = LocalDateTime.now().plusMinutes(1);
+        users.setTtlEmailCode(expireDate);
+
         users.setPassword(passwordEncoder.encode(users.getPassword()));
         users.setConfirmationCode(code);
         userRepository.save(users);
 
-        emailClient.sendConfirmationCode(users.getEmail(), users.getConfirmationCode());
+        EmailRequestDto emailRequestDto = new EmailRequestDto();
+        emailRequestDto.setTo(users.getEmail());
+        emailRequestDto.setCode(users.getConfirmationCode());
+        emailClient.sendConfirmationCode(emailRequestDto);
     }
 
     @Transactional
     public boolean confirmRegistration(String code) {
         Optional<Users> usersOptional = userRepository.findByConfirmationCode(code);
 
-        if (usersOptional.isPresent()) {
+        if (usersOptional.isPresent() && !LocalDateTime.now().isAfter(usersOptional.get().getTtlEmailCode())) {
             Users users = usersOptional.get();
             users.setEnable(true);
             users.setConfirmationCode(null);
@@ -95,7 +92,9 @@ public class UserService {
 
     public JwtAuthenticationDto singIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Users users = findByCredentials(userCredentialsDto);
-        return jwtService.generateAuthToken(users.getEmail());
+        if(users.getEnable() == true){return jwtService.generateAuthToken(users.getEmail());}else {
+            throw new IllegalArgumentException("Пользователь не подтвердил почту!");
+        }
     }
 
     public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
@@ -116,9 +115,17 @@ public class UserService {
             throw new IllegalArgumentException("Аккаунт уже активирован");
         }
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+
+        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
+        users.setTtlEmailCode(time);
+
         users.setConfirmationCode(code);
         userRepository.save(users);
-        emailClient.sendConfirmationCode(email, code);
+
+        EmailRequestDto emailRequestDto = new EmailRequestDto();
+        emailRequestDto.setTo(users.getEmail());
+        emailRequestDto.setCode(users.getConfirmationCode());
+        emailClient.sendConfirmationCode(emailRequestDto);
     }
 
     @Transactional
@@ -128,10 +135,16 @@ public class UserService {
 
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
 
+        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
+        users.setPasswordResetCodeExpiryDate(time);
 
         users.setPasswordResetCode(code);
         userRepository.save(users);
-        emailClient.sendPasswordResetCode(email, code);
+
+        EmailRequestDto emailRequestDto = new EmailRequestDto();
+        emailRequestDto.setTo(users.getEmail());
+        emailRequestDto.setCode(users.getConfirmationCode());
+        emailClient.sendPasswordResetCode(emailRequestDto);
     }
 
     @Transactional
@@ -139,8 +152,8 @@ public class UserService {
         Users users = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с такой почтой не найден"));
 
-        if (users.getPasswordResetCode() == null || !users.getPasswordResetCode().equals(code)) {
-            throw new IllegalArgumentException("Неверный код для сброса пароля");
+        if (users.getPasswordResetCode() == null || !users.getPasswordResetCode().equals(code) || LocalDateTime.now().isAfter(users.getPasswordResetCodeExpiryDate())) {
+            throw new IllegalArgumentException("Неверный или просроченный  код для сброса пароля");
         }
 
         if (newPassword.length() < 8) {
@@ -167,7 +180,11 @@ public class UserService {
         users.setPendingEmail(newEmail);
 
         userRepository.save(users);
-        emailClient.sendConfirmationCode(newEmail, code);
+
+        EmailRequestDto emailRequestDto = new EmailRequestDto();
+        emailRequestDto.setTo(users.getEmail());
+        emailRequestDto.setCode(users.getConfirmationCode());
+        emailClient.sendConfirmationCode(emailRequestDto);
     }
 
     @Transactional
@@ -177,9 +194,16 @@ public class UserService {
 
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
 
+        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
+        users.setTtlEmailCode(time);
+
         users.setEmailChangeCode(code);
         userRepository.save(users);
-        emailClient.sendConfirmationCode(pendingEmail, code);
+
+        EmailRequestDto emailRequestDto = new EmailRequestDto();
+        emailRequestDto.setTo(users.getEmail());
+        emailRequestDto.setCode(users.getConfirmationCode());
+        emailClient.sendConfirmationCode(emailRequestDto);
     }
 
     @Transactional
@@ -187,12 +211,13 @@ public class UserService {
         Users users = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с таким id" + id + " не найден"));
 
-        if (users.getEmailChangeCode() == null || !users.getEmailChangeCode().equals(code)) {
-            throw new IllegalArgumentException("Неверный код подтверждения.");
+        if (users.getEmailChangeCode() == null || !users.getEmailChangeCode().equals(code) || LocalDateTime.now().isAfter(users.getTtlEmailCode())) {
+            throw new IllegalArgumentException("Неверный или истёкший код подтверждения.");
         }
 
         users.setEmail(users.getPendingEmail());
 
+        users.setTtlEmailCode(null);
         users.setPendingEmail(null);
         users.setEmailChangeCode(null);
         userRepository.save(users);
@@ -302,10 +327,19 @@ public class UserService {
             Users users = optionalUsers.get();
             if (passwordEncoder.matches(userCredentialsDto.getPassword(), users.getPassword())) {
                 return users;
-
-
             }
         }
         throw new AuthenticationException("Почта или пароль неверны");
     }
+
+    @Transactional
+    public void changeAccountStatus(Long id, boolean newAccountStatus) {
+        Users users = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        users.setEnable(newAccountStatus);
+        userRepository.save(users);
+    }
+
+
 }

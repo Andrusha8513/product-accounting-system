@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record CustomUserDerails(Users users) implements UserDetails {
+public record CustomUserDetails(Users users) implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> roles = users.getRoles();
@@ -36,7 +36,7 @@ public record CustomUserDerails(Users users) implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return users.getEnable();
+        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override

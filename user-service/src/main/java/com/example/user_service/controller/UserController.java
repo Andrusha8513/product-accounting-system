@@ -197,4 +197,12 @@ public ResponseEntity<?> confirmEmailChange(@PathVariable Long id,
       List <UserRegistrationDTO> users =  userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+
+    @PutMapping("/changeAccountStatus/{id}")
+    public ResponseEntity<?> changeAccountStatus(@PathVariable Long id ,
+                                                 @RequestParam boolean newAccountStatus){
+
+        userService.changeAccountStatus(id , newAccountStatus);
+        return ResponseEntity.ok().build();
+    }
 }

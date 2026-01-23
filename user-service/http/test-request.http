@@ -32,7 +32,7 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=3A89A9
+POST http://localhost:8765/users/api/users/confirm-registration?code=4C6BF4
 
 ###
 
@@ -198,3 +198,74 @@ Content-Type: application/json
 
 {"refreshToken":"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NjkxMDAwNjF9.7-9J9Qj6AIY_RYac6dNtpmOgGffHgaPIRr_HRwdvZRpWDilo8OzncGRJCt-AcVsm"}
 ###
+
+
+### 3. Аутентификация и получение JWT токена
+POST http://localhost:8765/users/auth/sing-in
+Content-Type: application/json
+
+{
+  "email": "9197195@mail.ru",
+  "password": "11111111"
+}
+
+> {%
+    client.global.set("access_token", response.body.token);
+    client.global.set("refresh_token", response.body.refreshToken);
+    client.log("Access Token: " + response.body.token);
+    client.log("Refresh Token: " + response.body.refreshToken);
+%}
+
+###
+
+### 31. Проверка метода changeAccountStatus с JWT
+PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
+Authorization: Bearer {{access_token}}
+
+###
+
+### 32. Проверка метода getAllUsers с JWT
+GET http://localhost:8765/users/api/users/get-all-users
+Authorization: Bearer {{access_token}}
+
+###
+
+### 33. Обновление ролей пользователя на ADMIN (через JWT)
+PUT http://localhost:8765/users/api/users/update-roles/1
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+["ROLE_ADMIN"]
+
+###
+
+### 34. Добавление аватара с JWT
+POST http://localhost:8765/users/api/users/addAvatar/1/newAvatar
+Authorization: Bearer {{access_token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test-avatar.jpg"
+Content-Type: image/jpeg
+
+< ./test-avatar.jpg
+--WebAppBoundary--
+
+###
+### 3.Смена статуса аккаунта
+PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
+Authorization: Basic 4057163@mail.ru 11111111
+###
+
+POST http://localhost:8765/users/auth/sing-in
+Content-Type: application/json
+
+{
+  "email": "4057163@mail.ru",
+  "password": "11111111"
+}
+
+###
+
+PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NjkxNzUzMTZ9.8tCdXailiKR4gSE0f4UQsMfD9jFNw59iDpCPXJy8QdcAzHlU0b-MJz-8KEmDntVL
