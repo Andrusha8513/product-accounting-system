@@ -11,7 +11,7 @@ public interface PostService {
     List<PostDto> findAllPosts();
     List<PostDto> findAllPostsByUserId(Long id);
     PostDto findPostById(Long id);
-    PostDto createPost(PostDto postDto , MultipartFile file1 , MultipartFile file2, MultipartFile file3 , UserDto userDto);
-    void deletePostById(Long id);
-    PostDto updatePost(Long id,PostDto postDto ,MultipartFile file1, MultipartFile file2, MultipartFile file3);
+    PostDto createPost(PostDto postDto , MultipartFile file1 , MultipartFile file2, MultipartFile file3 , String email);
+    void deletePostById(Long id , String email);
+    PostDto updatePost(Long id,PostDto postDto ,MultipartFile file1, MultipartFile file2, MultipartFile file3, String email);
 }

@@ -27,6 +27,9 @@ public class PostMapper {
         Post post = new Post();
         post.setId(postDto.getId());
         post.setDescription(postDto.getDescription());
+        if (postDto.getUserId() != null) {
+            post.setUserId(postDto.getUserId());
+        }
         return post;
     }
 }

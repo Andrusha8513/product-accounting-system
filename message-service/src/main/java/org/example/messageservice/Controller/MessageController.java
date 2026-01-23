@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,8 @@ public class MessageController {
     }
     /// Отправка сообщений
     @MessageMapping("/chat")
-    public void processMessage(@Payload MessageDto messageDto) {
+    public void processMessage(@Payload MessageDto messageDto , Principal principal) {
+        principal.getName();
         MessageDto savedMsg = messageService.save(messageDto);
         /// Отправляем получателю в реальном времени
         simpMessagingTemplate.convertAndSendToUser(
@@ -36,7 +38,7 @@ public class MessageController {
         return ResponseEntity.ok(messageService.findMessages(senderId, recipientId));
     }
     /// удаление
-    @DeleteMapping("/messages/deleted/{id}")
+    @DeleteMapping("/deleted/{id}")
     public void deleteMessage(@PathVariable Long id ) {
         messageService.deleteById(id);
     }
