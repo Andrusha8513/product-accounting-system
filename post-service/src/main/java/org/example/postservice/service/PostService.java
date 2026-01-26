@@ -1,6 +1,4 @@
 package org.example.postservice.service;
-
-import com.example.user_service.dto.UserDto;
 import org.example.postservice.dto.PostDto;
 import org.springframework.web.multipart.MultipartFile;
 

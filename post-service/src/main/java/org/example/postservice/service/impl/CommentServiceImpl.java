@@ -1,7 +1,5 @@
 package org.example.postservice.service.impl;
 
-import com.example.user_service.UserRepository;
-
 import org.example.postservice.Model.Comment;
 import org.example.postservice.Model.Post;
 import org.example.postservice.UserClient;

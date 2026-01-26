@@ -22,6 +22,6 @@ public class Comment {
     private Long userID;
     @ManyToOne
     private Post post;
-    @OneToMany(mappedBy = "subcomments", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubComment> subComments = new ArrayList<>();
 }

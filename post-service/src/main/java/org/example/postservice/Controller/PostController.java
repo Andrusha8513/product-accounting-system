@@ -1,6 +1,5 @@
 package org.example.postservice.Controller;
 
-import com.example.user_service.dto.UserDto;
 import org.example.postservice.Model.Post;
 import org.example.postservice.UserClient;
 import org.example.postservice.dto.PostDto;
@@ -17,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/post")
 public class PostController {
     private final PostService postService;
-    public PostController(PostService postService, UserClient userClient) {
+    public PostController(PostService postService) {
         this.postService = postService;
     }
     @GetMapping

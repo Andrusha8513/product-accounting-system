@@ -1,6 +1,5 @@
 package org.example.postservice.service.impl;
 
-import com.example.user_service.UserRepository;
 import org.example.postservice.Model.Image;
 import org.example.postservice.Model.Post;
 import org.example.postservice.UserClient;
@@ -48,7 +47,7 @@ public class PostServiceImpl implements PostService {
         UserDto userDto = userClient.getUserByEmail(email);
         Post post = postMapper.toEntity(postDto);
         if (userDto != null) {
-            post.setUserId(post.getId());
+            post.setUserId(userDto.getId());
         }
 
         List<MultipartFile> files = new ArrayList<>();
