@@ -97,6 +97,17 @@ public class UserService {
         }
     }
 
+    private Users findByCredentials(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
+        Optional<Users> optionalUsers = userRepository.findByEmail(userCredentialsDto.getEmail());
+        if (optionalUsers.isPresent()) {
+            Users users = optionalUsers.get();
+            if (passwordEncoder.matches(userCredentialsDto.getPassword(), users.getPassword())) {
+                return users;
+            }
+        }
+        throw new AuthenticationException("Почта или пароль неверны");
+    }
+
     public JwtAuthenticationDto refreshToken(RefreshTokenDto refreshTokenDto) throws Exception {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
@@ -321,16 +332,7 @@ public class UserService {
         return userRepository.findAll().stream().map(userMapper::toDto).toList();
     }
 
-    private Users findByCredentials(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
-        Optional<Users> optionalUsers = userRepository.findByEmail(userCredentialsDto.getEmail());
-        if (optionalUsers.isPresent()) {
-            Users users = optionalUsers.get();
-            if (passwordEncoder.matches(userCredentialsDto.getPassword(), users.getPassword())) {
-                return users;
-            }
-        }
-        throw new AuthenticationException("Почта или пароль неверны");
-    }
+
 
     @Transactional
     public void changeAccountStatus(Long id, boolean newAccountStatus) {
@@ -341,5 +343,17 @@ public class UserService {
         userRepository.save(users);
     }
 
+    public PrivetUserProfileDto getPrivetProfile(String email){
+        Users users = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        return userMapper.toPrivetProfielDto(users);
+    }
+
+    public PublicUserProfileDto  findPublicProfile(String email){
+        Users users = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        return userMapper.toPublicProfileDto(users);
+    }
 
 }
