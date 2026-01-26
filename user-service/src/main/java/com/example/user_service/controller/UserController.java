@@ -44,8 +44,14 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public PrivetUserProfileDto getMyProfile(@RequestParam String email) {
-        return userService.getPrivetProfile(email);
+    public ResponseEntity<PrivetUserProfileDto>  getMyProfile(@RequestParam String email) {
+        try {
+            PrivetUserProfileDto privetUserProfileDto = userService.getPrivetProfile(email);
+            return ResponseEntity.ok(privetUserProfileDto);
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 
 
@@ -219,6 +225,17 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
+
+    @PutMapping("/accountBlocking/{id}")
+    public ResponseEntity<String> accountBlocking(@PathVariable Long id,
+                                                  @RequestParam boolean newAccountStatus){
+        try {
+            userService.accountBlocking(id, newAccountStatus);
+            return ResponseEntity.ok("Всё прошло  успешно , статус аккаунт теперь " + newAccountStatus);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/profile")

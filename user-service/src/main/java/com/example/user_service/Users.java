@@ -37,8 +37,9 @@ public class Users {
     private Long avatarId;
     private LocalDateTime ttlEmailCode;
     private LocalDateTime passwordResetCodeExpiryDate;
-    private boolean isAccountNonLocked;
+    private boolean isAccountNonLocked = false;
     private Integer loginAttempts = 0;
+    private String refreshToken;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
     private List<Image> photos  = new ArrayList<>();

@@ -83,6 +83,7 @@ public class UserService {
         if (usersOptional.isPresent() && !LocalDateTime.now().isAfter(usersOptional.get().getTtlEmailCode())) {
             Users users = usersOptional.get();
             users.setEnable(true);
+            users.setAccountNonLocked(true);
             users.setConfirmationCode(null);
             userRepository.save(users);
             return true;
@@ -92,7 +93,12 @@ public class UserService {
 
     public JwtAuthenticationDto singIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Users users = findByCredentials(userCredentialsDto);
-        if(users.getEnable() == true){return jwtService.generateAuthToken(users.getEmail());}else {
+        if (users.getEnable() == true && users.isAccountNonLocked()) {
+            JwtAuthenticationDto jwtAuthenticationDto = jwtService.generateAuthToken(users.getEmail(), users.getRoles(), true, true);
+            users.setRefreshToken(jwtAuthenticationDto.getRefreshToken());
+            userRepository.save(users);
+            return jwtAuthenticationDto;
+        } else {
             throw new IllegalArgumentException("Пользователь не подтвердил почту!");
         }
     }
@@ -112,9 +118,34 @@ public class UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getEmail(), refreshToken);
+            return jwtService.refreshBaseToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
+    }
+//надо мб допилить, на скорую руку писал
+    public JwtAuthenticationDto updateRefreshToken(String refreshToken) throws AuthenticationException {
+       String email = jwtService.getEmailFromToken(refreshToken);
+
+        Users users = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+       if(!jwtService.validateJwtToken(users.getEmail())) {
+           throw new AuthenticationException("Недействительный рефреш токен");
+       }
+
+        if (!refreshToken.equals(users.getRefreshToken())) {
+            throw new AuthenticationException("Неверный refresh токен");
+        }
+        JwtAuthenticationDto newTokens = new JwtAuthenticationDto();
+
+       String tokenAccess = String.valueOf(jwtService.generateAuthToken(users.getEmail(), users.getRoles()  , users.getEnable() , users.isAccountNonLocked()));
+       String refreshRefreshToken = String.valueOf(jwtService.refreshRefreshToken(users.getEmail()));
+       newTokens.setToken(tokenAccess);
+       newTokens.setRefreshToken(refreshRefreshToken);
+
+       users.setRefreshToken(newTokens.getRefreshToken());
+       userRepository.save(users);
+       return newTokens;
     }
 
     @Transactional
@@ -323,6 +354,7 @@ public class UserService {
             throw new IllegalArgumentException("Роли не могут быть пустыми");
         }
         users.setRoles(newRole);
+        jwtService.refreshBaseToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), users.getRefreshToken());
         userRepository.save(users);
 
     }
@@ -331,7 +363,6 @@ public class UserService {
     public List<UserRegistrationDTO> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::toDto).toList();
     }
-
 
 
     @Transactional
@@ -343,13 +374,21 @@ public class UserService {
         userRepository.save(users);
     }
 
-    public PrivetUserProfileDto getPrivetProfile(String email){
+    @Transactional
+    public void accountBlocking(Long id, boolean newAccountStatus) {
+        Users users = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        users.setAccountNonLocked(newAccountStatus);
+        userRepository.save(users);
+    }
+
+    public PrivetUserProfileDto getPrivetProfile(String email) {
         Users users = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         return userMapper.toPrivetProfielDto(users);
     }
 
-    public PublicUserProfileDto  findPublicProfile(String email){
+    public PublicUserProfileDto findPublicProfile(String email) {
         Users users = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 

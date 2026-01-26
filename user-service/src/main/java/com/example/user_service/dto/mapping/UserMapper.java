@@ -1,6 +1,7 @@
 package com.example.user_service.dto.mapping;
 
 import com.example.user_service.Users;
+import com.example.user_service.dto.JwtAuthenticationDto;
 import com.example.user_service.dto.PrivetUserProfileDto;
 import com.example.user_service.dto.PublicUserProfileDto;
 import com.example.user_service.dto.UserRegistrationDTO;
