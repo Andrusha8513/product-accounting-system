@@ -32,7 +32,7 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=4C6BF4
+POST http://localhost:8765/users/api/users/confirm-registration?code=C1FB60
 
 ###
 
@@ -269,3 +269,7 @@ Content-Type: application/json
 
 PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NjkxNzUzMTZ9.8tCdXailiKR4gSE0f4UQsMfD9jFNw59iDpCPXJy8QdcAzHlU0b-MJz-8KEmDntVL
+
+###
+PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=false
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk0NzIyOTUsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.RFtu3RMqG_TqjIP1ppIB-jp6udmE_3XvAyJ7dOAPZq09XmYPBSdIVBX895wARu9b

@@ -83,6 +83,7 @@ public class UserService {
         if (usersOptional.isPresent() && !LocalDateTime.now().isAfter(usersOptional.get().getTtlEmailCode())) {
             Users users = usersOptional.get();
             users.setEnable(true);
+            users.setAccountNonLocked(true);
             users.setConfirmationCode(null);
             userRepository.save(users);
             return true;
@@ -92,7 +93,8 @@ public class UserService {
 
     public JwtAuthenticationDto singIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Users users = findByCredentials(userCredentialsDto);
-        if(users.getEnable() == true){return jwtService.generateAuthToken(users.getEmail());}else {
+        if(users.getEnable() == true && users.isAccountNonLocked()){return jwtService.generateAuthToken(users.getEmail() , users.getRoles() , true , true);
+        } else {
             throw new IllegalArgumentException("Пользователь не подтвердил почту!");
         }
     }
@@ -112,7 +114,7 @@ public class UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getEmail(), refreshToken);
+            return jwtService.refreshBaseToken(users.getEmail() , users.getRoles(), users.getEnable() , users.isAccountNonLocked(), refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
@@ -340,6 +342,14 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
         users.setEnable(newAccountStatus);
+        userRepository.save(users);
+    }
+
+    @Transactional
+    public void accountBlocking(Long id , boolean newAccountStatus){
+        Users users = userRepository.findById(id)
+                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        users.setAccountNonLocked(newAccountStatus);
         userRepository.save(users);
     }
 

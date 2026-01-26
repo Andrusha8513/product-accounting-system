@@ -1,36 +1,44 @@
 package com.example.user_service.security.jwt;
 
-import com.example.user_service.dto.JwtAuthenticationDto;
+import com.example.user_service.Role;
+import com.example.user_service.UserRepository;;
+import com.example.user_service.dto.JwtAuthenticationDto;;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 public class JwtService {
 
     private static final Logger log = LogManager.getLogger(JwtService.class);
 
+
     @Value("58cc2c665709725f73f283b76c4a4d277c038dc8a00d09209672ed631ddda7b2")
     private String jwtSecret;
 
-    public JwtAuthenticationDto generateAuthToken(String email) {
+    public JwtAuthenticationDto generateAuthToken(String email , Set<Role> roles , Boolean isEnabled , Boolean isAccountNonLocked ) {
         JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email));
+        jwtDto.setToken(generateJwtToken(email  , roles , isEnabled , isAccountNonLocked ));
         jwtDto.setRefreshToken(generateRefreshJwtToken(email));
         return jwtDto;
     }
 
-    public JwtAuthenticationDto refreshBaseToken(String email, String refreshToken) {
+    public JwtAuthenticationDto refreshBaseToken(String email,Set<Role> roles ,Boolean isEnabled , Boolean isAccountNonLocked, String refreshToken ) {
         JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email));
+        jwtDto.setToken(generateJwtToken(email , roles , isEnabled , isAccountNonLocked));
         jwtDto.setRefreshToken(refreshToken);
         return jwtDto;
     }
@@ -43,6 +51,33 @@ public class JwtService {
                 .getPayload();
         return claims.getSubject();
     }
+
+    private Claims extractAllClaims(String token){
+        return Jwts.parser()
+                .verifyWith(getSingInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public TokenData extractTokenData(String token){
+        Claims claims = extractAllClaims(token);
+        String email = claims.getSubject();
+
+        List<String> role = claims.get("roles" , List.class);
+        Set<Role> roles = role != null ?
+                role.stream()
+                        .map(Role::valueOf)
+                        .collect(Collectors.toSet()) :
+                Collections.emptySet();
+
+        Boolean isEnabled = claims.get("isEnabled" , Boolean.class);
+        Boolean isAccountNonLocked = claims.get("accountNonLocked" , Boolean.class);
+
+        return new TokenData(email , null , roles , isEnabled , isAccountNonLocked);
+    }
+
+
 
     public boolean validateJwtToken(String token) {
         try {
@@ -65,13 +100,49 @@ public class JwtService {
         }
         return false;
     }
+    // можно допилить , добавить проверки и обработку ошибок
+    public Set<Role> getRoleFromToken(String token){
+        Claims claims = Jwts.parser()
+                .verifyWith(getSingInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        List<String> rolesList = claims.get("roles", List.class);
+
+        if(rolesList == null){
+            return Collections.emptySet();
+        }
+
+        return rolesList.stream()
+                .map(Role::valueOf)
+                .collect(Collectors.toSet());
+
+    }
+
+    public Boolean getEnabledFromToken(String token){
+        Claims claims = Jwts.parser()
+                .verifyWith(getSingInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return  claims.get("isEnabled" , Boolean.class);
+    }
 
 
-    private String generateJwtToken(String email) {
+    private String generateJwtToken(String email ,
+                                    Set<Role> roles ,
+                                    Boolean isEnabled  ,
+                                    Boolean isAccountNonLocked) {
         Date date = Date.from(LocalDateTime.now().plusMinutes(10).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .subject(email)
                 .expiration(date)
+                .claim("roles" , roles.stream()
+                        .map(Role::name)
+                        .collect(Collectors.toList()))
+                .claim("isEnabled",isEnabled)
+                .claim("accountNonLocked", isAccountNonLocked)
                 .signWith(getSingInKey())
                 .compact();
     }

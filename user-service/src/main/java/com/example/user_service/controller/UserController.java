@@ -221,6 +221,17 @@ public class UserController {
 
     }
 
+    @PutMapping("/accountBlocking/{id}")
+    public ResponseEntity<String> accountBlocking(@PathVariable Long id,
+                                                  @RequestParam boolean newAccountStatus){
+        try {
+            userService.accountBlocking(id, newAccountStatus);
+            return ResponseEntity.ok("Всё прошло  успешно , статус аккаунт теперь " + newAccountStatus);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/profile")
     public ResponseEntity<PublicUserProfileDto> findProfile(@RequestParam String email) {
         try {
