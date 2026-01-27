@@ -118,7 +118,7 @@ public class UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), refreshToken);
+            return jwtService.refreshBaseToken(users.getEmail(), refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
@@ -363,6 +363,7 @@ public class UserService {
     public List<UserRegistrationDTO> getAllUsers() {
         return userRepository.findAll().stream().map(userMapper::toDto).toList();
     }
+
 
 
     @Transactional
