@@ -1,13 +1,10 @@
 package com.example.user_service.security.jwt;
 
 import com.example.user_service.Role;
-import com.example.user_service.UserRepository;;
 import com.example.user_service.dto.JwtAuthenticationDto;;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;

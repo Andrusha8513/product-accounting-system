@@ -118,7 +118,7 @@ public class UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getEmail(), refreshToken);
+            return jwtService.refreshBaseToken(users.getEmail(), users.getRoles() , users.getEnable() , users.isAccountNonLocked() , refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
