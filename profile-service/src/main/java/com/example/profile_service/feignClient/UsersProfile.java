@@ -8,14 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
-@FeignClient(name =  "users")
+@FeignClient(name =  "users",
+        configuration = FeignMultipartConfig.class)
 public interface UsersProfile {
 
-    @GetMapping("/api/users/me")
+    @GetMapping(path = "/api/users/me")
     PrivetUserProfileDto getMyProfile(@RequestParam String email);
 
     @PostMapping("/api/users/addAvatar/{id}/newAvatar")
-     ResponseEntity<?> addAvatar(@PathVariable Long id, @RequestPart MultipartFile file);
+    String addAvatar(@PathVariable Long id, @RequestPart MultipartFile file);
 
     @PostMapping("/api/users/addPhotos/{id}")
     String addPhotos(@PathVariable Long id, @RequestPart List<MultipartFile> files);

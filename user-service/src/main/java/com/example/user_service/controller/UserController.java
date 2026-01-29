@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
@@ -44,14 +43,14 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<PrivetUserProfileDto>  getMyProfile(@RequestParam String email) {
+    public ResponseEntity<PrivetUserProfileDto> getMyProfile(@RequestParam String email) {
         try {
             PrivetUserProfileDto privetUserProfileDto = userService.getPrivetProfile(email);
             return ResponseEntity.ok(privetUserProfileDto);
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
-
     }
 
 
@@ -156,7 +155,7 @@ public class UserController {
 
     @PostMapping("/addAvatar/{id}/newAvatar")
     public ResponseEntity<String> addAvatar(@PathVariable Long id,
-                                            @RequestPart MultipartFile file) {
+                                            @RequestPart("file") MultipartFile file) {
         try {
             userService.addAvatar(id, file);
             return ResponseEntity.ok("Аватарка успешно добавлена");
@@ -167,7 +166,7 @@ public class UserController {
 
     @PostMapping("/addPhotos/{id}")
     public ResponseEntity<String> addPhotos(@PathVariable Long id,
-                                            @RequestPart List<MultipartFile> files) {
+                                            @RequestPart("files") List<MultipartFile> files) {
         try {
             userService.addPhotos(id, files);
             return ResponseEntity.ok("Фотографии успешно добавлены");

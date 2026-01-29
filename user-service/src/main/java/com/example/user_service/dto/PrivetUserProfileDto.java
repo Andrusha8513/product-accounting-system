@@ -1,6 +1,8 @@
 package com.example.user_service.dto;
 
 import com.example.user_service.image.Image;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Lob;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -16,5 +18,5 @@ public class PrivetUserProfileDto {
     private LocalDate birthday;
     private String password;
     private Long avatarId;
-    private List<Image> images = new ArrayList<>();
+    private List<ImageDto> images;
 }

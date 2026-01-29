@@ -6,6 +6,7 @@ import com.example.profile_service.feignClient.UsersProfile;
 import com.example.user_service.dto.PrivetUserProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.example.postservice.dto.PostDto;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

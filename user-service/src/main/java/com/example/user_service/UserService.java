@@ -8,6 +8,8 @@ import com.example.user_service.image.ImageRepository;
 import com.example.user_service.image.ImageService;
 import com.example.user_service.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -118,34 +120,35 @@ public class UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getEmail(), users.getRoles() , users.getEnable() , users.isAccountNonLocked() , refreshToken);
+            return jwtService.refreshBaseToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
-//надо мб допилить, на скорую руку писал
+
+    //надо мб допилить, на скорую руку писал
     public JwtAuthenticationDto updateRefreshToken(String refreshToken) throws AuthenticationException {
-       String email = jwtService.getEmailFromToken(refreshToken);
+        String email = jwtService.getEmailFromToken(refreshToken);
 
         Users users = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
-       if(!jwtService.validateJwtToken(users.getEmail())) {
-           throw new AuthenticationException("Недействительный рефреш токен");
-       }
+        if (!jwtService.validateJwtToken(users.getEmail())) {
+            throw new AuthenticationException("Недействительный рефреш токен");
+        }
 
         if (!refreshToken.equals(users.getRefreshToken())) {
             throw new AuthenticationException("Неверный refresh токен");
         }
         JwtAuthenticationDto newTokens = new JwtAuthenticationDto();
 
-       String tokenAccess = String.valueOf(jwtService.generateAuthToken(users.getEmail(), users.getRoles()  , users.getEnable() , users.isAccountNonLocked()));
-       String refreshRefreshToken = String.valueOf(jwtService.refreshRefreshToken(users.getEmail()));
-       newTokens.setToken(tokenAccess);
-       newTokens.setRefreshToken(refreshRefreshToken);
+        String tokenAccess = String.valueOf(jwtService.generateAuthToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked()));
+        String refreshRefreshToken = String.valueOf(jwtService.refreshRefreshToken(users.getEmail()));
+        newTokens.setToken(tokenAccess);
+        newTokens.setRefreshToken(refreshRefreshToken);
 
-       users.setRefreshToken(newTokens.getRefreshToken());
-       userRepository.save(users);
-       return newTokens;
+        users.setRefreshToken(newTokens.getRefreshToken());
+        userRepository.save(users);
+        return newTokens;
     }
 
     @Transactional
@@ -365,7 +368,6 @@ public class UserService {
     }
 
 
-
     @Transactional
     public void changeAccountStatus(Long id, boolean newAccountStatus) {
         Users users = userRepository.findById(id)
@@ -383,6 +385,7 @@ public class UserService {
         userRepository.save(users);
     }
 
+    @Transactional(readOnly = true)
     public PrivetUserProfileDto getPrivetProfile(String email) {
         Users users = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));

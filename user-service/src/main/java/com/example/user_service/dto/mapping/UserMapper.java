@@ -1,11 +1,12 @@
 package com.example.user_service.dto.mapping;
 
 import com.example.user_service.Users;
-import com.example.user_service.dto.JwtAuthenticationDto;
-import com.example.user_service.dto.PrivetUserProfileDto;
-import com.example.user_service.dto.PublicUserProfileDto;
-import com.example.user_service.dto.UserRegistrationDTO;
+import com.example.user_service.dto.*;
+import com.example.user_service.image.Image;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class UserMapper {
@@ -35,14 +36,32 @@ public class UserMapper {
     public PrivetUserProfileDto toPrivetProfielDto(Users users){
         PrivetUserProfileDto dto = new PrivetUserProfileDto();
         dto.setId(users.getId());
-        dto.setEmail(users.getEmail());
         dto.setName(users.getName());
         dto.setSecondName(users.getSecondName());
+        dto.setEmail(users.getEmail());
         dto.setBirthday(users.getBirthDay());
         dto.setPassword(users.getPassword());
-        dto.setImages(users.getPhotos());
+        dto.setAvatarId(users.getAvatarId());
+        List<ImageDto> imageDtos = users.getPhotos().stream()
+                .map(this::toDtoImages)
+                .collect(Collectors.toList());
+        dto.setImages(imageDtos);
         return dto;
     }
+
+    public ImageDto toDtoImages(Image image){
+        ImageDto imageDto = new ImageDto();
+
+        imageDto.setId(image.getId());
+        imageDto.setName(image.getName());
+        imageDto.setOriginalFileName(image.getOriginalFileName());
+        imageDto.setContentType(image.getContentType());
+        imageDto.setSize(image.getSize());
+        imageDto.setUrl("/image/" + image.getId());
+
+        return imageDto;
+    }
+
 
     public PublicUserProfileDto toPublicProfileDto(Users users) {
         PublicUserProfileDto dto = new PublicUserProfileDto();
