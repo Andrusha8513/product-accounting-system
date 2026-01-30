@@ -22,7 +22,7 @@ public class Image {
     private String contentType;
     private boolean isPreviewImages;
     @Lob
-    @Column(name = "bytes", columnDefinition = "bytea") // Для PostgreSQL нужно именно bytea
+    @Column(name = "bytes")
     private byte[] bytes;
     @ManyToOne(cascade = CascadeType.REFRESH , fetch = FetchType.EAGER)
     private Post post;

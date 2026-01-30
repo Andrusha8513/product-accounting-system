@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
         this.commentMapper = commentMapper;
     }
 
-    public List<CommentDto> getAllComments(Long id,PostDto postDto) {
+    public List<CommentDto> getAllComments(Long id) {
         List<Comment> comments = commentRepository.findAllByPost_Id(id);
         return comments.stream().map(commentMapper::toDto).toList();
     }

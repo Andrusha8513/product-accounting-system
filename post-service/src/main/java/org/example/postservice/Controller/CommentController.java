@@ -18,8 +18,8 @@ public class CommentController {
         this.commentService = commentService;
     }
     @GetMapping("/{id}")
-    public ResponseEntity<List<CommentDto>> getAllComments(@PathVariable Long id , @RequestBody PostDto postDto) {
-        return ResponseEntity.ok(commentService.getAllComments(id, postDto));
+    public ResponseEntity<List<CommentDto>> getAllComments(@PathVariable Long id) {
+        return ResponseEntity.ok(commentService.getAllComments(id));
     }
     @PostMapping("/create/{postId}")
     public ResponseEntity<?> addComment(@PathVariable Long postId , @RequestParam String text , Principal principal){
