@@ -9,10 +9,11 @@ import java.util.List;
 
 @Data
 public class PublicUserProfileDto {
+    private Long id;
     private String name;
     private String secondName;
     private LocalDate birthday;
     private String email;
     private Long avatarId;
-    private List<Image> images = new ArrayList<>();
+    private List<ImageDto> images = new ArrayList<>();
 }

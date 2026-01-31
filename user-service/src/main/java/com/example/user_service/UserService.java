@@ -392,6 +392,7 @@ public class UserService {
         return userMapper.toPrivetProfielDto(users);
     }
 
+    @Transactional(readOnly = true)
     public PublicUserProfileDto findPublicProfile(String email) {
         Users users = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));

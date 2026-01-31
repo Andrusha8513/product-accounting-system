@@ -15,6 +15,9 @@ public interface UsersProfile {
     @GetMapping(path = "/api/users/me")
     PrivetUserProfileDto getMyProfile(@RequestParam String email);
 
+    @GetMapping("/api/users/profile")
+    PublicUserProfileDto findProfile(@RequestParam String email);
+
     @PostMapping("/api/users/addAvatar/{id}/newAvatar")
     String addAvatar(@PathVariable Long id, @RequestPart MultipartFile file);
 
@@ -26,9 +29,6 @@ public interface UsersProfile {
 
     @DeleteMapping("/api/users/delete-photo/{id}/{photoId}")
     String deletePhoto(@PathVariable Long id , @PathVariable Long photoId);
-
-    @GetMapping("/api/users/profile")
-    PublicUserProfileDto findProfile(@RequestParam String email);
 
     @PutMapping("/api/users/update-user-password/{id}")
     String updateUserPassword(@PathVariable Long id,

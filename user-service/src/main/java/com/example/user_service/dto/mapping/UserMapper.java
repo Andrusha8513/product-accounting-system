@@ -65,12 +65,16 @@ public class UserMapper {
 
     public PublicUserProfileDto toPublicProfileDto(Users users) {
         PublicUserProfileDto dto = new PublicUserProfileDto();
+        dto.setId(users.getId());
         dto.setName(users.getName());
         dto.setSecondName(users.getSecondName());
         dto.setEmail(users.getEmail());
         dto.setBirthday(users.getBirthDay());
         dto.setAvatarId(users.getAvatarId());
-        dto.setImages(users.getPhotos());
+        List<ImageDto> imageDtos = users.getPhotos().stream()
+                .map(this::toDtoImages)
+                .collect(Collectors.toList());
+        dto.setImages(imageDtos);
         return dto;
     }
 }

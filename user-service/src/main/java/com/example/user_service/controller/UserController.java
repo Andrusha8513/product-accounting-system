@@ -10,6 +10,7 @@ import com.example.user_service.dto.UserRegistrationDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +51,17 @@ public class UserController {
         } catch (RuntimeException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<PublicUserProfileDto> findProfile(@RequestParam String email) {
+        try {
+            PublicUserProfileDto profileDto = userService.findPublicProfile(email);
+            return ResponseEntity.ok(profileDto);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
@@ -237,13 +249,5 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<PublicUserProfileDto> findProfile(@RequestParam String email) {
-        try {
-            PublicUserProfileDto profileDto = userService.findPublicProfile(email);
-            return ResponseEntity.ok(profileDto);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
+
 }

@@ -18,10 +18,10 @@ POST http://localhost:8765/users/api/users/registration
 Content-Type: application/json
 
 {
-  "name": "Aра",
-  "secondName": "Армани",
+  "name": "Паша",
+  "secondName": "Техник",
   "password": "11111111",
-  "email": "9197195@mail.ru",
+  "email": "4057163@mail.ru",
   "birthDay": "1995-05-15",
   "enabled": false,
   "roles": ["ROLE_USER"]
@@ -32,12 +32,12 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=59231F
+POST http://localhost:8765/users/api/users/confirm-registration?code=14A472
 
 ###
 
 ### 3. Повторная отправка кода подтверждения
-POST http://localhost:8765/users/api/users/resend-confirm-registration?email=9197195@mail.ru
+POST http://localhost:8765/users/api/users/resend-confirm-registration?email=4057163@mail.ru
 
 ###
 
@@ -242,7 +242,7 @@ Content-Type: application/json
 
 ### 34. Добавление аватара с JWT
 POST http://localhost:8765/users/api/users/addAvatar/1/newAvatar
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk3MTQ0ODgsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.pYwzmNxTqQJS9jxTNjTK0DmYGuh6iqkDMKnjtrDTWBXN8TVib71_3Ty8zA_9J5Qb
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk4ODc4MzAsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.QpE3uivHbUDzqCjD6Jt5QASJbjIPK9FwnXYZfdlU3YZmmVG0H4_0uis80NrELcXw
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -300,10 +300,15 @@ Content-Disposition: form-data; name="description"
 --WebAppBoundary--
 
 ###
+### Просмотр публичного профиля
+GET http://localhost:8765/profile/api/profile/findProfile?email=9197195@mail.ru
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk4ODc4MzAsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.QpE3uivHbUDzqCjD6Jt5QASJbjIPK9FwnXYZfdlU3YZmmVG0H4_0uis80NrELcXw
+Accept: application/json
 
+###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
 GET http://localhost:8765/profile/api/profile/my-profile?email=9197195@mail.ru
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk3MTY1ODEsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.02fGXDT2FV7lqiQ6hSt0XUAtWmYFjoiZCeXaNSyIeuiSORbGqS-DhHwi5qnSJgdk
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk4ODc1NDksInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.k5QHt8IuikAUYHFdgzmwjjvlPI9TOopidL-_vHESCgTrma9Fy-iGs3pfSTGi05Kb
 Accept: application/json
 
 ###

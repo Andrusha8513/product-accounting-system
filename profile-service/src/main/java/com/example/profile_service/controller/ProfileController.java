@@ -1,7 +1,7 @@
 package com.example.profile_service.controller;
-import org.springframework.core.io.Resource;
+import com.example.profile_service.dto.FullPrivetProfileDto;
+import com.example.profile_service.dto.FullPublicProfileDto;
 import com.example.profile_service.ProfileService;
-import com.example.profile_service.dto.FullProfileDto;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -15,16 +15,27 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping("/my-profile")
-    public ResponseEntity<FullProfileDto> getMyProfile(@RequestParam String email) {
+    public ResponseEntity<FullPrivetProfileDto> getMyProfile(@RequestParam String email) {
         try {
-            FullProfileDto fullProfileDto = profileService.getMyProfile(email);
+            FullPrivetProfileDto fullProfileDto = profileService.getMyProfile(email);
             return ResponseEntity.ok(fullProfileDto);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
     }
-    @GetMapping("/user/{email}")
-    public ResponseEntity<FullProfileDto> getUserProfile(@RequestParam String email) {
-        return ResponseEntity.ok(profileService.getMyProfile(email));
-    }
+//    @GetMapping("/user/{email}")
+//    public ResponseEntity<FullPrivetProfileDto> getUserProfile(@RequestParam String email) {
+//        return ResponseEntity.ok(profileService.getMyProfile(email));
+//    }
+
+
+@GetMapping("/findProfile")
+    public ResponseEntity<FullPublicProfileDto> findProfile(@RequestParam String email){
+        try {
+            FullPublicProfileDto profileDto = profileService.getPublicProfile(email);
+            return ResponseEntity.ok(profileDto);
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().build();
+        }
+}
 }
