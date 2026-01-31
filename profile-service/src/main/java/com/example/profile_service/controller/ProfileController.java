@@ -23,5 +23,8 @@ public class ProfileController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    @GetMapping("/user/{email}")
+    public ResponseEntity<FullProfileDto> getUserProfile(@RequestParam String email) {
+        return ResponseEntity.ok(profileService.getMyProfile(email));
+    }
 }
