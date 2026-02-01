@@ -8,8 +8,6 @@ import com.example.user_service.image.ImageRepository;
 import com.example.user_service.image.ImageService;
 import com.example.user_service.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -96,7 +94,7 @@ public class UserService {
     public JwtAuthenticationDto singIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Users users = findByCredentials(userCredentialsDto);
         if (users.getEnable() == true && users.isAccountNonLocked()) {
-            JwtAuthenticationDto jwtAuthenticationDto = jwtService.generateAuthToken(users.getEmail(), users.getRoles(), true, true);
+            JwtAuthenticationDto jwtAuthenticationDto = jwtService.generateAuthToken(users.getId(), users.getEmail(), users.getRoles(), true, true);
             users.setRefreshToken(jwtAuthenticationDto.getRefreshToken());
             userRepository.save(users);
             return jwtAuthenticationDto;
@@ -120,7 +118,7 @@ public class UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), refreshToken);
+            return jwtService.refreshBaseToken(users.getId(),users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
@@ -141,7 +139,7 @@ public class UserService {
         }
         JwtAuthenticationDto newTokens = new JwtAuthenticationDto();
 
-        String tokenAccess = String.valueOf(jwtService.generateAuthToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked()));
+        String tokenAccess = String.valueOf(jwtService.generateAuthToken(users.getId(), users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked()));
         String refreshRefreshToken = String.valueOf(jwtService.refreshRefreshToken(users.getEmail()));
         newTokens.setToken(tokenAccess);
         newTokens.setRefreshToken(refreshRefreshToken);
@@ -357,7 +355,7 @@ public class UserService {
             throw new IllegalArgumentException("Роли не могут быть пустыми");
         }
         users.setRoles(newRole);
-        jwtService.refreshBaseToken(users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), users.getRefreshToken());
+        jwtService.refreshBaseToken(users.getId(), users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), users.getRefreshToken());
         userRepository.save(users);
 
     }
@@ -386,8 +384,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public PrivetUserProfileDto getPrivetProfile(String email) {
-        Users users = userRepository.findByEmail(email)
+    public PrivetUserProfileDto getPrivetProfile(Long id) {
+        Users users = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         return userMapper.toPrivetProfielDto(users);
     }
@@ -398,6 +396,24 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
         return userMapper.toPublicProfileDto(users);
+    }
+
+    @Transactional
+    public void updateName(Long id , String newName){
+        Users users = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        users.setName(newName);
+        userRepository.save(users);
+    }
+
+    @Transactional
+    public void updateSecondName(Long id , String newSecondName){
+        Users users = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        users.setSecondName(newSecondName);
+        userRepository.save(users);
     }
 
 }

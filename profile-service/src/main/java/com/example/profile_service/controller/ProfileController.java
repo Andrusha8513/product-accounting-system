@@ -5,6 +5,7 @@ import com.example.profile_service.ProfileService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -14,10 +15,10 @@ public class ProfileController {
 
     private final ProfileService profileService;
 
-    @GetMapping("/my-profile")
-    public ResponseEntity<FullPrivetProfileDto> getMyProfile(@RequestParam String email) {
+    @GetMapping("/my-profile/{id}")
+    public ResponseEntity<FullPrivetProfileDto> getMyProfile(@PathVariable Long id) {
         try {
-            FullPrivetProfileDto fullProfileDto = profileService.getMyProfile(email);
+            FullPrivetProfileDto fullProfileDto = profileService.getMyProfile(id);
             return ResponseEntity.ok(fullProfileDto);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();

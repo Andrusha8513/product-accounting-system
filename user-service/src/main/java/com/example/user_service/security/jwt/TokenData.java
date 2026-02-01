@@ -9,6 +9,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class TokenData {
+    private Long id;
     private String email;
     private String password;
     private Set<Role> roles;

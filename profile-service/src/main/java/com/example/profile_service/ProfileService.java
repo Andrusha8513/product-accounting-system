@@ -19,8 +19,8 @@ public class ProfileService {
    private  final UsersProfile usersProfile;
    private  final PostClient postClient;
 
-public FullPrivetProfileDto getMyProfile(String email){
-   PrivetUserProfileDto myInfo = usersProfile.getMyProfile(email);
+public FullPrivetProfileDto getMyProfile(Long id){
+   PrivetUserProfileDto myInfo = usersProfile.getMyProfile(id);
 
     List<PostDto> myPosts = postClient.findAllPostsByUserId(myInfo.getId());
 

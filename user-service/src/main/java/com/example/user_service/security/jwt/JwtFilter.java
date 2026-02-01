@@ -1,6 +1,7 @@
 package com.example.user_service.security.jwt;
 
 
+import com.example.user_service.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,15 +42,17 @@ public class JwtFilter extends OncePerRequestFilter {
                     .map(role -> new SimpleGrantedAuthority(role.name()))
                     .collect(Collectors.toList());
 
-            UserDetails userDetails = User.builder()
-                    .username(tokenData.getEmail())
-                    .password("")
-                    .authorities(authorities)
-                    .accountExpired(false)
-                    .accountLocked(!tokenData.getIsAccountNonLocked())
-                    .credentialsExpired(false)
-                    .disabled(!tokenData.getIsEnabled())
-                    .build();
+            UserDetails userDetails = new CustomUserDetails(
+                    tokenData.getId(),
+                    tokenData.getEmail(),
+                    "",
+                    tokenData.getIsEnabled(),
+                    true,
+                    true,
+                    !tokenData.getIsAccountNonLocked(),
+                    authorities
+            );
+
 
 
             Authentication auth = new UsernamePasswordAuthenticationToken(

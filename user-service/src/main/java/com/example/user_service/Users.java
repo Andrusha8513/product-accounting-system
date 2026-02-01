@@ -2,6 +2,8 @@ package com.example.user_service;
 
 import com.example.user_service.image.Image;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,13 +26,30 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "users_id")
     private Long id;
+
+    @Size(max = 100 , message = "Почта не может быть длиннее 100 символов!")
+    @NotBlank(message = "Почта не может быть пустой!")
     private String email;
+
+    @Size(min = 8 ,max = 100  , message = "Пароль должен быть не короче 8 и не длиннее 100 символов!")
+    @NotBlank(message = "Пароль не может быть пустым!")
     private String password;
+
+    @Size(min = 1 ,max = 60 , message = "Чё за имя такое длиннее 60 символов?")
+    @NotBlank(message = "Имя не может быть пустым!")
     private String name;
+
+    @Size(min = 1 , max = 60 , message = "Чё за имя такое длиннее 60 символов?")
+    @NotBlank(message = "Фамилия не может быть пустой!")
     private String secondName;
+
+    @Size(max = 100 , message = "Почта не может быть длиннее 100 символов!")
+    @NotBlank(message = "Почта не может быть пустой!")
+    private String pendingEmail;
+
+
     private String confirmationCode;
     private Boolean enable = false;
-    private String pendingEmail;
     private String emailChangeCode;
     private String passwordResetCode;
     private LocalDate birthDay;

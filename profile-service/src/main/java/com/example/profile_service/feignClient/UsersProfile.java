@@ -12,8 +12,8 @@ import java.util.List;
         configuration = FeignMultipartConfig.class)
 public interface UsersProfile {
 
-    @GetMapping(path = "/api/users/me")
-    PrivetUserProfileDto getMyProfile(@RequestParam String email);
+    @GetMapping(path = "/api/users/me/{id}")
+    PrivetUserProfileDto getMyProfile(@PathVariable Long id);
 
     @GetMapping("/api/users/profile")
     PublicUserProfileDto findProfile(@RequestParam String email);

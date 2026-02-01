@@ -28,16 +28,16 @@ public class JwtService {
     @Value("58cc2c665709725f73f283b76c4a4d277c038dc8a00d09209672ed631ddda7b2")
     private String jwtSecret;
 
-    public JwtAuthenticationDto generateAuthToken(String email, Set<Role> roles, Boolean isEnabled, Boolean isAccountNonLocked) {
+    public JwtAuthenticationDto generateAuthToken(Long userId,String email, Set<Role> roles, Boolean isEnabled, Boolean isAccountNonLocked) {
         JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email, roles, isEnabled, isAccountNonLocked));
+        jwtDto.setToken(generateJwtToken(userId,email, roles, isEnabled, isAccountNonLocked));
         jwtDto.setRefreshToken(generateRefreshJwtToken(email));
         return jwtDto;
     }
 
-    public JwtAuthenticationDto refreshBaseToken(String email, Set<Role> roles, Boolean isEnabled, Boolean isAccountNonLocked, String refreshToken) {
+    public JwtAuthenticationDto refreshBaseToken(Long userId,String email, Set<Role> roles, Boolean isEnabled, Boolean isAccountNonLocked, String refreshToken) {
         JwtAuthenticationDto jwtDto = new JwtAuthenticationDto();
-        jwtDto.setToken(generateJwtToken(email, roles, isEnabled, isAccountNonLocked));
+        jwtDto.setToken(generateJwtToken(userId,email, roles, isEnabled, isAccountNonLocked));
         jwtDto.setRefreshToken(refreshToken);
         return jwtDto;
     }
@@ -62,6 +62,7 @@ public class JwtService {
     public TokenData extractTokenData(String token) {
         Claims claims = extractAllClaims(token);
         String email = claims.getSubject();
+        Long  userId = claims.get("userId" , Long.class);
 
         List<String> role = claims.get("roles", List.class);
         Set<Role> roles = role != null ?
@@ -73,7 +74,7 @@ public class JwtService {
         Boolean isEnabled = claims.get("isEnabled", Boolean.class);
         Boolean isAccountNonLocked = claims.get("accountNonLocked", Boolean.class);
 
-        return new TokenData(email, null, roles, isEnabled, isAccountNonLocked);
+        return new TokenData(userId,email, null, roles, isEnabled, isAccountNonLocked);
     }
 
 
@@ -138,7 +139,8 @@ public class JwtService {
     }
 
 
-    private String generateJwtToken(String email,
+    private String generateJwtToken(Long userId,
+                                    String email,
                                     Set<Role> roles,
                                     Boolean isEnabled,
                                     Boolean isAccountNonLocked) {
@@ -146,6 +148,7 @@ public class JwtService {
         return Jwts.builder()
                 .subject(email)
                 .expiration(date)
+                .claim("userId" , userId)
                 .claim("roles", roles.stream()
                         .map(Role::name)
                         .collect(Collectors.toList()))

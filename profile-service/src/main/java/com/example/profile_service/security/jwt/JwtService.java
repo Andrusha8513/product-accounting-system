@@ -1,5 +1,7 @@
 package com.example.profile_service.security.jwt;
 
+import com.example.user_service.Role;
+import com.example.user_service.security.jwt.TokenData;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +12,11 @@ import io.jsonwebtoken.io.Decoders;
 
 import javax.crypto.SecretKey;
 import java.security.PublicKey;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtService {
@@ -53,5 +60,31 @@ public class JwtService {
             log.error("Ошибка Exception {}", String.valueOf(e));
         }
         return false;
+    }
+
+    public Claims extractAllClaims(String token){
+        return Jwts.parser()
+                .verifyWith(getSingInKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public TokenData extractTokenData(String token){
+        Claims claims = extractAllClaims(token);
+
+        String email = claims.getSubject();
+        Long userId = claims.get("userId" , Long.class);
+
+        List<String> role = claims.get("roles" , List.class);
+        Set<Role> roles = role != null ? role.stream()
+                .map(Role::valueOf)
+                .collect(Collectors.toSet()) :
+                Collections.emptySet();
+
+        Boolean isEnabled = claims.get("isEnabled" , Boolean.class);
+        Boolean isAccountNonLocked = claims.get("accountNonLocked" , Boolean.class);
+
+        return new TokenData(userId , email , null , roles , isEnabled , isAccountNonLocked);
     }
 }

@@ -232,17 +232,17 @@ Authorization: Bearer {{access_token}}
 ###
 
 ### 33. Обновление ролей пользователя на ADMIN (через JWT)
-PUT http://localhost:8765/users/api/users/update-roles/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk2OTIyNDgsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaXNFbmFibGVkIjp0cnVlLCJhY2NvdW50Tm9uTG9ja2VkIjp0cnVlfQ.jIDHnrI_7v09ksqb770LD6s3Zseg7RFLtEw_jhz0eIORCO1siTxZSHcIpM-n79p3
+PUT http://localhost:8765/users/api/users/update-roles/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk5MDI2NjUsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.BaTG5g4ms6lnrNjVcSZkq1Mp5ZtzgLe8WlB2ZqSTxcVvjB4LTfdGA2KagOeuMK86
 Content-Type: application/json
 
-["ROLE_USER"]
+["ROLE_ADMIN"]
 
 ###
 
 ### 34. Добавление аватара с JWT
-POST http://localhost:8765/users/api/users/addAvatar/1/newAvatar
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk4ODc4MzAsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.QpE3uivHbUDzqCjD6Jt5QASJbjIPK9FwnXYZfdlU3YZmmVG0H4_0uis80NrELcXw
+POST http://localhost:8765/users/api/users/addAvatar/2/newAvatar
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk5MDQ0MDksInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.MdlLBR9vV9kUqUBFzgmQWr7MPaHnKG43cMb5i3zQ5wZqXUhyvQY1hVapHVYxkqDr
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
@@ -290,25 +290,25 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJle
 ###
 
 POST http://localhost:8765/posts/api/post/createpost
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk2OTQ0NTMsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.ClOzHdFrKgByG0PgGEvHP9AIOOamP7C_Z2nU-rG-x3iDHeAgqSrkaWXPmKd2dyJ7
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk5MDIyMTUsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.MjVUlhZ8ArVw31d-5er7S2EJbL6uGjA_byKS_7aFXIoTbIDWX0HRPwDFZouTXw5A
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
 Content-Disposition: form-data; name="description"
 
-ЖЖЖ
+Пиздец
 --WebAppBoundary--
 
 ###
 ### Просмотр публичного профиля
-GET http://localhost:8765/profile/api/profile/findProfile?email=9197195@mail.ru
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk4ODc4MzAsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.QpE3uivHbUDzqCjD6Jt5QASJbjIPK9FwnXYZfdlU3YZmmVG0H4_0uis80NrELcXw
+GET http://localhost:8765/profile/api/profile/findProfile?email=4057163@mail.ru
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk5MDM3NTMsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.TuwhLD0r5R0ioZ4EUavw6yrjyNU1dhzNWXr-9nU2qCPNsfZA35V5miecap-1WWRi
 Accept: application/json
 
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
-GET http://localhost:8765/profile/api/profile/my-profile?email=9197195@mail.ru
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk4ODc1NDksInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.k5QHt8IuikAUYHFdgzmwjjvlPI9TOopidL-_vHESCgTrma9Fy-iGs3pfSTGi05Kb
+GET http://localhost:8765/profile/api/profile/my-profile/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk5MDY4NDAsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.CRFPmDYYrTOq_EZNGg5d6pIp8jmoIWOaSgmqFSVk6P042XtQ9TgO0jiXEYsIcVNQ
 Accept: application/json
 
 ###
@@ -331,5 +331,22 @@ Content-Type: image/jpeg
 
 < ./test-photo1.jpg
 --WebAppBoundary--
+
+###
+### 1. Обновление имени пользователя (требует аутентификации и соответствия ID)
+PUT http://localhost:8765/users/api/users/updateName/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk5MDkyMjIsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.pjoActLHpQM0XFvIIiiyJgdQGKFVNproCdiUnrDbKlyJAlf87QMWxqr-HV4MqXs6
+Content-Type: application/x-www-form-urlencoded
+
+newName=Егор
+
+###
+
+### 2. Обновление фамилии пользователя
+PUT http://localhost:8765/users/api/users/updateSecondName/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk5MDkwNjcsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.ZfrEVoMDZRmX-ZuQr4B7LDhdIEum6di1xpSRExbCju47TH8H-3qcnqwXx7zbPCm3
+Content-Type: application/x-www-form-urlencoded
+
+newSecondName=Сервик
 
 ###
