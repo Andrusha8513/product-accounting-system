@@ -36,6 +36,11 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAllPostsByUserId(id).stream().map(postMapper::toDto).toList();
     }
 
+    @Override
+    public List<PostDto> findAllPostsByCommunityId(Long id) {
+        return postRepository.findAllByCommunityId(id).stream().map(postMapper::toDto).toList();
+    }
+
 
     public PostDto findPostById(Long id) {
         return postMapper.toDto(postRepository.findById(id).orElseThrow());
@@ -46,6 +51,7 @@ public class PostServiceImpl implements PostService {
                               MultipartFile file3 , String email) {
         UserDto userDto = userClient.getUserByEmail(email);
         Post post = postMapper.toEntity(postDto);
+        post.setCommunityId(postDto.getCommunityId());
         if (userDto != null) {
             post.setUserId(userDto.getId());
         }
@@ -137,4 +143,5 @@ public class PostServiceImpl implements PostService {
         Post updatedPost = postRepository.save(post);
         return postMapper.toDto(updatedPost);
     }
+
 }

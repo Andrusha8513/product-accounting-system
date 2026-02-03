@@ -24,4 +24,5 @@ public class Post {
     private List<Image> images = new ArrayList<>();
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+    private Long communityId;
 }
