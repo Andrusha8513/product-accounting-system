@@ -12,8 +12,14 @@ import com.example.channel_service.Repository.CommunityMemberRepository;
 import com.example.channel_service.Repository.CommunityRepository;
 import com.example.channel_service.RolesMember.CommunityRole;
 import com.example.channel_service.Service.CommunityService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
+@Service
 public class CommunityServiceImpl implements CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityMemberRepository communityMemberRepository;
@@ -30,7 +36,6 @@ public class CommunityServiceImpl implements CommunityService {
         this.userClient = userClient;
         this.communityMapper = communityMapper;
     }
-
     public CommunityDto createCommunity(String name, String description, String email) {
         UserDto userDto = userClient.getUserByEmail(email);
         Community community = communityRepository.save(Community.builder().description(description)
@@ -92,6 +97,16 @@ public class CommunityServiceImpl implements CommunityService {
         return postClient.createPost(postDto , f1 , f2 ,f3 , email);
     }
 
+    public void deletePostById(Long communityId , Long postId, String email) {
+        UserDto userDto = userClient.getUserByEmail(email);
+        CommunityMember communityMember = communityMemberRepository.findByCommunityIdAndUserId(communityId, userDto.getId())
+                .orElseThrow(() -> new RuntimeException("Вы не участник сообщества"));
+        if (communityMember.getRole() == CommunityRole.MEMBER) {
+            throw new RuntimeException("Вы не имеете прав удалить данный пост");
+        }
+        postClient.deletePost(postId, email);
+    }
+
     public PostDto updatePostInCommunity(Long postId, Long communityId, PostDto postDto, MultipartFile f1, MultipartFile f2, MultipartFile f3, String email) {
         UserDto userDto = userClient.getUserByEmail(email);
         CommunityMember member = communityMemberRepository
@@ -103,12 +118,32 @@ public class CommunityServiceImpl implements CommunityService {
     }
     /// Для проверки прав
     public boolean checkPermission(Long communityId, Long userId, String action) {
-        return communityMemberRepository.findByCommunityIdAndUserId(communityId , userId)
-                .map(communityMember -> {
-            if (communityMember.getRole() == CommunityRole.ADMIN) return true;
-            if (communityMember.getRole() == CommunityRole.EDITOR) return true;
-            return false;
-        })
-                .orElse(false);
+        return communityMemberRepository.findByCommunityIdAndUserId(communityId, userId).map(communityMember ->{
+         CommunityRole communityRole = communityMember.getRole();
+         if (communityRole == CommunityRole.ADMIN) {
+             return true;
+         }
+         if ("DELETE".equalsIgnoreCase(action) && communityRole == CommunityRole.EDITOR) {
+             return true;
+         }
+         if ("POST".equalsIgnoreCase(action) && communityRole == CommunityRole.EDITOR) {
+             return true;
+         }
+         if ("EDIT".equalsIgnoreCase(action) && communityRole == CommunityRole.EDITOR) {
+             return true;
+         }
+         return false;
+        }).orElse(false);
+    }
+
+
+    public List<CommunityDto> findAllCommunity() {
+        return communityRepository.findAll().stream().map(communityMapper::toDto).toList();
+    }
+
+
+    public CommunityDto getCommunityById(Long communityId) {
+        return communityMapper.toDto(communityRepository.findById(communityId)
+                .orElseThrow(() -> new RuntimeException("Такого канала нету")));
     }
 }
