@@ -1,5 +1,7 @@
 package org.example.postservice.service.impl;
 
+import jakarta.transaction.Transactional;
+import org.example.postservice.CommunityClient;
 import org.example.postservice.Model.Image;
 import org.example.postservice.Model.Post;
 import org.example.postservice.UserClient;
@@ -20,10 +22,12 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final UserClient userClient;
+    private final CommunityClient communityClient;
     public PostServiceImpl(PostRepository postRepository, PostMapper postMapper,
-                           ImageMapper imageMapper , UserClient userClient) {
+                           CommunityClient communityClient , UserClient userClient) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
+        this.communityClient = communityClient;
         this.userClient = userClient;
     }
 
@@ -36,16 +40,21 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAllPostsByUserId(id).stream().map(postMapper::toDto).toList();
     }
 
+    public List<PostDto> getPostsByCommunity(Long communityId) {
+        return postRepository.findAllByCommunityId(communityId).stream().map(postMapper::toDto).toList();
+    }
+
 
     public PostDto findPostById(Long id) {
         return postMapper.toDto(postRepository.findById(id).orElseThrow());
     }
 
-
+    @Transactional
     public PostDto createPost(PostDto postDto, MultipartFile file1, MultipartFile file2,
                               MultipartFile file3 , String email) {
         UserDto userDto = userClient.getUserByEmail(email);
         Post post = postMapper.toEntity(postDto);
+        post.setCommunityId(postDto.getCommunityId());
         if (userDto != null) {
             post.setUserId(userDto.getId());
         }
@@ -84,22 +93,42 @@ public class PostServiceImpl implements PostService {
         return postMapper.toDto(savedPost);
     }
 
-
+    @Transactional
     public void deletePostById(Long id , String email) {
         Post post = postRepository.findById(id).orElseThrow();
         UserDto currentUser = userClient.getUserByEmail(email);
-        if (!post.getUserId().equals(currentUser.getId())) {
-            throw new RuntimeException("Вы не владелец поста");
+        boolean isOwner = post.getUserId().equals(currentUser.getId());
+        boolean isCommunityAdmin = false;
+        if (post.getCommunityId() != null) {
+            try{
+                isCommunityAdmin = communityClient
+                        .checkPermission(post.getCommunityId(),currentUser.getId() , "DELETE");
+            } catch (Exception e){
+                isCommunityAdmin = false;
+            }
+        }
+        if (!isOwner && !isCommunityAdmin) {
+            throw new RuntimeException("Вы не имеете право удалять пост");
         }
         postRepository.deleteById(id);
     }
 
-
+    @Transactional
     public PostDto updatePost(Long id, PostDto postDto, MultipartFile file1, MultipartFile file2, MultipartFile file3, String email) {
         Post post = postRepository.findById(id).orElseThrow();
         UserDto currentUser = userClient.getUserByEmail(email);
-        if (!post.getUserId().equals(currentUser.getId())) {
-            throw new RuntimeException("Вы не можете редактировать чужой пост");
+        boolean isOwner = post.getUserId().equals(currentUser.getId());
+        boolean isCommunityAdmin = false;
+        if (post.getCommunityId() != null) {
+            try {
+                isCommunityAdmin = communityClient
+                        .checkPermission(post.getCommunityId(),currentUser.getId() , "EDIT");
+            }catch (Exception e){
+                isCommunityAdmin = false;
+            }
+        }
+        if (!isOwner && !isCommunityAdmin) {
+            throw new RuntimeException("У вас нету права редактировать пост");
         }
         post.setDescription(postDto.getDescription());
         post.getImages().clear();

@@ -1,9 +1,6 @@
 package org.example.postservice.Controller;
 
-import org.example.postservice.Model.Post;
-import org.example.postservice.UserClient;
 import org.example.postservice.dto.PostDto;
-import org.example.postservice.repository.PostRepository;
 import org.example.postservice.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +20,10 @@ public class PostController {
     public ResponseEntity<List<PostDto>> findAllPosts() {
         List<PostDto> postDto = postService.findAllPosts();
         return ResponseEntity.ok(postDto);
+    }
+    @GetMapping("/community/{communityId}")
+    public ResponseEntity<List<PostDto>> findAllPostsByCommunityId(@PathVariable  Long communityId) {
+        return ResponseEntity.ok(postService.getPostsByCommunity(communityId));
     }
     @GetMapping("/api/post/{userId}")
     public ResponseEntity<List<PostDto>> findAllPostsByUserId(@PathVariable Long userId) {

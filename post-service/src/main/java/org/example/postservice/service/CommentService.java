@@ -10,6 +10,6 @@ import java.util.List;
 public interface CommentService {
     List<CommentDto> getAllComments(Long id);
     CommentDto addComment(Long postId, String text , String email);
-    void deleteCommentById(Long id);
+    void deleteCommentById(Long id , String email);
     CommentDto updateComment(Long id, String text , String email);
 }
