@@ -36,6 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
         if (token != null && jwtService.validateJwtToken(token)) {
+            jwtService.refreshRefreshToken(token);
           TokenData tokenData =  jwtService.extractTokenData(token);
 
             List<GrantedAuthority> authorities = tokenData.getRoles().stream()

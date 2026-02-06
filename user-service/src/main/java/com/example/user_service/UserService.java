@@ -33,7 +33,6 @@ public class UserService {
     private final JwtService jwtService;
 
 
-    // private final UserMapping userMapping;//добавил , пока не юзал. На будущее мб пока оставлю
 
 
     public UserDto getUserBySecondName(String secondName) {
@@ -93,12 +92,16 @@ public class UserService {
 
     public JwtAuthenticationDto singIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Users users = findByCredentials(userCredentialsDto);
+        if (users.getEnable() == true && users.isAccountNonLocked() && jwtService.validateJwtToken(users.getRefreshToken())) {
+            return jwtService.refreshBaseToken(users.getId(), users.getEmail(), users.getRoles(), true, true  , users.getRefreshToken());
+        }
+
         if (users.getEnable() == true && users.isAccountNonLocked()) {
             JwtAuthenticationDto jwtAuthenticationDto = jwtService.generateAuthToken(users.getId(), users.getEmail(), users.getRoles(), true, true);
             users.setRefreshToken(jwtAuthenticationDto.getRefreshToken());
             userRepository.save(users);
             return jwtAuthenticationDto;
-        } else {
+        }  else {
             throw new IllegalArgumentException("Пользователь не подтвердил почту!");
         }
     }

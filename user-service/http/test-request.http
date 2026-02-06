@@ -197,7 +197,7 @@ Content-Type: application/json
 POST http://localhost:8765/users/auth/refresh
 Content-Type: application/json
 
-{"refreshToken":"eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk3Nzg1NzV9.1vQ8o8rds1nu7sHgt1_h1-CpgwbwnkemQgiTSLVF0CgCCjI-K5SzVE0nyeHMTP6f"}
+{"refreshToken":"$2a$12$E1a7U74ollfDe7/CfhXMMe0Ooz7Q/uMJOCj1J.bNZk5h4ZE2eo5gO"}
 ###
 
 
