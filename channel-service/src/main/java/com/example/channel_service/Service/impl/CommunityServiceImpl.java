@@ -132,6 +132,12 @@ public class CommunityServiceImpl implements CommunityService {
          if ("EDIT".equalsIgnoreCase(action) && communityRole == CommunityRole.EDITOR) {
              return true;
          }
+         if ("COMMENT".equalsIgnoreCase(action)){
+             return true;
+         }
+         if ("MODERATE".equalsIgnoreCase(action) && communityRole == CommunityRole.EDITOR) {
+             return true;
+         }
          return false;
         }).orElse(false);
     }

@@ -1,5 +1,6 @@
 package org.example.postservice.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.example.postservice.CommunityClient;
 import org.example.postservice.Model.Image;
 import org.example.postservice.Model.Post;
@@ -39,7 +40,6 @@ public class PostServiceImpl implements PostService {
         return postRepository.findAllPostsByUserId(id).stream().map(postMapper::toDto).toList();
     }
 
-    @Override
     public List<PostDto> getPostsByCommunity(Long communityId) {
         return postRepository.findAllByCommunityId(communityId).stream().map(postMapper::toDto).toList();
     }
@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
         return postMapper.toDto(postRepository.findById(id).orElseThrow());
     }
 
-
+    @Transactional
     public PostDto createPost(PostDto postDto, MultipartFile file1, MultipartFile file2,
                               MultipartFile file3 , String email) {
         UserDto userDto = userClient.getUserByEmail(email);
@@ -89,16 +89,11 @@ public class PostServiceImpl implements PostService {
                 post.getImages().add(image);
             }
         }
-        if (postDto.getCommunityId() != null) {
-            post.setCommunityId(postDto.getCommunityId());
-        }
-
-
         Post savedPost = postRepository.save(post);
         return postMapper.toDto(savedPost);
     }
 
-
+    @Transactional
     public void deletePostById(Long id , String email) {
         Post post = postRepository.findById(id).orElseThrow();
         UserDto currentUser = userClient.getUserByEmail(email);
@@ -118,7 +113,7 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
     }
 
-
+    @Transactional
     public PostDto updatePost(Long id, PostDto postDto, MultipartFile file1, MultipartFile file2, MultipartFile file3, String email) {
         Post post = postRepository.findById(id).orElseThrow();
         UserDto currentUser = userClient.getUserByEmail(email);
@@ -131,9 +126,9 @@ public class PostServiceImpl implements PostService {
             }catch (Exception e){
                 isCommunityAdmin = false;
             }
-            if (!isOwner && !isCommunityAdmin) {
-                throw new RuntimeException("У вас нету права редактировать пост");
-            }
+        }
+        if (!isOwner && !isCommunityAdmin) {
+            throw new RuntimeException("У вас нету права редактировать пост");
         }
         post.setDescription(postDto.getDescription());
         post.getImages().clear();

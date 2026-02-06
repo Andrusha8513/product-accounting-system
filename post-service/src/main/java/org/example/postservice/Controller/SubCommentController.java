@@ -22,12 +22,12 @@ public class SubCommentController {
         return ResponseEntity.ok(subCommentsService.addSubComment(commentId, text, principal.getName()));
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteSubComment(@PathVariable Long id) {
-        subCommentsService.deleteSubComment(id);
+    public ResponseEntity<?> deleteSubComment(@PathVariable Long id , Principal principal) {
+        subCommentsService.deleteSubComment(id , principal.getName());
         return ResponseEntity.ok().build();
     }
     @PostMapping("/update/{id}")
-    public ResponseEntity<?> updateSubComment(@PathVariable Long id, @RequestParam String text) {
-        return ResponseEntity.ok().body(subCommentsService.updateSubComment(id, text));
+    public ResponseEntity<?> updateSubComment(@PathVariable Long id, @RequestParam String text , Principal principal) {
+        return ResponseEntity.ok().body(subCommentsService.updateSubComment(id, text , principal.getName()));
     }
 }

@@ -9,6 +9,6 @@ import java.util.List;
 @Component
 public interface SubCommentsService {
     SubCommentDto addSubComment(Long commentId , String text , String email);
-    void deleteSubComment(Long id);
-    SubCommentDto updateSubComment(Long id , String text);
+    void deleteSubComment(Long id , String email);
+    SubCommentDto updateSubComment(Long id , String text , String email);
 }

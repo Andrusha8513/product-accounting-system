@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "channel")
+@FeignClient(name = "channel", path = "/api/community")
 public interface CommunityClient {
     @GetMapping("/{id}/check-permission")
     boolean checkPermission(@PathVariable Long id , @RequestParam Long userId , @RequestParam String action);
