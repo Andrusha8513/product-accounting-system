@@ -21,10 +21,8 @@ Content-Type: application/json
   "name": "Паша",
   "secondName": "Техник",
   "password": "11111111",
-  "email": "4057163@mail.ru",
-  "birthDay": "1995-05-15",
-  "enabled": false,
-  "roles": ["ROLE_USER"]
+  "email": "jkcxlzdsdfds@mail.ru",
+  "birthDay": "1995-05-15"
 }
 
 
@@ -221,22 +219,26 @@ Content-Type: application/json
 
 ### 31. Проверка метода changeAccountStatus с JWT
 PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
-Authorization: Bearer {{access_token}}
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NTg4NzEsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.WRIQK1r1FHkCS3-2MqwtVVj4KafeWwwaX61RaVGAKO4I4daipaaKwoJpAUIrjO_O
 
 ###
+PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=false
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NTg2NTYsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.O7VjH5cSZx-8jpxsAjakco000ARxh-crloktaqCrbW-MyYhOCaU0hIVQ6-B-Dm74
+###
+### accountBlocking
 
 ### 32. Проверка метода getAllUsers с JWT
 GET http://localhost:8765/users/api/users/get-all-users
-Authorization: Bearer {{access_token}}
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NjA2OTQsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.yzWH2lelbo5_S89nU3fz2jSjkkVng1VvylCTotBC9ZqNCv5G_Fd47T1a8Xoo7Va3
 
 ###
 
 ### 33. Обновление ролей пользователя на ADMIN (через JWT)
-PUT http://localhost:8765/users/api/users/update-roles/2
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk5MDI2NjUsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.BaTG5g4ms6lnrNjVcSZkq1Mp5ZtzgLe8WlB2ZqSTxcVvjB4LTfdGA2KagOeuMK86
+PUT http://localhost:8765/users/api/users/update-roles/1
+Authorization: Bearer "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NjAxNjAsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.bHHQmKK9WusD_sPLkjGSLYeqVZrL_vl2N1YxMCSmpButwaDcuzbliR8f3jtV7mIZ
 Content-Type: application/json
 
-["ROLE_ADMIN"]
+["ROLE_USER"]
 
 ###
 
@@ -282,11 +284,11 @@ Content-Type: application/json
 ###
 
 PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NjkxNzUzMTZ9.8tCdXailiKR4gSE0f4UQsMfD9jFNw59iDpCPXJy8QdcAzHlU0b-MJz-8KEmDntVL
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA0NTkyNzYsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.N3toa9UmcvPGwCJsf9AFOkRpEnQKHDvRjKZVuieQG63FrmJ2PLNqIdGDxwS84FWu
 
 ###
 PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=false
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk0NzIyOTUsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.RFtu3RMqG_TqjIP1ppIB-jp6udmE_3XvAyJ7dOAPZq09XmYPBSdIVBX895wARu9b
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NjIyNTIsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.Rqh-hu9LSnGPt-qZY2okzp8oDJFiLlr0sLO-kZSy8mD4oGP3JBQL_vL9DXwyQ95f
 ###
 
 POST http://localhost:8765/posts/api/post/createpost

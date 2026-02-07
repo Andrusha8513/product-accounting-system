@@ -138,6 +138,11 @@ public class JwtService {
         return claims.getExpiration();
     }
 
+    public Long getTimeFromToken(String token){
+        Date date = getExpiryDate(token);
+        return date.getTime() - System.currentTimeMillis();
+    }
+
 
     private String generateJwtToken(Long userId,
                                     String email,

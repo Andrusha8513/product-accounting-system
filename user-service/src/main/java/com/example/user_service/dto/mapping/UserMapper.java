@@ -16,7 +16,7 @@ public class UserMapper {
         dto.setName(users.getName());
         dto.setSecondName(users.getSecondName());
         dto.setBirthDay(users.getBirthDay());
-        dto.setRoles(users.getRoles());
+//        dto.setRoles(users.getRoles());
 //        dto.setEnabled(users.getEnable());
         dto.setPassword(users.getPassword());
         return dto;
@@ -27,7 +27,7 @@ public class UserMapper {
         users.setName(userDto.getName());
         users.setSecondName(userDto.getSecondName());
         users.setBirthDay(userDto.getBirthDay());
-        users.setRoles(userDto.getRoles());
+//        users.setRoles(userDto.getRoles());
 //        users.setEnable(userDto.isEnabled());
         users.setPassword(userDto.getPassword());
         return users;

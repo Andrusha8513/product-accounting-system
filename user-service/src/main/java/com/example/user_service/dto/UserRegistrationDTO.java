@@ -13,6 +13,4 @@ public class UserRegistrationDTO {
     private String password;
     private String email;
     private LocalDate birthDay;
-//    private boolean enabled;
-    private Set<Role> roles;
 }

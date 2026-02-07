@@ -44,8 +44,8 @@ public class Users {
     @NotBlank(message = "Фамилия не может быть пустой!")
     private String secondName;
 
-    @Size(max = 100 , message = "Почта не может быть длиннее 100 символов!")
-    @NotBlank(message = "Почта не может быть пустой!")
+//    @Size(max = 100 , message = "Почта не может быть длиннее 100 символов!")
+//    @NotBlank(message = "Почта не может быть пустой!")
     private String pendingEmail;
 
 

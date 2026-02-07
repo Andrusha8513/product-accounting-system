@@ -7,6 +7,7 @@ import com.example.user_service.image.Image;
 import com.example.user_service.image.ImageRepository;
 import com.example.user_service.image.ImageService;
 import com.example.user_service.security.jwt.JwtService;
+import com.example.user_service.security.jwt.RedisJwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserMapperNew userMapperNew;
     private final JwtService jwtService;
+    private final RedisJwtService redisJwtService;
 
 
 
@@ -65,6 +67,7 @@ public class UserService {
         LocalDateTime expireDate = LocalDateTime.now().plusMinutes(1);
         users.setTtlEmailCode(expireDate);
 
+        users.setRoles(Set.of(Role.ROLE_USER));
         users.setPassword(passwordEncoder.encode(users.getPassword()));
         users.setConfirmationCode(code);
         userRepository.save(users);
@@ -125,6 +128,23 @@ public class UserService {
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
+
+    public void logout(String token){
+        long ttl = jwtService.getTimeFromToken(token);
+        if(ttl > 0){
+            redisJwtService.saveTokenToBlackList(token , ttl);
+        }
+    }
+
+//    private void banUser(Long userId){
+//        Users users = userRepository.findById(userId)
+//                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+//        users.setAccountNonLocked(false);
+//        users.setRefreshToken(null);
+//        userRepository.save(users);
+//
+//        redisJwtService.blockUserId(userId);
+//    }
 
     //надо мб допилить, на скорую руку писал
     public JwtAuthenticationDto updateRefreshToken(String refreshToken) throws AuthenticationException {
@@ -375,7 +395,10 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
         users.setEnable(newAccountStatus);
+        users.setRefreshToken(null);
         userRepository.save(users);
+
+        redisJwtService.blockUserId(id);
     }
 
     @Transactional
@@ -383,7 +406,10 @@ public class UserService {
         Users users = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         users.setAccountNonLocked(newAccountStatus);
+        users.setRefreshToken(null);
         userRepository.save(users);
+
+        redisJwtService.blockUserId(id);
     }
 
     @Transactional(readOnly = true)

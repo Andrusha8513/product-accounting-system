@@ -29,15 +29,29 @@ import java.util.stream.Collectors;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final RedisJwtService redisJwtService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
+
         if (token != null && jwtService.validateJwtToken(token)) {
             jwtService.refreshRefreshToken(token);
+
+
+
+            if(redisJwtService.isTokenBlacklisted(token)){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED , "Токен в нигер листе");
+            }
+
+
           TokenData tokenData =  jwtService.extractTokenData(token);
+
+            if (redisJwtService.isUserBlocked(tokenData.getId())){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь заблокирован");
+            }
 
             List<GrantedAuthority> authorities = tokenData.getRoles().stream()
                     .map(role -> new SimpleGrantedAuthority(role.name()))

@@ -3,7 +3,5 @@
   "secondName": "Техник",
   "password": "11111111",
   "email": "4057163@mail.ru",
-  "birthDay": "1995-05-15",
-  "enabled": false,
-  "roles": ["ROLE_USER"]
+  "birthDay": "1995-05-15"
 }
