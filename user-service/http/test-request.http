@@ -18,10 +18,10 @@ POST http://localhost:8765/users/api/users/registration
 Content-Type: application/json
 
 {
-  "name": "Паша",
-  "secondName": "Техник",
+  "name": "ДАНЯЯЯЯЯЯЯ",
+  "secondName": "мУРАКАМИИИИИИ",
   "password": "11111111",
-  "email": "jkcxlzdsdfds@mail.ru",
+  "email": "WEFfklslfddkssdPP@mail.ru",
   "birthDay": "1995-05-15"
 }
 
@@ -222,14 +222,14 @@ PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NTg4NzEsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.WRIQK1r1FHkCS3-2MqwtVVj4KafeWwwaX61RaVGAKO4I4daipaaKwoJpAUIrjO_O
 
 ###
-PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=false
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NTg2NTYsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.O7VjH5cSZx-8jpxsAjakco000ARxh-crloktaqCrbW-MyYhOCaU0hIVQ6-B-Dm74
+PUT http://localhost:8765/users/api/users/accountBlocking/32?newAccountStatus=false
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0ODc1MjgsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.ArZdA0-GwTPMszOWGjs8O2IAipUSgmxLgBnBSt_pBgRUyAPsR-ww1m2Cuem_MUxz
 ###
 ### accountBlocking
 
 ### 32. Проверка метода getAllUsers с JWT
 GET http://localhost:8765/users/api/users/get-all-users
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NjA2OTQsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.yzWH2lelbo5_S89nU3fz2jSjkkVng1VvylCTotBC9ZqNCv5G_Fd47T1a8Xoo7Va3
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA1OTMyNTksInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.-MmhQWlDa17qrRZKwSkUcML4d0HR47T4cdnYi_cjhU0Ea4YPoAf6U44mP2RdDBrI
 
 ###
 
@@ -273,7 +273,7 @@ PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus
 Authorization: Basic 4057163@mail.ru 11111111
 ###
 
-POST http://localhost:8765/users/auth/sing-in
+POST http://localhost:8765/users/auth/sign-in
 Content-Type: application/json
 
 {
@@ -303,14 +303,14 @@ Content-Disposition: form-data; name="description"
 
 ###
 ### Просмотр публичного профиля
-GET http://localhost:8765/profile/api/profile/findProfile?email=4057163@mail.ru
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk5MDM3NTMsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.TuwhLD0r5R0ioZ4EUavw6yrjyNU1dhzNWXr-9nU2qCPNsfZA35V5miecap-1WWRi
+GET http://localhost:8765/profile/api/profile/findProfile?email=9197195@mail.ru
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA1OTIwMTYsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.HW1o_GnjfFqEJCabMx0-W0EW-kB57b8tg-lEYHTPUjKbS0TWVgsZUuZxIfmnIGa_
 Accept: application/json
 
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
-GET http://localhost:8765/profile/api/profile/my-profile/2
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk5MDY4NDAsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.CRFPmDYYrTOq_EZNGg5d6pIp8jmoIWOaSgmqFSVk6P042XtQ9TgO0jiXEYsIcVNQ
+GET http://localhost:8765/profile/api/profile/my-profile/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA1OTM3MzEsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.1HfEUpduj2EENiqs6R4mJN6uGFs5X8PnkIj9jAf8auUJb-g-1zswuJu28LsKckIK
 Accept: application/json
 
 ###

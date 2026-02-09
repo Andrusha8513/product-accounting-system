@@ -3,7 +3,7 @@ version: '3.8'
 services:
   redis:
     image: redis:alpine
-    container_name: redis_user_service
+    container_name: redis_api-gateway
     restart: always
     ports:
       - "6379:6379"
@@ -16,7 +16,7 @@ services:
   # веб интерфейс для просмотра данных в Redis
   redis-commander:
     image: rediscommander/redis-commander:latest
-    container_name: redis_ui
+    container_name: redis_api
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:

@@ -16,8 +16,7 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
 
-        // ВАЖНО: Используем setAllowedOriginPatterns("*") вместо setAllowedOrigins("*")
-        // Это позволяет разрешить ВСЕМ и при этом передавать токены/куки
+
         corsConfig.setAllowedOriginPatterns(Collections.singletonList("*"));
 
         corsConfig.setMaxAge(3600L);

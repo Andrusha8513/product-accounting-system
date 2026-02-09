@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/me/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<PrivetUserProfileDto> getMyProfile(@PathVariable Long id) {
         try {
             PrivetUserProfileDto privetUserProfileDto = userService.getPrivetProfile(id);

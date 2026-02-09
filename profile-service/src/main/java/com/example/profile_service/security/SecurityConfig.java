@@ -1,6 +1,6 @@
 package com.example.profile_service.security;
 
-import com.example.profile_service.security.jwt.JwtFilter;
+//import com.example.profile_service.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
+//    private final JwtFilter jwtFilter;
 
 
     @Bean
@@ -25,11 +25,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/profile/my-profile/{id}").authenticated()
-                        .requestMatchers("/api/profile/findProfile").authenticated())
+                                .anyRequest().permitAll());
 
 
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

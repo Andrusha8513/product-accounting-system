@@ -129,11 +129,23 @@ public class UserService {
         throw new AuthenticationException("Недействительный рефреш токен");
     }
 
-    public void logout(String token){
-        long ttl = jwtService.getTimeFromToken(token);
+    public void logout(String accessToken){
+        long ttl = jwtService.getTimeFromToken(accessToken);
         if(ttl > 0){
-            redisJwtService.saveTokenToBlackList(token , ttl);
+            redisJwtService.saveTokenToBlackList(accessToken , ttl);
         }
+    }
+
+    @Transactional
+    public void fullLogout(Long userId, String accessToken){
+        Users users = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+        users.setRefreshToken(null);
+        userRepository.save(users);
+
+        long ttl = jwtService.getTimeFromToken(accessToken);
+
+        redisJwtService.saveTokenToBlackList(accessToken , ttl);
     }
 
 //    private void banUser(Long userId){
@@ -405,11 +417,20 @@ public class UserService {
     public void accountBlocking(Long id, boolean newAccountStatus) {
         Users users = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+
         users.setAccountNonLocked(newAccountStatus);
         users.setRefreshToken(null);
         userRepository.save(users);
 
-        redisJwtService.blockUserId(id);
+        if(!newAccountStatus){
+            redisJwtService.blockUserId(id);
+        }
+        if(newAccountStatus){
+            redisJwtService.unblockUserId(id);
+        }
+
+
     }
 
     @Transactional(readOnly = true)

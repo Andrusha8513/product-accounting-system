@@ -6,10 +6,7 @@ import com.example.user_service.dto.RefreshTokenDto;
 import com.example.user_service.dto.UserCredentialsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
 
@@ -19,7 +16,7 @@ import javax.naming.AuthenticationException;
 public class AuthController {
     private final UserService userService;
 
-    @PostMapping("/sing-in")
+    @PostMapping("/sign-in")
     public ResponseEntity<JwtAuthenticationDto> singIn(@RequestBody UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         try {
     JwtAuthenticationDto jwtAuthenticationDto = userService.singIn(userCredentialsDto);
@@ -32,5 +29,29 @@ public class AuthController {
     @PostMapping("/refresh")
     public JwtAuthenticationDto refresh(@RequestBody RefreshTokenDto refreshTokenDto) throws Exception {
         return userService.refreshToken(refreshTokenDto);
+    }
+
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestParam String accessToken){
+        try {
+            userService.logout(accessToken);
+            return ResponseEntity.ok().build();
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @PostMapping("/fullLogout/{id}")
+    public ResponseEntity<String> fullLogout(@PathVariable Long id ,
+                                             @RequestParam String accessToken){
+        try {
+            userService.fullLogout(id, accessToken);
+            return ResponseEntity.ok("Успешно вышли со всех аккаунтов");
+        }catch (RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }

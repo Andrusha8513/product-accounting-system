@@ -1,7 +1,8 @@
-package com.example.user_service.security.jwt;
+package com.example.api_gateway.jwt;
 
 
-import com.example.user_service.security.CustomUserDetails;
+import com.example.api_gateway.CustomUserDetails;
+import com.example.api_gateway.redis.RedisJwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,20 +38,20 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = getTokenFromRequest(request);
 
         if (token != null && jwtService.validateJwtToken(token)) {
-            jwtService.refreshRefreshToken(token);
+            //jwtService.refreshRefreshToken(token);
 
 
 
-//            if(redisJwtService.isTokenBlacklisted(token)){
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED , "Токен в нигер листе");
-//            }
+            if(redisJwtService.isTokenBlacklisted(token)){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED , "Токен в нигер листе");
+            }
 
 
           TokenData tokenData =  jwtService.extractTokenData(token);
 
-//            if (redisJwtService.isUserBlocked(tokenData.getId())){
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь заблокирован");
-//            }
+            if (redisJwtService.isUserBlocked(tokenData.getId())){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь заблокирован");
+            }
 
             List<GrantedAuthority> authorities = tokenData.getRoles().stream()
                     .map(role -> new SimpleGrantedAuthority(role.name()))
@@ -61,6 +62,8 @@ public class JwtFilter extends OncePerRequestFilter {
                     tokenData.getEmail(),
                     "",
                     tokenData.getIsEnabled(),
+                    true,
+                    true,
                     !tokenData.getIsAccountNonLocked(),
                     authorities
             );
