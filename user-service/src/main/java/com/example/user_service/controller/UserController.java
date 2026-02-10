@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-   // @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')") пока в коменты кину ВДРУГ логику твою поломаю
+    // @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')") пока в коменты кину ВДРУГ логику твою поломаю
     public ResponseEntity<UserDto> getUserById(@RequestParam Long id) {
         return ResponseEntity.ok(userService.getInfoById(id));
     }
@@ -123,7 +123,8 @@ public class UserController {
     }
 
     @PostMapping("/send-email-reset-code")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')") // не тестил как работает защита , но по идее должна работать
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    // не тестил как работает защита , но по идее должна работать
     public ResponseEntity<String> sendEmailResetCode(@RequestParam String email,
                                                      @RequestParam String newEmail) {
         try {
@@ -243,6 +244,7 @@ public class UserController {
     public ResponseEntity<String> changeAccountStatus(@PathVariable Long id,
                                                       @RequestParam boolean newAccountStatus) {
         try {
+
             userService.changeAccountStatus(id, newAccountStatus);
             return ResponseEntity.ok("Всё прошло  успешно , статус аккаунт теперь " + newAccountStatus);
         } catch (Exception e) {
@@ -254,8 +256,12 @@ public class UserController {
     @PutMapping("/accountBlocking/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> accountBlocking(@PathVariable Long id,
-                                                  @RequestParam boolean newAccountStatus){
+                                                  @RequestParam boolean newAccountStatus) {
         try {
+
+
+
+
             userService.accountBlocking(id, newAccountStatus);
             return ResponseEntity.ok("Всё прошло  успешно , статус аккаунт теперь " + newAccountStatus);
         } catch (Exception e) {
@@ -266,23 +272,23 @@ public class UserController {
     @PutMapping("/updateName/{id}")
     @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
     public ResponseEntity<String> updateName(@PathVariable Long id,
-                                             @RequestParam String newName){
+                                             @RequestParam String newName) {
         try {
-            userService.updateName(id , newName);
+            userService.updateName(id, newName);
             return ResponseEntity.ok().build();
-        }catch (RuntimeException e){
-           return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("/updateSecondName/{id}")
     @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
     public ResponseEntity<String> updateSecondName(@PathVariable Long id,
-                                                   @RequestParam String newSecondName){
+                                                   @RequestParam String newSecondName) {
         try {
-            userService.updateSecondName(id , newSecondName);
+            userService.updateSecondName(id, newSecondName);
             return ResponseEntity.ok().build();
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

@@ -277,28 +277,34 @@ POST http://localhost:8765/users/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "4057163@mail.ru",
+  "email": "9197195@mail.ru",
   "password": "11111111"
 }
 
+###
+###Выход из аккаунта
+###
+POST http://localhost:8765/users/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA2ODgwMjcsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.5p0W-K1RSBmg6Kxg0qP9uRCsoH11z3445Cq6hgAP7uGuul-0DQtVd8tE5GKFfj1u
+Content-Type: application/json
 ###
 
 PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA0NTkyNzYsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.N3toa9UmcvPGwCJsf9AFOkRpEnQKHDvRjKZVuieQG63FrmJ2PLNqIdGDxwS84FWu
 
 ###
-PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=false
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NjIyNTIsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.Rqh-hu9LSnGPt-qZY2okzp8oDJFiLlr0sLO-kZSy8mD4oGP3JBQL_vL9DXwyQ95f
+PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=true
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA2ODc0NTQsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.VylkDstwx8fOijiE-jouN6K12CDkkCEblJ8o8wIgL-Z0oAyhbwNXBGJdlCaiRySL
 ###
 
 POST http://localhost:8765/posts/api/post/createpost
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk5MDIyMTUsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.MjVUlhZ8ArVw31d-5er7S2EJbL6uGjA_byKS_7aFXIoTbIDWX0HRPwDFZouTXw5A
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA2ODM1ODUsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.A_3LhWlmSkHjn7nkjK8QsKC0W_KWqRROcrbwI4vSiJlmeQo8wxOsFcP6lyG9rpE1
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
 Content-Disposition: form-data; name="description"
 
-Пиздец
+араавыdsewq
 --WebAppBoundary--
 
 ###
@@ -310,7 +316,7 @@ Accept: application/json
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
 GET http://localhost:8765/profile/api/profile/my-profile/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA1OTM3MzEsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.1HfEUpduj2EENiqs6R4mJN6uGFs5X8PnkIj9jAf8auUJb-g-1zswuJu28LsKckIK
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA2ODc5MDAsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.pHXae5VlYTpBXoqEHeTeE_cc_u-AC9KwOD9IbAvktnIAcE2I4C5bi_LIkE02KPo2
 Accept: application/json
 
 ###

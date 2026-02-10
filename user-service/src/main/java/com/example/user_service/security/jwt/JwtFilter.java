@@ -39,18 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token != null && jwtService.validateJwtToken(token)) {
             jwtService.refreshRefreshToken(token);
 
-
-
-//            if(redisJwtService.isTokenBlacklisted(token)){
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED , "Токен в нигер листе");
-//            }
-
-
           TokenData tokenData =  jwtService.extractTokenData(token);
-
-//            if (redisJwtService.isUserBlocked(tokenData.getId())){
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь заблокирован");
-//            }
 
             List<GrantedAuthority> authorities = tokenData.getRoles().stream()
                     .map(role -> new SimpleGrantedAuthority(role.name()))

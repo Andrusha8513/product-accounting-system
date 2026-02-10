@@ -33,8 +33,15 @@ public class AuthController {
 
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestParam String accessToken){
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader){
         try {
+            if(authHeader == null || !authHeader.startsWith("Bearer ")){
+                return ResponseEntity.badRequest().body("Неверный заголовок авторизации братик");
+            }
+
+
+            String accessToken = authHeader.substring(7);
+
             userService.logout(accessToken);
             return ResponseEntity.ok().build();
         }catch (RuntimeException e){
@@ -45,13 +52,18 @@ public class AuthController {
 
     @PostMapping("/fullLogout/{id}")
     public ResponseEntity<String> fullLogout(@PathVariable Long id ,
-                                             @RequestParam String accessToken){
+                                            @RequestHeader("Authorization") String authHeder){
         try {
+            if(authHeder == null || !authHeder.startsWith("Bearer ")){
+                return ResponseEntity.badRequest().body("Неверный заголовок авторизации братик");
+            }
+
+            String accessToken = authHeder.substring(7);
+
             userService.fullLogout(id, accessToken);
             return ResponseEntity.ok("Успешно вышли со всех аккаунтов");
         }catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 }

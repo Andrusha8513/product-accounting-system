@@ -12,9 +12,9 @@ public class RedisJwtService {
 
     private final RedisTemplate<String , Object> redisTemplate;
 
-    private static final String token_black_list = "blk:token:";
+    private static final String TOKEN_BLACKLIST = "blk:token:";
 
-    private static final String user_blocklist_prefix="blk:user:";
+    private static final String USER_BLACKLIST ="blk:user:";
 
 
 
@@ -22,7 +22,7 @@ public class RedisJwtService {
     public void saveTokenToBlackList(String token , long ttlMillis){
         if(ttlMillis > 0){
             redisTemplate.opsForValue().set(
-                    token_black_list + token,
+                    TOKEN_BLACKLIST + token,
                     "true",
                     ttlMillis,
                     TimeUnit.MILLISECONDS
@@ -33,7 +33,7 @@ public class RedisJwtService {
 
     public void  blockUserId(Long userId){
         redisTemplate.opsForValue().set(
-                user_blocklist_prefix + userId,
+                USER_BLACKLIST + userId,
                 "banned",
                 20,
                 TimeUnit.MINUTES
@@ -43,16 +43,16 @@ public class RedisJwtService {
 
 
     public boolean isTokenBlacklisted(String token){
-        return Boolean.TRUE.equals(redisTemplate.hasKey(token_black_list + token));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(TOKEN_BLACKLIST + token));
     }
 
 //короче написла бан юзеров , но пока не решил как там все реализовать буду. Есть мысли  как улучшить  то что есть сейчас , но пока трогать не буду
     public boolean isUserBlocked(Long userId){
-        return Boolean.TRUE.equals(redisTemplate.hasKey(user_blocklist_prefix + userId));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(USER_BLACKLIST + userId));
     }
 
     //для супер быстрого разбана крч
     public void unblockUserId(Long userId){
-        redisTemplate.delete(user_blocklist_prefix + userId);
+        redisTemplate.delete(USER_BLACKLIST + userId);
     }
 }

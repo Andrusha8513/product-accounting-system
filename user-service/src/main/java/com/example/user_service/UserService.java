@@ -429,8 +429,6 @@ public class UserService {
         if(newAccountStatus){
             redisJwtService.unblockUserId(id);
         }
-
-
     }
 
     @Transactional(readOnly = true)
