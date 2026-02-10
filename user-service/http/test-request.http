@@ -1,4 +1,5 @@
-### Проверка доступности Eureka Server
+###
+###Проверка доступности Eureka Server
 GET http://localhost:8761/
 
 ###
@@ -18,10 +19,10 @@ POST http://localhost:8765/users/api/users/registration
 Content-Type: application/json
 
 {
-  "name": "ДАНЯЯЯЯЯЯЯ",
-  "secondName": "мУРАКАМИИИИИИ",
+  "name": "Ара",
+  "secondName": "Бибизяна",
   "password": "11111111",
-  "email": "WEFfklslfddkssdPP@mail.ru",
+  "email": "9197195@mail.ru",
   "birthDay": "1995-05-15"
 }
 
@@ -285,7 +286,7 @@ Content-Type: application/json
 ###Выход из аккаунта
 ###
 POST http://localhost:8765/users/auth/logout
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA2ODgwMjcsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.5p0W-K1RSBmg6Kxg0qP9uRCsoH11z3445Cq6hgAP7uGuul-0DQtVd8tE5GKFfj1u
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA3NDE3MjIsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.r3HVmsO5zs95s3mKv7f9rm0Eq7mjhl9lGfHPtt2glFX85h3Q7dpTQQt5mrKhaXBk
 Content-Type: application/json
 ###
 
@@ -294,7 +295,7 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJle
 
 ###
 PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=true
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA2ODc0NTQsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.VylkDstwx8fOijiE-jouN6K12CDkkCEblJ8o8wIgL-Z0oAyhbwNXBGJdlCaiRySL
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA3NDE1NDAsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.xS8SOLcmaxQ8Bf3r6Cxm5C1VWHTHmqU_yCR1nR0PXD8xwgNHk2YqXlVBYNQOC_Jk
 ###
 
 POST http://localhost:8765/posts/api/post/createpost
@@ -316,7 +317,7 @@ Accept: application/json
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
 GET http://localhost:8765/profile/api/profile/my-profile/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA2ODc5MDAsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.pHXae5VlYTpBXoqEHeTeE_cc_u-AC9KwOD9IbAvktnIAcE2I4C5bi_LIkE02KPo2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA3NDE3MjIsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.r3HVmsO5zs95s3mKv7f9rm0Eq7mjhl9lGfHPtt2glFX85h3Q7dpTQQt5mrKhaXBk
 Accept: application/json
 
 ###

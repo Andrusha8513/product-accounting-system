@@ -6,6 +6,7 @@ import com.example.user_service.dto.mapping.UserMapperNew;
 import com.example.user_service.image.Image;
 import com.example.user_service.image.ImageRepository;
 import com.example.user_service.image.ImageService;
+import com.example.user_service.kafka.EmailKafkaProducer;
 import com.example.user_service.security.jwt.JwtService;
 import com.example.user_service.security.jwt.RedisJwtService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class UserService {
     private final UserMapperNew userMapperNew;
     private final JwtService jwtService;
     private final RedisJwtService redisJwtService;
+    private final EmailKafkaProducer emailKafkaProducer;
 
 
 
@@ -75,7 +77,7 @@ public class UserService {
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
-        emailClient.sendConfirmationCode(emailRequestDto);
+        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -86,6 +88,7 @@ public class UserService {
             Users users = usersOptional.get();
             users.setEnable(true);
             users.setAccountNonLocked(true);
+            users.setTtlEmailCode(null);
             users.setConfirmationCode(null);
             userRepository.save(users);
             return true;

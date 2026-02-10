@@ -8,6 +8,7 @@ import com.example.user_service.dto.PrivetUserProfileDto;
 import com.example.user_service.dto.PublicUserProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.example.postservice.dto.PostDto;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -16,29 +17,31 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
-   private  final UsersProfile usersProfile;
-   private  final PostClient postClient;
+    private final UsersProfile usersProfile;
+    private final PostClient postClient;
 
-public FullPrivetProfileDto getMyProfile(Long id){
-   PrivetUserProfileDto myInfo = usersProfile.getMyProfile(id);
 
-    List<PostDto> myPosts = postClient.findAllPostsByUserId(myInfo.getId());
+    @Cacheable(value = "private_profile", key = "#id")
+    public FullPrivetProfileDto getMyProfile(Long id) {
+        PrivetUserProfileDto myInfo = usersProfile.getMyProfile(id);
 
-    return FullPrivetProfileDto.builder()
-            .userDetails(myInfo)
-            .posts(myPosts != null ? myPosts : Collections.emptyList())
-            .build();
+        List<PostDto> myPosts = postClient.findAllPostsByUserId(myInfo.getId());
 
-}
+        return FullPrivetProfileDto.builder()
+                .userDetails(myInfo)
+                .posts(myPosts != null ? myPosts : Collections.emptyList())
+                .build();
 
-public FullPublicProfileDto getPublicProfile(String email){
-    PublicUserProfileDto info = usersProfile.findProfile(email);
+    }
 
-    List<PostDto> postDtos = postClient.findAllPostsByUserId(info.getId());
+    public FullPublicProfileDto getPublicProfile(String email) {
+        PublicUserProfileDto info = usersProfile.findProfile(email);
 
-    return FullPublicProfileDto.builder()
-            .userDetails(info)
-            .posts(postDtos != null ? postDtos : Collections.emptyList())
-            .build();
-}
+        List<PostDto> postDtos = postClient.findAllPostsByUserId(info.getId());
+
+        return FullPublicProfileDto.builder()
+                .userDetails(info)
+                .posts(postDtos != null ? postDtos : Collections.emptyList())
+                .build();
+    }
 }
