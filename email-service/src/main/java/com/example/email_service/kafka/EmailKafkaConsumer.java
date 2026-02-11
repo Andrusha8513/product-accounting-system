@@ -14,15 +14,30 @@ import org.springframework.stereotype.Service;
 public class EmailKafkaConsumer {
     private final EmailService emailService;
 
+
+
     @KafkaListener(topics = "email",
-            groupId = "email-service")
-    public void consumerEmail(EmailRequestDto emailRequestDto) {
-        try {
-            log.info("Получено письмо от: email={}", emailRequestDto.getTo());
-            emailService.sendConfirmationEmail(emailRequestDto);
-            log.info("EmailService вызван успешно");
-        } catch (Exception e) {
-            log.error("Критическая ошибка при отправке почты: ", e);
+    groupId = "email-servise")
+    public void consumerEmail(EmailRequestDto emailRequestDto){
+        switch (emailRequestDto.getType()){
+            case CONFIRMATION:
+                try {
+                    log.info("Получено письмо от: email={}", emailRequestDto.getTo());
+                    emailService.sendConfirmationEmail(emailRequestDto);
+                    log.info("EmailService отработал успешно");
+                }catch (Exception e){
+                    log.error("Критическая ошибка при отправке почты: ", e);
+                }
+                break;
+            case PASSWORD_RESET:
+                try {
+                    log.info("Получено письмо от: email={}", emailRequestDto.getTo());
+                    emailService.sendPasswordResetCode(emailRequestDto);
+                    log.info("EmailService отработал успешно");
+                }catch (Exception e){
+                    log.error("Критическая ошибка при отправке почты: ", e);
+                }
+                break;
         }
     }
 }

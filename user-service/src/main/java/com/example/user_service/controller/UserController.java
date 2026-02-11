@@ -110,7 +110,6 @@ public class UserController {
     }
 
     @PostMapping("/reset-password-with-code")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
     public ResponseEntity<String> resetPasswordWithCode(@RequestParam String email,
                                                         @RequestParam String code,
                                                         @RequestParam String newPassword) {
@@ -123,7 +122,7 @@ public class UserController {
     }
 
     @PostMapping("/send-email-reset-code")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#email) or hasAuthority('ADMIN')")
     // не тестил как работает защита , но по идее должна работать
     public ResponseEntity<String> sendEmailResetCode(@RequestParam String email,
                                                      @RequestParam String newEmail) {

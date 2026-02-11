@@ -27,7 +27,6 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailClient emailClient;
     private final ImageService imageService;
     private final ImageRepository imageRepository;
     private final UserMapper userMapper;
@@ -77,6 +76,7 @@ public class UserService {
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
+        emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
         emailKafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
@@ -206,7 +206,8 @@ public class UserService {
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
-        emailClient.sendConfirmationCode(emailRequestDto);
+        emailRequestDto.setType(EmailRequestDto.EmailType.PASSWORD_RESET);
+        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -224,8 +225,9 @@ public class UserService {
 
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
-        emailRequestDto.setCode(users.getConfirmationCode());
-        emailClient.sendPasswordResetCode(emailRequestDto);
+        emailRequestDto.setCode(users.getPasswordResetCode());
+        emailRequestDto.setType(EmailRequestDto.EmailType.PASSWORD_RESET);
+        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -265,7 +267,8 @@ public class UserService {
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
-        emailClient.sendConfirmationCode(emailRequestDto);
+        emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
+        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -284,7 +287,8 @@ public class UserService {
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
-        emailClient.sendConfirmationCode(emailRequestDto);
+        emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
+        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
