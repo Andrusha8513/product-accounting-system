@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -12,9 +13,11 @@ public class RedisJwtService {
 
     private final RedisTemplate<String , Object> redisTemplate;
 
-    private static final String token_black_list = "blk:token:";
+    private static final String TOKEN_BLACK_LIST = "blk:token:";
 
-    private static final String user_blocklist_prefix="blk:user:";
+    private static final String USER_BLOCKLIST_PREFIX ="blk:user:";
+
+    private static final String CONFIRMATION_CODE_PREFIX="blk:email_code:";
 
 
 
@@ -22,7 +25,7 @@ public class RedisJwtService {
     public void saveTokenToBlackList(String token , long ttlMillis){
         if(ttlMillis > 0){
             redisTemplate.opsForValue().set(
-                    token_black_list + token,
+                    TOKEN_BLACK_LIST + token,
                     "true",
                     ttlMillis,
                     TimeUnit.MILLISECONDS
@@ -33,7 +36,7 @@ public class RedisJwtService {
 
     public void  blockUserId(Long userId){
         redisTemplate.opsForValue().set(
-                user_blocklist_prefix + userId,
+                USER_BLOCKLIST_PREFIX + userId,
                 "banned",
                 20,
                 TimeUnit.MINUTES
@@ -43,16 +46,37 @@ public class RedisJwtService {
 
 
     public boolean isTokenBlacklisted(String token){
-        return Boolean.TRUE.equals(redisTemplate.hasKey(token_black_list + token));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(TOKEN_BLACK_LIST + token));
     }
 
 //короче написла бан юзеров , но пока не решил как там все реализовать буду. Есть мысли  как улучшить  то что есть сейчас , но пока трогать не буду
     public boolean isUserBlocked(Long userId){
-        return Boolean.TRUE.equals(redisTemplate.hasKey(user_blocklist_prefix + userId));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(USER_BLOCKLIST_PREFIX + userId));
     }
 
     //для супер быстрого разбана крч
     public void unblockUserId(Long userId){
-        redisTemplate.delete(user_blocklist_prefix + userId);
+        redisTemplate.delete(USER_BLOCKLIST_PREFIX + userId);
+    }
+
+
+    public void saveEmailConfirmation(String code){
+        redisTemplate.opsForValue().set(
+                CONFIRMATION_CODE_PREFIX + code,
+                "active",
+                1,
+                TimeUnit.MINUTES
+        );
+    }
+
+    public boolean isCodeAlive(String code){
+        return Boolean.TRUE.equals(redisTemplate.hasKey(CONFIRMATION_CODE_PREFIX + code));
+    }
+
+    public void deleteConfirmationCode(String code){
+        redisTemplate.delete(CONFIRMATION_CODE_PREFIX + code);
     }
 }
+
+
+

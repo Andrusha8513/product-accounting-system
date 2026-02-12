@@ -36,8 +36,6 @@ public class UserService {
     private final EmailKafkaProducer emailKafkaProducer;
 
 
-
-
     public UserDto getUserBySecondName(String secondName) {
         Users user = userRepository.getUserBySecondName(secondName).orElseThrow();
         return userMapperNew.toDto(user);
@@ -65,13 +63,15 @@ public class UserService {
         Users users = userMapper.toEntity(userDto);
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
 
-        LocalDateTime expireDate = LocalDateTime.now().plusMinutes(1);
-        users.setTtlEmailCode(expireDate);
+//        LocalDateTime expireDate = LocalDateTime.now().plusMinutes(1);
+//        users.setTtlEmailCode(expireDate);
 
         users.setRoles(Set.of(Role.ROLE_USER));
         users.setPassword(passwordEncoder.encode(users.getPassword()));
         users.setConfirmationCode(code);
         userRepository.save(users);
+
+        redisJwtService.saveEmailConfirmation(code);
 
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
@@ -84,13 +84,12 @@ public class UserService {
     public boolean confirmRegistration(String code) {
         Optional<Users> usersOptional = userRepository.findByConfirmationCode(code);
 
-        if (usersOptional.isPresent() && !LocalDateTime.now().isAfter(usersOptional.get().getTtlEmailCode())) {
+        if (usersOptional.isPresent() && redisJwtService.isCodeAlive(code)) {
             Users users = usersOptional.get();
             users.setEnable(true);
             users.setAccountNonLocked(true);
-            users.setTtlEmailCode(null);
-            users.setConfirmationCode(null);
             userRepository.save(users);
+            redisJwtService.deleteConfirmationCode(code);
             return true;
         }
         return false;
@@ -99,7 +98,7 @@ public class UserService {
     public JwtAuthenticationDto singIn(UserCredentialsDto userCredentialsDto) throws AuthenticationException {
         Users users = findByCredentials(userCredentialsDto);
         if (users.getEnable() == true && users.isAccountNonLocked() && jwtService.validateJwtToken(users.getRefreshToken())) {
-            return jwtService.refreshBaseToken(users.getId(), users.getEmail(), users.getRoles(), true, true  , users.getRefreshToken());
+            return jwtService.refreshBaseToken(users.getId(), users.getEmail(), users.getRoles(), true, true, users.getRefreshToken());
         }
 
         if (users.getEnable() == true && users.isAccountNonLocked()) {
@@ -107,7 +106,7 @@ public class UserService {
             users.setRefreshToken(jwtAuthenticationDto.getRefreshToken());
             userRepository.save(users);
             return jwtAuthenticationDto;
-        }  else {
+        } else {
             throw new IllegalArgumentException("Пользователь не подтвердил почту!");
         }
     }
@@ -127,20 +126,20 @@ public class UserService {
         String refreshToken = refreshTokenDto.getRefreshToken();
         if (refreshToken != null && jwtService.validateJwtToken(refreshToken)) {
             Users users = findByEmail(jwtService.getEmailFromToken(refreshToken));
-            return jwtService.refreshBaseToken(users.getId(),users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), refreshToken);
+            return jwtService.refreshBaseToken(users.getId(), users.getEmail(), users.getRoles(), users.getEnable(), users.isAccountNonLocked(), refreshToken);
         }
         throw new AuthenticationException("Недействительный рефреш токен");
     }
 
-    public void logout(String accessToken){
+    public void logout(String accessToken) {
         long ttl = jwtService.getTimeFromToken(accessToken);
-        if(ttl > 0){
-            redisJwtService.saveTokenToBlackList(accessToken , ttl);
+        if (ttl > 0) {
+            redisJwtService.saveTokenToBlackList(accessToken, ttl);
         }
     }
 
     @Transactional
-    public void fullLogout(Long userId, String accessToken){
+    public void fullLogout(Long userId, String accessToken) {
         Users users = userRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
         users.setRefreshToken(null);
@@ -148,18 +147,9 @@ public class UserService {
 
         long ttl = jwtService.getTimeFromToken(accessToken);
 
-        redisJwtService.saveTokenToBlackList(accessToken , ttl);
+        redisJwtService.saveTokenToBlackList(accessToken, ttl);
     }
 
-//    private void banUser(Long userId){
-//        Users users = userRepository.findById(userId)
-//                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-//        users.setAccountNonLocked(false);
-//        users.setRefreshToken(null);
-//        userRepository.save(users);
-//
-//        redisJwtService.blockUserId(userId);
-//    }
 
     //надо мб допилить, на скорую руку писал
     public JwtAuthenticationDto updateRefreshToken(String refreshToken) throws AuthenticationException {
@@ -195,10 +185,13 @@ public class UserService {
         if (users.getEnable()) {
             throw new IllegalArgumentException("Аккаунт уже активирован");
         }
+        if (users.getConfirmationCode() != null) {
+            redisJwtService.deleteConfirmationCode(users.getConfirmationCode());
+        }
+
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
 
-        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
-        users.setTtlEmailCode(time);
+        redisJwtService.saveEmailConfirmation(code);
 
         users.setConfirmationCode(code);
         userRepository.save(users);
@@ -206,7 +199,7 @@ public class UserService {
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
-        emailRequestDto.setType(EmailRequestDto.EmailType.PASSWORD_RESET);
+        emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
         emailKafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
@@ -217,11 +210,13 @@ public class UserService {
 
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
 
-        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
-        users.setPasswordResetCodeExpiryDate(time);
+//        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
+//        users.setPasswordResetCodeExpiryDate(time);
 
         users.setPasswordResetCode(code);
         userRepository.save(users);
+
+        redisJwtService.saveResetCode(code);
 
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
@@ -238,11 +233,11 @@ public class UserService {
         if (users.getPasswordResetCode() == null || !users.getPasswordResetCode().equals(code) || LocalDateTime.now().isAfter(users.getPasswordResetCodeExpiryDate())) {
             throw new IllegalArgumentException("Неверный или просроченный  код для сброса пароля");
         }
-
         if (newPassword.length() < 8) {
             throw new IllegalArgumentException("Пароля не должен быть короче восьми символов!");
         }
 
+        redisJwtService.deleteResetCode(code);
         users.setPassword(passwordEncoder.encode(newPassword));
         users.setPasswordResetCode(null);
         users.setPasswordResetCodeExpiryDate(null);
@@ -430,10 +425,10 @@ public class UserService {
         users.setRefreshToken(null);
         userRepository.save(users);
 
-        if(!newAccountStatus){
+        if (!newAccountStatus) {
             redisJwtService.blockUserId(id);
         }
-        if(newAccountStatus){
+        if (newAccountStatus) {
             redisJwtService.unblockUserId(id);
         }
     }
@@ -454,7 +449,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateName(Long id , String newName){
+    public void updateName(Long id, String newName) {
         Users users = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
@@ -463,7 +458,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateSecondName(Long id , String newSecondName){
+    public void updateSecondName(Long id, String newSecondName) {
         Users users = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
