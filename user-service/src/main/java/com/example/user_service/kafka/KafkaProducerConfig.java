@@ -2,6 +2,7 @@ package com.example.user_service.kafka;
 
 
 import com.example.user_service.dto.EmailRequestDto;
+import com.example.user_service.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -37,6 +38,12 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String , EmailRequestDto> kafkaTemplate(
             ProducerFactory<String , EmailRequestDto> producerFactory){
+        return new KafkaTemplate<>(producerFactory);
+    }
+
+    @Bean
+    public KafkaTemplate<String , UserDto> kafkaTemplateUser(
+            ProducerFactory<String , UserDto> producerFactory){
         return new KafkaTemplate<>(producerFactory);
     }
 }
