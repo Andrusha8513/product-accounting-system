@@ -4,12 +4,11 @@ import jakarta.transaction.Transactional;
 import org.example.postservice.CommunityClient;
 import org.example.postservice.Model.Image;
 import org.example.postservice.Model.Post;
-import org.example.postservice.UserClient;
+import org.example.postservice.Model.UserCache;
 import org.example.postservice.dto.PostDto;
-import org.example.postservice.dto.UserDto;
-import org.example.postservice.mapper.ImageMapper;
 import org.example.postservice.mapper.PostMapper;
 import org.example.postservice.repository.PostRepository;
+import org.example.postservice.repository.UserCacheRepository;
 import org.example.postservice.service.PostService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,14 +20,14 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
-    private final UserClient userClient;
+    private final UserCacheRepository userCacheRepository;
     private final CommunityClient communityClient;
     public PostServiceImpl(PostRepository postRepository, PostMapper postMapper,
-                           CommunityClient communityClient , UserClient userClient) {
+                           CommunityClient communityClient , UserCacheRepository userCacheRepository) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.communityClient = communityClient;
-        this.userClient = userClient;
+        this.userCacheRepository = userCacheRepository;
     }
 
     public List<PostDto> findAllPosts() {
@@ -52,11 +51,11 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostDto createPost(PostDto postDto, MultipartFile file1, MultipartFile file2,
                               MultipartFile file3 , String email) {
-        UserDto userDto = userClient.getUserByEmail(email);
+        UserCache userCache = userCacheRepository.findByEmail(email).orElseThrow();
         Post post = postMapper.toEntity(postDto);
         post.setCommunityId(postDto.getCommunityId());
-        if (userDto != null) {
-            post.setUserId(userDto.getId());
+        if (userCache != null) {
+            post.setUserId(userCache.getId());
         }
 
         List<MultipartFile> files = new ArrayList<>();
@@ -96,7 +95,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePostById(Long id , String email) {
         Post post = postRepository.findById(id).orElseThrow();
-        UserDto currentUser = userClient.getUserByEmail(email);
+        UserCache currentUser = userCacheRepository.findByEmail(email).orElseThrow();
         boolean isOwner = post.getUserId().equals(currentUser.getId());
         boolean isCommunityAdmin = false;
         if (post.getCommunityId() != null) {
@@ -116,7 +115,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostDto updatePost(Long id, PostDto postDto, MultipartFile file1, MultipartFile file2, MultipartFile file3, String email) {
         Post post = postRepository.findById(id).orElseThrow();
-        UserDto currentUser = userClient.getUserByEmail(email);
+        UserCache currentUser = userCacheRepository.findByEmail(email).orElseThrow();
         boolean isOwner = post.getUserId().equals(currentUser.getId());
         boolean isCommunityAdmin = false;
         if (post.getCommunityId() != null) {

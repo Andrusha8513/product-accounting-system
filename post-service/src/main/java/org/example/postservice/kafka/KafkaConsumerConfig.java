@@ -19,13 +19,11 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
-
-
     @Bean
     public ConsumerFactory<String , UserDto> consumerFactory(ObjectMapper objectMapper){
        Map<String , Object> properties = new HashMap<>();
        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG , "localhost:9092");
-       properties.put(ConsumerConfig.GROUP_ID_CONFIG , "email-service");
+       properties.put(ConsumerConfig.GROUP_ID_CONFIG , "users");
 
         JsonDeserializer<UserDto> jsonDeserializer = new JsonDeserializer<>(UserDto.class ,objectMapper);
         jsonDeserializer.addTrustedPackages("*");
