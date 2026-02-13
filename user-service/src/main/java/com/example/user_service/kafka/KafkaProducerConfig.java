@@ -1,6 +1,7 @@
 package com.example.user_service.kafka;
 
 
+
 import com.example.user_service.dto.EmailRequestDto;
 import com.example.user_service.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,5 +54,9 @@ public class KafkaProducerConfig {
         );
     }
 
-
+    @Bean
+    public KafkaTemplate<String , UserDto> kafkaTemplateUser(
+            ProducerFactory<String , UserDto> producerFactory){
+        return new KafkaTemplate<>(producerFactory);
+    }
 }
