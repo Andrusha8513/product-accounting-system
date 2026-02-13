@@ -5,11 +5,15 @@ import org.example.postservice.CommunityClient;
 import org.example.postservice.Model.Image;
 import org.example.postservice.Model.Post;
 import org.example.postservice.Model.UserCache;
+import org.example.postservice.dto.ActionType;
 import org.example.postservice.dto.PostDto;
+import org.example.postservice.dto.UserActivityEventDto;
+import org.example.postservice.kafka.KafkaPostProducerKonfig;
 import org.example.postservice.mapper.PostMapper;
 import org.example.postservice.repository.PostRepository;
 import org.example.postservice.repository.UserCacheRepository;
 import org.example.postservice.service.PostService;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,12 +26,15 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final UserCacheRepository userCacheRepository;
     private final CommunityClient communityClient;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     public PostServiceImpl(PostRepository postRepository, PostMapper postMapper,
-                           CommunityClient communityClient , UserCacheRepository userCacheRepository) {
+                           CommunityClient communityClient , UserCacheRepository userCacheRepository,
+                           KafkaTemplate<String, Object> kafkaTemplate) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
         this.communityClient = communityClient;
         this.userCacheRepository = userCacheRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public List<PostDto> findAllPosts() {
@@ -89,6 +96,8 @@ public class PostServiceImpl implements PostService {
             }
         }
         Post savedPost = postRepository.save(post);
+        kafkaTemplate.send("post-events", new UserActivityEventDto(savedPost.getId(),
+                savedPost.getUserId(),null, ActionType.CREATE,"POST"));
         return postMapper.toDto(savedPost);
     }
 
@@ -109,6 +118,8 @@ public class PostServiceImpl implements PostService {
         if (!isOwner && !isCommunityAdmin) {
             throw new RuntimeException("Вы не имеете право удалять пост");
         }
+        kafkaTemplate.send("post-events", new UserActivityEventDto(id , post.getUserId(),
+                null,ActionType.DELETE, "POST"));
         postRepository.deleteById(id);
     }
 
@@ -163,6 +174,8 @@ public class PostServiceImpl implements PostService {
             }
         }
         Post updatedPost = postRepository.save(post);
+        kafkaTemplate.send("post-events" , new UserActivityEventDto(updatedPost.getId() ,
+                updatedPost.getUserId(),null ,ActionType.UPDATE, "POST"));
         return postMapper.toDto(updatedPost);
     }
 }

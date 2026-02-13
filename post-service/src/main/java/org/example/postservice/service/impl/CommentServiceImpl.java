@@ -5,12 +5,15 @@ import org.example.postservice.CommunityClient;
 import org.example.postservice.Model.Comment;
 import org.example.postservice.Model.Post;
 import org.example.postservice.Model.UserCache;
+import org.example.postservice.dto.ActionType;
 import org.example.postservice.dto.CommentDto;
+import org.example.postservice.dto.UserActivityEventDto;
 import org.example.postservice.mapper.CommentMapper;
 import org.example.postservice.repository.CommentRepository;
 import org.example.postservice.repository.PostRepository;
 import org.example.postservice.repository.UserCacheRepository;
 import org.example.postservice.service.CommentService;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +25,17 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
     private final UserCacheRepository userCacheRepository;
     private final CommunityClient communityClient;
+    private final KafkaTemplate<String , Object> kafkaTemplate;
     public CommentServiceImpl(CommentRepository commentRepository,
                               PostRepository postRepository,
                               UserCacheRepository userCacheRepository, CommentMapper commentMapper ,
-                              CommunityClient communityClient) {
+                              CommunityClient communityClient ,  KafkaTemplate<String , Object> kafkaTemplate) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userCacheRepository = userCacheRepository;
         this.commentMapper = commentMapper;
         this.communityClient = communityClient;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public List<CommentDto> getAllComments(Long id) {
@@ -58,7 +63,9 @@ public class CommentServiceImpl implements CommentService {
         comment.setPost(post);
         comment.setText(text);
         comment.setUserID(userCache.getId());
-        commentRepository.save(comment);
+        comment =  commentRepository.save(comment);
+        kafkaTemplate.send("post-events", new UserActivityEventDto(comment.getId(), comment.getUserID(),
+                post.getId(), ActionType.CREATE, "COMMENT"));
         return commentMapper.toDto(comment);
     }
 
@@ -81,6 +88,8 @@ public class CommentServiceImpl implements CommentService {
         if (!isAuthor && !isCommunityModerator) {
             throw new RuntimeException("не имеете права");
         }
+        kafkaTemplate.send("post-events", new UserActivityEventDto(id, comment.getPost().getId(),
+                comment.getUserID(), ActionType.DELETE, "COMMENT"));
         commentRepository.deleteById(id);
     }
 
@@ -92,7 +101,10 @@ public class CommentServiceImpl implements CommentService {
            throw new RuntimeException("Вы не можете редактировать чужой комментарий");
         }
         comment.setText(text);
-        return commentMapper.toDto(commentRepository.save(comment));
+        Comment updatedComment = commentRepository.save(comment);
+        kafkaTemplate.send("post-events" , new UserActivityEventDto(updatedComment.getId(),
+                updatedComment.getPost().getId(), updatedComment.getUserID(),
+                ActionType.UPDATE, "COMMENT"));
+        return commentMapper.toDto(comment);
     }
-    
 }

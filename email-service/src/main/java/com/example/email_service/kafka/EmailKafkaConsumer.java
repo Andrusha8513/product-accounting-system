@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailKafkaConsumer {
     private final EmailService emailService;
-
-
-
     @KafkaListener(topics = "email",
     groupId = "email-servise")
     public void consumerEmail(EmailRequestDto emailRequestDto){
