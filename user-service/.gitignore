@@ -66,8 +66,11 @@ application-*.properties
 application-*.yml
 application-*.yaml
 
+### Gradle (если используется) ###
+.gradle/
+build/
 
-
+### Maven (уже есть, но уточним) ###
 target/
 pom.xml.tag
 pom.xml.releaseBackup
