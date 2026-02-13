@@ -14,16 +14,10 @@ import org.springframework.stereotype.Service;
 public class EmailKafkaProducer {
 
     private final KafkaTemplate<String , EmailRequestDto> kafkaTemplate;
-    private final KafkaTemplate<String, UserDto> kafkaTemplateUser;
-
 
     public void sendEmailToKafka(EmailRequestDto emailRequestDto){
         kafkaTemplate.send("email" , emailRequestDto);
         log.info("Отправил сообщение в kafka: to={}" , emailRequestDto.getTo());
     }
 
-    public void sendEmailToUser(UserDto userDto){
-        kafkaTemplateUser.send("user" , userDto);
-        log.info("Отправил сообщение в kafka: to={}" , userDto.getId());
-    }
 }
