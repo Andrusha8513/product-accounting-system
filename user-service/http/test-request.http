@@ -31,12 +31,12 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=064394
+POST http://localhost:8765/users/api/users/confirm-registration?code=3CF168
 
 ###
 
 ### 3. Повторная отправка кода подтверждения
-POST http://localhost:8765/users/api/users/resend-confirm-registration?email=4057163@mail.ru
+POST http://localhost:8765/users/api/users/resend-confirm-registration?email=9197195@mail.ru
 
 ###
 

@@ -53,9 +53,5 @@ public class KafkaProducerConfig {
         );
     }
 
-    @Bean
-    public KafkaTemplate<String , UserDto> kafkaTemplateUser(
-            ProducerFactory<String , UserDto> producerFactory){
-        return new KafkaTemplate<>(producerFactory);
-    }
+
 }

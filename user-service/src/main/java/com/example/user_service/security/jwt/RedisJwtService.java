@@ -19,7 +19,7 @@ public class RedisJwtService {
 
     private static final String CONFIRMATION_CODE_PREFIX="blk:email_code:";
 
-
+    private static final String RESET_PASSWORD_CODE = "blk:res_pass_code:";
 
 
     public void saveTokenToBlackList(String token , long ttlMillis){
@@ -64,7 +64,7 @@ public class RedisJwtService {
         redisTemplate.opsForValue().set(
                 CONFIRMATION_CODE_PREFIX + code,
                 "active",
-                1,
+                15,
                 TimeUnit.MINUTES
         );
     }
@@ -75,6 +75,23 @@ public class RedisJwtService {
 
     public void deleteConfirmationCode(String code){
         redisTemplate.delete(CONFIRMATION_CODE_PREFIX + code);
+    }
+
+    public void saveResetCode(String code){
+        redisTemplate.opsForValue().set(
+                RESET_PASSWORD_CODE + code,
+                "active",
+                15,
+                TimeUnit.MINUTES
+        );
+    }
+
+    public boolean isResetCodeAlive(String code){
+        return Boolean.TRUE.equals(redisTemplate.hasKey(RESET_PASSWORD_CODE + code));
+    }
+
+    public void deleteResetCode(String code){
+        redisTemplate.delete(RESET_PASSWORD_CODE + code);
     }
 }
 
