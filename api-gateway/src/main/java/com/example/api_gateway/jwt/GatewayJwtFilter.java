@@ -89,21 +89,5 @@ public class GatewayJwtFilter implements GlobalFilter, Ordered {
 }
 
 
-//    private void setCustomDetailsToSecurityContextHolder(String token) {
-//        String email = jwtService.getEmailFromToken(token);
-//        Set<Role> roles = jwtService.getRoleFromToken(token);
-//        CustomUserDetails customUserDerails = customUserService.loadUserByUsername(email);
-//        List<GrantedAuthority> authorities = roles.stream()
-//                .map(role -> new SimpleGrantedAuthority(role.name()))
-//                .collect(Collectors.toList());
-//
-//        //пока для тестов отключил
-////        if (!customUserDerails.isEnabled()){
-////            throw new DisabledException("Аккаунт  не активирован");
-////        }
-//
-//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(customUserDerails, null,
-//                authorities);
-//        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-//    }
+
 

@@ -317,7 +317,7 @@ Accept: application/json
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
 GET http://localhost:8765/profile/api/profile/myProfile/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzEyNDYzNjEsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.tLNBsTX61mkLaQKZl33gwMcnaTobW_jvLneRhDm6JoN_-CMc0GwaoZNNQA6-vYZp
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEyNjIzMDcsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.I2mdhOUc_UjkpX67J8SxnUJJNifOpdTOjpJ8YL85CKATgbruR-g6EyZaq0JhCIYl
 Accept: application/json
 
 ###
