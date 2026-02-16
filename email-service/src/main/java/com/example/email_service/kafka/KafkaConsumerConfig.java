@@ -29,7 +29,7 @@ public class KafkaConsumerConfig {
        properties.put(ConsumerConfig.GROUP_ID_CONFIG , "email-service");
 
         JsonDeserializer<EmailRequestDto> jsonDeserializer = new JsonDeserializer<>(EmailRequestDto.class ,objectMapper);
-        jsonDeserializer.addTrustedPackages("*");
+        jsonDeserializer.addTrustedPackages("com.example.email_service.dto");
 
 
         return  new DefaultKafkaConsumerFactory<>(

@@ -1,9 +1,8 @@
-package com.example.user_service.dto;
+package com.example.profile_service.dto;
 
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class PrivetUserProfileDto {
@@ -13,6 +12,4 @@ public class PrivetUserProfileDto {
     private String email;
     private LocalDate birthday;
     private String password;
-    private Long avatarId;
-    private List<ImageDto> images;
 }

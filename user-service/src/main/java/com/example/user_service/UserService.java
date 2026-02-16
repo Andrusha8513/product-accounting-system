@@ -6,7 +6,7 @@ import com.example.user_service.dto.mapping.UserMapperNew;
 import com.example.user_service.image.Image;
 import com.example.user_service.image.ImageRepository;
 import com.example.user_service.image.ImageService;
-import com.example.user_service.kafka.EmailKafkaProducer;
+import com.example.user_service.kafka.KafkaProducer;
 import com.example.user_service.security.jwt.JwtService;
 import com.example.user_service.security.jwt.RedisJwtService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class UserService {
     private final UserMapperNew userMapperNew;
     private final JwtService jwtService;
     private final RedisJwtService redisJwtService;
-    private final EmailKafkaProducer emailKafkaProducer;
+    private final KafkaProducer kafkaProducer;
 
 
     public UserDto getUserBySecondName(String secondName) {
@@ -77,7 +77,22 @@ public class UserService {
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
         emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
-        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
+        kafkaProducer.sendEmailToKafka(emailRequestDto);
+
+        UserDto userToPost = new UserDto();
+        userToPost.setId(users.getId());
+        userToPost.setSecondName(userDto.getSecondName());
+        userToPost.setEmail(userDto.getEmail());
+        kafkaProducer.sendUserToKafka(userToPost);
+
+        TestProfileDto profileDto = new TestProfileDto();
+        profileDto.setId(users.getId());
+        profileDto.setName(userDto.getName());
+        profileDto.setSecondName(userDto.getSecondName());
+        profileDto.setEmail(users.getEmail());
+        profileDto.setPassword(users.getPassword());
+        profileDto.setBirthday(userDto.getBirthDay());
+        kafkaProducer.sendPrivetProfileToKafka(profileDto);
     }
 
     @Transactional
@@ -88,6 +103,7 @@ public class UserService {
             Users users = usersOptional.get();
             users.setEnable(true);
             users.setAccountNonLocked(true);
+            users.setConfirmationCode(null);
             userRepository.save(users);
             redisJwtService.deleteConfirmationCode(code);
             return true;
@@ -200,7 +216,7 @@ public class UserService {
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
         emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
-        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
+        kafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -222,7 +238,7 @@ public class UserService {
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getPasswordResetCode());
         emailRequestDto.setType(EmailRequestDto.EmailType.PASSWORD_RESET);
-        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
+        kafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -263,7 +279,7 @@ public class UserService {
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
         emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
-        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
+        kafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -283,7 +299,7 @@ public class UserService {
         emailRequestDto.setTo(users.getEmail());
         emailRequestDto.setCode(users.getConfirmationCode());
         emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
-        emailKafkaProducer.sendEmailToKafka(emailRequestDto);
+        kafkaProducer.sendEmailToKafka(emailRequestDto);
     }
 
     @Transactional
@@ -455,7 +471,13 @@ public class UserService {
 
         users.setName(newName);
         userRepository.save(users);
+
+        TestProfileDto profileDto  = userMapper.toTestProfileDto(users);
+        kafkaProducer.sendPrivetProfileToKafka(profileDto);
+
+        kafkaProducer.sendPrivetProfileToKafka(profileDto);
     }
+
 
     @Transactional
     public void updateSecondName(Long id, String newSecondName) {
@@ -464,6 +486,12 @@ public class UserService {
 
         users.setSecondName(newSecondName);
         userRepository.save(users);
+
+        TestProfileDto profileDto  = userMapper.toTestProfileDto(users);
+        kafkaProducer.sendPrivetProfileToKafka(profileDto);
+
+        UserDto userDto = userMapperNew.toDto(users);
+        kafkaProducer.sendUserToKafka(userDto);
     }
 
 }

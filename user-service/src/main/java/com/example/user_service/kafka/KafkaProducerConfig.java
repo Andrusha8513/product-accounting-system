@@ -3,6 +3,8 @@ package com.example.user_service.kafka;
 
 
 import com.example.user_service.dto.EmailRequestDto;
+import com.example.user_service.dto.PrivetUserProfileDto;
+import com.example.user_service.dto.TestProfileDto;
 import com.example.user_service.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Value;
@@ -43,8 +45,6 @@ public class KafkaProducerConfig {
     public ProducerFactory<String , UserDto> userProducerFactory(ObjectMapper objectMapper){
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         JsonSerializer<UserDto> serializer = new JsonSerializer<>(objectMapper);
         serializer.setAddTypeInfo(false);
         return new DefaultKafkaProducerFactory<>(
@@ -59,4 +59,29 @@ public class KafkaProducerConfig {
             ProducerFactory<String , UserDto> producerFactory){
         return new KafkaTemplate<>(producerFactory);
     }
+
+
+
+
+    @Bean
+    public ProducerFactory<String , TestProfileDto> profileDtoProducerFactory(ObjectMapper objectMapper){
+        Map<String , Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG , "localhost:9092");
+        JsonSerializer<TestProfileDto> serializer = new JsonSerializer<>(objectMapper);
+        serializer.setAddTypeInfo(false);
+
+        return new DefaultKafkaProducerFactory<>(
+                config ,
+                new StringSerializer(),
+                serializer
+        );
+    }
+
+
+    @Bean
+    public KafkaTemplate<String , TestProfileDto> kafkaTemplateProfile(
+            ProducerFactory<String , TestProfileDto> producerFactory){
+                return new KafkaTemplate<>(producerFactory);
+    }
+
 }

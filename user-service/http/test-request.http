@@ -22,7 +22,7 @@ Content-Type: application/json
   "name": "Ара",
   "secondName": "Бибизяна",
   "password": "11111111",
-  "email": "9197195@mail.ru",
+  "email": "4057163@mail.ru",
   "birthDay": "1995-05-15"
 }
 
@@ -31,7 +31,7 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=3CF168
+POST http://localhost:8765/users/api/users/confirm-registration?code=EE7279
 
 ###
 
@@ -316,8 +316,8 @@ Accept: application/json
 
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
-GET http://localhost:8765/profile/api/profile/my-profile/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA3NDE3MjIsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.r3HVmsO5zs95s3mKv7f9rm0Eq7mjhl9lGfHPtt2glFX85h3Q7dpTQQt5mrKhaXBk
+GET http://localhost:8765/profile/api/profile/myProfile/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzEyNDYzNjEsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.tLNBsTX61mkLaQKZl33gwMcnaTobW_jvLneRhDm6JoN_-CMc0GwaoZNNQA6-vYZp
 Accept: application/json
 
 ###
@@ -343,8 +343,8 @@ Content-Type: image/jpeg
 
 ###
 ### 1. Обновление имени пользователя (требует аутентификации и соответствия ID)
-PUT http://localhost:8765/users/api/users/updateName/2
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3Njk5MDkyMjIsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.pjoActLHpQM0XFvIIiiyJgdQGKFVNproCdiUnrDbKlyJAlf87QMWxqr-HV4MqXs6
+PUT http://localhost:8765/users/api/users/updateName/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEyNDcyODEsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.i2HXI-Fqp-venzicVn0Lj7VzIs7N1ndSjevlaQcjXu4YxCorvqnu2CvtFxpaXdz7
 Content-Type: application/x-www-form-urlencoded
 
 newName=Егор
@@ -353,7 +353,7 @@ newName=Егор
 
 ### 2. Обновление фамилии пользователя
 PUT http://localhost:8765/users/api/users/updateSecondName/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3Njk5MDkwNjcsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.ZfrEVoMDZRmX-ZuQr4B7LDhdIEum6di1xpSRExbCju47TH8H-3qcnqwXx7zbPCm3
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEyNDgzMTAsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.zup8zo2Pimv44Qd7zUkRnz0ZI2pyRR_d_aS3wt35iaT6sN5SZYSkTbkG4N5EEMtG
 Content-Type: application/x-www-form-urlencoded
 
 newSecondName=Сервик

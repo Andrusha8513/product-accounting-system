@@ -14,6 +14,8 @@ public class UserCache {
     @Id
     private Long id;
     @Column(unique = true)
+
+    private Long userId;
     private String email;
     private String secondName;
 }

@@ -77,4 +77,15 @@ public class UserMapper {
         dto.setImages(imageDtos);
         return dto;
     }
+
+    public TestProfileDto toTestProfileDto(Users users){
+        TestProfileDto dto = new TestProfileDto();
+        dto.setId(users.getId());
+        dto.setName(users.getName());
+        dto.setSecondName(users.getSecondName());
+        dto.setEmail(users.getEmail());
+        dto.setBirthday(users.getBirthDay());
+        dto.setPassword(users.getPassword());
+        return dto;
+    }
 }

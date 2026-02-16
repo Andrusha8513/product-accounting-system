@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.postservice.Model.UserCache;
 import org.example.postservice.dto.UserDto;
 import org.example.postservice.repository.UserCacheRepository;
-import org.example.postservice.service.PostService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,10 @@ public class PostKafkaConsumer {
                 groupId = "post-service")
         public void consumerEmail(UserDto userDto) {
             log.info("Пришел юзер {}" ,userDto.getEmail());
-            UserCache userCache = new UserCache();
+            UserCache userCache = userCacheRepository.findByUserId(userDto.getId())
+                            .orElse(new UserCache());
+
+            userCache.setUserId(userDto.getId());
             userCache.setEmail(userDto.getEmail());
             userCache.setId(userDto.getId());
             userCache.setEmail(userDto.getEmail());

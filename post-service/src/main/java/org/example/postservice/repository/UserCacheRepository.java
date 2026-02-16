@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserCacheRepository extends JpaRepository<UserCache,Long> {
     Optional<UserCache> findByEmail(String email);
+    Optional<UserCache> findByUserId(Long userId);;
 }
