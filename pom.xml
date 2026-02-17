@@ -17,6 +17,7 @@
         <module>message-service</module>
         <module>profile-service</module>
         <module>channel-service</module>
+        <module>support-module</module>
     </modules>
 
     <properties>

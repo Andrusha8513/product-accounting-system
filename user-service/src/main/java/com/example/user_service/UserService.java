@@ -494,4 +494,5 @@ public class UserService {
         kafkaProducer.sendUserToKafka(userDto);
     }
 
+
 }

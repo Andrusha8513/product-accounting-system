@@ -56,9 +56,9 @@ public class JwtFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("Authentication set for user: {}", tokenData.getEmail());
+            log.info("Для пользователя установлена аутентификация: {}", tokenData.getEmail());
         } else {
-            log.info("No valid token, continuing as anonymous");
+            log.info("Нет действительного токена, продолжаем работу в анонимном режиме.");
         }
         filterChain.doFilter(request, response);
     }

@@ -15,6 +15,7 @@
         <option value="$PROJECT_DIR$/message-service/pom.xml" />
         <option value="$PROJECT_DIR$/../profile-service/pom.xml" />
         <option value="$PROJECT_DIR$/../channel-service/pom.xml" />
+        <option value="$PROJECT_DIR$/../support-module/pom.xml" />
       </list>
     </option>
   </component>

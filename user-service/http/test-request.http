@@ -31,7 +31,7 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=EE7279
+POST http://localhost:8765/users/api/users/confirm-registration?code=A6F2C2
 
 ###
 
@@ -122,7 +122,7 @@ Authorization: Basic 4057163@mail.ru 11111111
 ###
 
 ### 13. Обновление ролей (для админа)
-PUT http://localhost:8765/users/api/users/update-roles/1
+PUT http://localhost:8765/users/api/users/update-roles/3
 Authorization: Basic 4057163@mail.ru 11111111
 Content-Type: application/json
 
@@ -205,8 +205,8 @@ POST http://localhost:8765/users/auth/sing-in
 Content-Type: application/json
 
 {
-  "email": "9197195@mail.ru",
-  "password": "11111111"
+  "email": "pavelsevruk5@gmail.com",
+  "password": "Fuckman5"
 }
 
 > {%
@@ -235,11 +235,11 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJle
 ###
 
 ### 33. Обновление ролей пользователя на ADMIN (через JWT)
-PUT http://localhost:8765/users/api/users/update-roles/1
-Authorization: Bearer "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA0NjAxNjAsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.bHHQmKK9WusD_sPLkjGSLYeqVZrL_vl2N1YxMCSmpButwaDcuzbliR8f3jtV7mIZ
+PUT http://localhost:8765/users/api/users/update-roles/3
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzNjc4MjgsInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.9M3BTJ9Kbfr8OT82Ut3qcsiQlakv4KfZSeNiu23Nl9f64p7oouradhIqK1Ahvne5
 Content-Type: application/json
 
-["ROLE_USER"]
+["ROLE_ADMIN"]
 
 ###
 
@@ -278,8 +278,8 @@ POST http://localhost:8765/users/auth/sign-in
 Content-Type: application/json
 
 {
-  "email": "4057163@mail.ru",
-  "password": "11111111"
+  "email": "pavelsevruk10@mail.ru",
+  "password": "Fuckman5"
 }
 
 ###
@@ -290,12 +290,12 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJle
 Content-Type: application/json
 ###
 
-PUT http://localhost:8765/users/api/users/changeAccountStatus/1?newAccountStatus=false
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA0NTkyNzYsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.N3toa9UmcvPGwCJsf9AFOkRpEnQKHDvRjKZVuieQG63FrmJ2PLNqIdGDxwS84FWu
+PUT http://localhost:8765/users/api/users/changeAccountStatus/2?newAccountStatus=false
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzNjc4MjgsInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.9M3BTJ9Kbfr8OT82Ut3qcsiQlakv4KfZSeNiu23Nl9f64p7oouradhIqK1Ahvne5
 
 ###
 PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=true
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA3NDE1NDAsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.xS8SOLcmaxQ8Bf3r6Cxm5C1VWHTHmqU_yCR1nR0PXD8xwgNHk2YqXlVBYNQOC_Jk
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzNjc5MTIsInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.D28wxZ-22cgHzhlOEbgpEtJEK96Ml_nwOcxOLu4D1ifBOfrERH1-3r2UmK-gE9zj
 ###
 
 POST http://localhost:8765/posts/api/post/createpost
@@ -316,8 +316,8 @@ Accept: application/json
 
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
-GET http://localhost:8765/profile/api/profile/myProfile/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEyNjIzMDcsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.I2mdhOUc_UjkpX67J8SxnUJJNifOpdTOjpJ8YL85CKATgbruR-g6EyZaq0JhCIYl
+GET http://localhost:8765/profile/api/profile/myProfile/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwYXZlbHNldnJ1azEwQG1haWwucnUiLCJleHAiOjE3NzEzNjkyNTQsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.CrPLyENfWqtw3TOGgaX2Pe2wXHbJ8PbKA564Jgb3dk4auMR3Iu9oCzOWaWeptlzg
 Accept: application/json
 
 ###
