@@ -1,5 +1,6 @@
 package com.example.user_service;
 
+import com.example.support_module.jwt.Role;
 import com.example.user_service.image.Image;
 //import com.example.user_service.security.jwt.JwtToken;
 import jakarta.persistence.*;

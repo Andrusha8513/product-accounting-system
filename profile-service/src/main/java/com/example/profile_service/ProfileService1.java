@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class ProfileService1 {
     private final ProfileRepository profileRepository;
 
-    public Profile getProfile(Long id){
-        return profileRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Профиль не найден с таким id:)" + id + "не найден"));
+    public Profile getProfile(String email){
+        return profileRepository.findByEmail((email))
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден. "));
     }
 }

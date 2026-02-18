@@ -1,4 +1,4 @@
-package com.example.profile_service.security;
+package com.example.support_module.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

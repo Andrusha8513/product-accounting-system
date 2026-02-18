@@ -1,6 +1,7 @@
 package com.example.user_service.controller;
 
-import com.example.user_service.Role;
+
+import com.example.support_module.jwt.Role;
 import com.example.user_service.UserRepository;
 import com.example.user_service.UserService;
 import com.example.user_service.dto.PrivetUserProfileDto;
@@ -122,7 +123,7 @@ public class UserController {
     }
 
     @PostMapping("/send-email-reset-code")
-    @PreAuthorize("@securityService.isOwner(#email) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwnerForEmail(#email) or hasAuthority('ROLE_ADMIN')")
     // не тестил как работает защита , но по идее должна работать
     public ResponseEntity<String> sendEmailResetCode(@RequestParam String email,
                                                      @RequestParam String newEmail) {
@@ -146,7 +147,7 @@ public class UserController {
 
 
     @PutMapping("/update-user-password/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> updateUserPassword(@PathVariable Long id,
                                                      @RequestParam String newPassword,
                                                      @RequestParam String currenPassword) {
@@ -159,7 +160,7 @@ public class UserController {
     }
 
     @PostMapping("/confirm-email-change/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> confirmEmailChange(@PathVariable Long id,
                                                      @RequestParam String code) {
         try {
@@ -172,7 +173,7 @@ public class UserController {
 
 
     @PostMapping("/addAvatar/{id}/newAvatar")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> addAvatar(@PathVariable Long id,
                                             @RequestPart("file") MultipartFile file) {
         try {
@@ -184,7 +185,7 @@ public class UserController {
     }
 
     @PostMapping("/addPhotos/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> addPhotos(@PathVariable Long id,
                                             @RequestPart("files") List<MultipartFile> files) {
         try {
@@ -196,7 +197,7 @@ public class UserController {
     }
 
     @PutMapping("/updateAvatar/{id}/{newAvatar}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> updateAvatar(@PathVariable Long id,
                                                @PathVariable Long newAvatar) {
         try {
@@ -220,7 +221,7 @@ public class UserController {
     }
 
     @PutMapping("/update-roles/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')") //  ПОКА ДЛЯ ТЕСТОВ OR
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')") //  ПОКА ДЛЯ ТЕСТОВ OR
     public ResponseEntity<String> updateRoles(@PathVariable Long id,
                                               @RequestBody Set<Role> newRole) {
         try {
@@ -232,14 +233,14 @@ public class UserController {
     }
 
     @GetMapping("/get-all-users")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserRegistrationDTO>> getAllUsers() {
         List<UserRegistrationDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
     @PutMapping("/changeAccountStatus/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> changeAccountStatus(@PathVariable Long id,
                                                       @RequestParam boolean newAccountStatus) {
         try {
@@ -269,7 +270,7 @@ public class UserController {
     }
 
     @PutMapping("/updateName/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> updateName(@PathVariable Long id,
                                              @RequestParam String newName) {
         try {
@@ -281,7 +282,7 @@ public class UserController {
     }
 
     @PutMapping("/updateSecondName/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ADMIN')")
+    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> updateSecondName(@PathVariable Long id,
                                                    @RequestParam String newSecondName) {
         try {

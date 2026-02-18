@@ -1,6 +1,6 @@
 package com.example.user_service.security;
 
-import com.example.user_service.security.jwt.JwtFilter;
+import com.example.user_service.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

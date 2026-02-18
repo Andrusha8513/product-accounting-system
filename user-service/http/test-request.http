@@ -235,11 +235,11 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJle
 ###
 
 ### 33. Обновление ролей пользователя на ADMIN (через JWT)
-PUT http://localhost:8765/users/api/users/update-roles/3
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzNjc4MjgsInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.9M3BTJ9Kbfr8OT82Ut3qcsiQlakv4KfZSeNiu23Nl9f64p7oouradhIqK1Ahvne5
+PUT http://localhost:8765/users/api/users/update-roles/1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwYXZlbHNldnJ1azEwQG1haWwucnUiLCJleHAiOjE3NzEzNzk5MjMsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.apCTTBsnKRoUKJ1J6vrkrObtm7Mlu5ItYyboZk3MR0TAu7kuWDDeZolUQvJuxpk_
 Content-Type: application/json
 
-["ROLE_ADMIN"]
+["ROLE_USER"]
 
 ###
 
@@ -283,19 +283,24 @@ Content-Type: application/json
 }
 
 ###
+#{
+#  "email": "4057163@mail.ru",
+#  "password": "11111111"
+#}
 ###Выход из аккаунта
 ###
 POST http://localhost:8765/users/auth/logout
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzA3NDE3MjIsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.r3HVmsO5zs95s3mKv7f9rm0Eq7mjhl9lGfHPtt2glFX85h3Q7dpTQQt5mrKhaXBk
 Content-Type: application/json
 ###
-
+###Декативация аккаунта
 PUT http://localhost:8765/users/api/users/changeAccountStatus/2?newAccountStatus=false
 Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzNjc4MjgsInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.9M3BTJ9Kbfr8OT82Ut3qcsiQlakv4KfZSeNiu23Nl9f64p7oouradhIqK1Ahvne5
 
 ###
+###Бан аккаунта
 PUT http://localhost:8765/users/api/users/accountBlocking/1?newAccountStatus=true
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzNjc5MTIsInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.D28wxZ-22cgHzhlOEbgpEtJEK96Ml_nwOcxOLu4D1ifBOfrERH1-3r2UmK-gE9zj
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzNzkwOTksInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.NpjvxP9Z9X7CIaWLlzv5GnQPX7UAU-REeXn9Yea-ApH3xgOuQRKKETIMr9VSDh4H
 ###
 
 POST http://localhost:8765/posts/api/post/createpost
@@ -316,8 +321,8 @@ Accept: application/json
 
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
-GET http://localhost:8765/profile/api/profile/myProfile/2
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwYXZlbHNldnJ1azEwQG1haWwucnUiLCJleHAiOjE3NzEzNjkyNTQsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.CrPLyENfWqtw3TOGgaX2Pe2wXHbJ8PbKA564Jgb3dk4auMR3Iu9oCzOWaWeptlzg
+GET http://localhost:8765/profile/api/profile/myProfile/?email=pavelsevruk10@mail.ru
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEzODM0NDAsInVzZXJJZCI6Mywicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.obWqRJqwjbRk-cQsquBE4JqNw_vuJOU4f651XGcImvKoUp18NcXoibykoF9dTWHW
 Accept: application/json
 
 ###
@@ -352,10 +357,10 @@ newName=Егор
 ###
 
 ### 2. Обновление фамилии пользователя
-PUT http://localhost:8765/users/api/users/updateSecondName/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzEyNDgzMTAsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.zup8zo2Pimv44Qd7zUkRnz0ZI2pyRR_d_aS3wt35iaT6sN5SZYSkTbkG4N5EEMtG
+PUT http://localhost:8765/users/api/users/updateSecondName/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJwYXZlbHNldnJ1azEwQG1haWwucnUiLCJleHAiOjE3NzEzODA3MzgsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.TtQQhJUVIUtddXsxk6KuIVtnIt1pN5NYelYKy7M4ZBFNKXm4ziA3yQV4iDcP0eH8
 Content-Type: application/x-www-form-urlencoded
 
-newSecondName=Сервик
+newSecondName=hjklf;d'sa
 
 ###

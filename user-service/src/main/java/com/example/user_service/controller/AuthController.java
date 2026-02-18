@@ -1,8 +1,9 @@
 package com.example.user_service.controller;
 
+import com.example.support_module.jwt.JwtAuthenticationDto;
+import com.example.support_module.jwt.RefreshTokenDto;
 import com.example.user_service.UserService;
-import com.example.user_service.dto.JwtAuthenticationDto;
-import com.example.user_service.dto.RefreshTokenDto;
+
 import com.example.user_service.dto.UserCredentialsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,9 @@
 package com.example.api_gateway.jwt;
 
-import com.example.api_gateway.redis.RedisJwtService;
+
+import com.example.support_module.jwt.JwtService;
+import com.example.support_module.jwt.TokenData;
+import com.example.support_module.redis.RedisJwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +79,7 @@ public class GatewayJwtFilter implements GlobalFilter, Ordered {
             DataBuffer buffer = response.bufferFactory().wrap(bytes);
             return response.writeWith(Mono.just(buffer));
         } catch (JsonProcessingException e) {
-            log.error("Error writing JSON response", e);
+            log.error("Ошибка при записи JSON-ответа. ", e);
             return response.setComplete();
         }
 

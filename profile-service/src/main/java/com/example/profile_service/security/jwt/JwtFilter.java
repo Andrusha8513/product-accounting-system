@@ -1,7 +1,10 @@
 package com.example.profile_service.security.jwt;
 
 
-import com.example.profile_service.security.CustomUserDetails;
+//import com.example.profile_service.security.CustomUserDetails;
+import com.example.support_module.jwt.JwtService;
+import com.example.support_module.jwt.TokenData;
+import com.example.support_module.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,5 @@
 package com.example.user_service.dto;
 
-import com.example.user_service.Role;
 import lombok.Data;
 
 import java.time.LocalDate;

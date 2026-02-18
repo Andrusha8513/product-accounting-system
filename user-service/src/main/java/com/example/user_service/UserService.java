@@ -1,5 +1,10 @@
 package com.example.user_service;
 
+import com.example.support_module.jwt.JwtAuthenticationDto;
+import com.example.support_module.jwt.JwtService;
+import com.example.support_module.jwt.RefreshTokenDto;
+import com.example.support_module.jwt.Role;
+import com.example.support_module.redis.RedisJwtService;
 import com.example.user_service.dto.*;
 import com.example.user_service.dto.mapping.UserMapper;
 import com.example.user_service.dto.mapping.UserMapperNew;
@@ -7,15 +12,12 @@ import com.example.user_service.image.Image;
 import com.example.user_service.image.ImageRepository;
 import com.example.user_service.image.ImageService;
 import com.example.user_service.kafka.KafkaProducer;
-import com.example.user_service.security.jwt.JwtService;
-import com.example.user_service.security.jwt.RedisJwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.time.LocalDateTime;

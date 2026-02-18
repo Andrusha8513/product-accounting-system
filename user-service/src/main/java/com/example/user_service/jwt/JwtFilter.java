@@ -1,7 +1,10 @@
-package com.example.user_service.security.jwt;
+package com.example.user_service.jwt;
 
 
-import com.example.user_service.security.CustomUserDetails;
+import com.example.support_module.security.CustomUserDetails;
+import com.example.support_module.jwt.JwtService;
+import com.example.support_module.jwt.TokenData;
+//import com.example.user_service.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +31,7 @@ import java.util.stream.Collectors;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final RedisJwtService redisJwtService;
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
