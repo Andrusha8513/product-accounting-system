@@ -4,12 +4,12 @@ package com.example.user_service.jwt;
 import com.example.support_module.security.CustomUserDetails;
 import com.example.support_module.jwt.JwtService;
 import com.example.support_module.jwt.TokenData;
-//import com.example.user_service.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -40,6 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = getTokenFromRequest(request);
 
         if (token != null && jwtService.validateJwtToken(token)) {
+            log.info("Token получен: {}", token);
             jwtService.refreshRefreshToken(token);
 
           TokenData tokenData =  jwtService.extractTokenData(token);

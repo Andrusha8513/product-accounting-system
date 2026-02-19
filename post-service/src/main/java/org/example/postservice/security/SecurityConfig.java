@@ -43,7 +43,7 @@ public class SecurityConfig {
                         //Маршруты для которых нужен токен(ПОДКОММЕНТАРИИ)
                         .requestMatchers("/api/subcomment/**").authenticated()
 
-
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 //Берем JWT фильтр

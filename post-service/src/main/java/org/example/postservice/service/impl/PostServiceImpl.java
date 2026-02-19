@@ -7,8 +7,7 @@ import org.example.postservice.Model.Post;
 import org.example.postservice.Model.UserCache;
 import org.example.postservice.dto.ActionType;
 import org.example.postservice.dto.PostDto;
-import org.example.postservice.dto.UserActivityEventDto;
-import org.example.postservice.kafka.KafkaPostProducerKonfig;
+//import org.example.postservice.dto.UserActivityEventDto;
 import org.example.postservice.mapper.PostMapper;
 import org.example.postservice.repository.PostRepository;
 import org.example.postservice.repository.UserCacheRepository;
@@ -96,8 +95,8 @@ public class PostServiceImpl implements PostService {
             }
         }
         Post savedPost = postRepository.save(post);
-        kafkaTemplate.send("post-events", new UserActivityEventDto(savedPost.getId(),
-                savedPost.getUserId(),null, ActionType.CREATE,"POST"));
+//        kafkaTemplate.send("post-events", new UserActivityEventDto(savedPost.getId(),
+//                savedPost.getUserId(),null, ActionType.CREATE,"POST"));
         return postMapper.toDto(savedPost);
     }
 
@@ -118,8 +117,8 @@ public class PostServiceImpl implements PostService {
         if (!isOwner && !isCommunityAdmin) {
             throw new RuntimeException("Вы не имеете право удалять пост");
         }
-        kafkaTemplate.send("post-events", new UserActivityEventDto(id , post.getUserId(),
-                null,ActionType.DELETE, "POST"));
+//        kafkaTemplate.send("post-events", new UserActivityEventDto(id , post.getUserId(),
+//                null,ActionType.DELETE, "POST"));
         postRepository.deleteById(id);
     }
 
@@ -174,8 +173,8 @@ public class PostServiceImpl implements PostService {
             }
         }
         Post updatedPost = postRepository.save(post);
-        kafkaTemplate.send("post-events" , new UserActivityEventDto(updatedPost.getId() ,
-                updatedPost.getUserId(),null ,ActionType.UPDATE, "POST"));
+//        kafkaTemplate.send("post-events" , new UserActivityEventDto(updatedPost.getId() ,
+//                updatedPost.getUserId(),null ,ActionType.UPDATE, "POST"));
         return postMapper.toDto(updatedPost);
     }
 }

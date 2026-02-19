@@ -7,7 +7,7 @@ import org.example.postservice.Model.Post;
 import org.example.postservice.Model.UserCache;
 import org.example.postservice.dto.ActionType;
 import org.example.postservice.dto.CommentDto;
-import org.example.postservice.dto.UserActivityEventDto;
+//import org.example.postservice.dto.UserActivityEventDto;
 import org.example.postservice.mapper.CommentMapper;
 import org.example.postservice.repository.CommentRepository;
 import org.example.postservice.repository.PostRepository;
@@ -64,8 +64,8 @@ public class CommentServiceImpl implements CommentService {
         comment.setText(text);
         comment.setUserID(userCache.getId());
         comment =  commentRepository.save(comment);
-        kafkaTemplate.send("post-events", new UserActivityEventDto(comment.getId(), comment.getUserID(),
-                post.getId(), ActionType.CREATE, "COMMENT"));
+//        kafkaTemplate.send("post-events", new UserActivityEventDto(comment.getId(), comment.getUserID(),
+//                post.getId(), ActionType.CREATE, "COMMENT"));
         return commentMapper.toDto(comment);
     }
 
@@ -88,8 +88,8 @@ public class CommentServiceImpl implements CommentService {
         if (!isAuthor && !isCommunityModerator) {
             throw new RuntimeException("не имеете права");
         }
-        kafkaTemplate.send("post-events", new UserActivityEventDto(id, comment.getPost().getId(),
-                comment.getUserID(), ActionType.DELETE, "COMMENT"));
+//        kafkaTemplate.send("post-events", new UserActivityEventDto(id, comment.getPost().getId(),
+//                comment.getUserID(), ActionType.DELETE, "COMMENT"));
         commentRepository.deleteById(id);
     }
 
@@ -102,9 +102,9 @@ public class CommentServiceImpl implements CommentService {
         }
         comment.setText(text);
         Comment updatedComment = commentRepository.save(comment);
-        kafkaTemplate.send("post-events" , new UserActivityEventDto(updatedComment.getId(),
-                updatedComment.getPost().getId(), updatedComment.getUserID(),
-                ActionType.UPDATE, "COMMENT"));
+//        kafkaTemplate.send("post-events" , new UserActivityEventDto(updatedComment.getId(),
+//                updatedComment.getPost().getId(), updatedComment.getUserID(),
+//                ActionType.UPDATE, "COMMENT"));
         return commentMapper.toDto(comment);
     }
 }

@@ -9,7 +9,7 @@ import org.example.postservice.Model.SubComment;
 import org.example.postservice.Model.UserCache;
 import org.example.postservice.dto.ActionType;
 import org.example.postservice.dto.SubCommentDto;
-import org.example.postservice.dto.UserActivityEventDto;
+//import org.example.postservice.dto.UserActivityEventDto;
 import org.example.postservice.mapper.SubCommentMapper;
 import org.example.postservice.repository.CommentRepository;
 import org.example.postservice.repository.SubCommentRepository;
@@ -62,8 +62,8 @@ public class SubCommentsServiceImpl implements SubCommentsService {
         subComment.setUserId(userCache.getId());
         subComment.setText(text);
         SubComment saveSubComment = subCommentRepository.save(subComment);
-        kafkaTemplate.send("post-events", new UserActivityEventDto(subComment.getId(),
-                subComment.getUserId(),comment.getId() ,ActionType.CREATE , "SUBCOMMENT"));
+//        kafkaTemplate.send("post-events", new UserActivityEventDto(subComment.getId(),
+//                subComment.getUserId(),comment.getId() ,ActionType.CREATE , "SUBCOMMENT"));
         return subCommentMapper.toDto(saveSubComment);
     }
 
@@ -83,9 +83,9 @@ public class SubCommentsServiceImpl implements SubCommentsService {
         if (!isAuthor && !isModerator) {
             throw new RuntimeException("Вы не можете удалить ответ на комментарий");
         }
-        kafkaTemplate.send("post-events", new UserActivityEventDto(id, subComment.getUserId(),
-                subComment.getComment().getId(),
-                ActionType.DELETE, "SUBCOMMENT"));
+//        kafkaTemplate.send("post-events", new UserActivityEventDto(id, subComment.getUserId(),
+//                subComment.getComment().getId(),
+//                ActionType.DELETE, "SUBCOMMENT"));
         subCommentRepository.deleteById(id);
     }
 
@@ -98,8 +98,8 @@ public class SubCommentsServiceImpl implements SubCommentsService {
         }
         subComment.setText(text);
         SubComment updateSubComment = subCommentRepository.save(subComment);
-        kafkaTemplate.send("post-events", new UserActivityEventDto(subComment.getId(),
-                subComment.getUserId(),subComment.getComment().getId() ,ActionType.UPDATE , "SUBCOMMENT"));
+//        kafkaTemplate.send("post-events", new UserActivityEventDto(subComment.getId(),
+//                subComment.getUserId(),subComment.getComment().getId() ,ActionType.UPDATE , "SUBCOMMENT"));
         return subCommentMapper.toDto(updateSubComment);
     }
 }

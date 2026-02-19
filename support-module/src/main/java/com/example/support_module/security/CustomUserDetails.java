@@ -22,9 +22,4 @@ public class CustomUserDetails extends User {
     }
 
 
-
-    public CustomUserDetails(Long id , String username){
-        super(username  ,  "", Collections.emptyList());
-        this.id = id;
-    }
 }

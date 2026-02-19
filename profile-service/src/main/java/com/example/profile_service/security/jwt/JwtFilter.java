@@ -1,7 +1,5 @@
 package com.example.profile_service.security.jwt;
 
-
-//import com.example.profile_service.security.CustomUserDetails;
 import com.example.support_module.jwt.JwtService;
 import com.example.support_module.jwt.TokenData;
 import com.example.support_module.security.CustomUserDetails;
@@ -41,7 +39,6 @@ public class JwtFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
 
-
         if (token != null && jwtService.validateJwtToken(token)) {
             log.info("Token получен: {}", token);
             TokenData tokenData = jwtService.extractTokenData(token);
@@ -49,19 +46,18 @@ public class JwtFilter extends OncePerRequestFilter {
                     .map(role -> new SimpleGrantedAuthority(role.name()))
                     .collect(Collectors.toList());
 
-            CustomUserDetails userDetails = new CustomUserDetails(
+
+            UserDetails userDetails = new CustomUserDetails(
                     tokenData.getId(),
                     tokenData.getEmail(),
                     "",
                     authorities
             );
 
-            UsernamePasswordAuthenticationToken authentication =
+            Authentication authentication =
                     new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("Для пользователя установлена аутентификация: {}", tokenData.getEmail());
-        } else {
-            log.info("Нет действительного токена, продолжаем работу в анонимном режиме.");
         }
         filterChain.doFilter(request, response);
     }
