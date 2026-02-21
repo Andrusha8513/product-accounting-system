@@ -1,0 +1,150 @@
+### 1. Аутентификация и управление токенами
+
+### 1.1 Вход в систему (получение JWT)
+POST http://localhost:8765/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "9197195@mail.ru",
+  "password": "11111111"
+}
+
+> {% client.global.set("token", response.body.accessToken);
+    client.global.set("refreshToken", response.body.refreshToken);
+%}
+
+### 1.2 Обновление access token
+POST http://localhost:8765/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 1.3 Выход (инвалидация текущего access token)
+POST http://localhost:8765/auth/logout
+Authorization: Bearer {{token}}
+
+### 1.4 Полный выход со всех устройств (инвалидация всех refresh токенов пользователя)
+POST http://localhost:8765/auth/fullLogout/1
+Authorization: Bearer {{token}}
+
+### 2. Пользователи (UserController)
+
+### 2.1 Получить пользователя по фамилии (для внутренних сервисов)
+GET http://localhost:8765/api/users/secondName?secondName=Иванов
+
+### 2.2 Получить пользователя по ID (некорректное использование @RequestParam, но по коду)
+GET http://localhost:8765/api/users/1?id=1
+
+### 2.3 Получить пользователя по email
+GET http://localhost:8765/api/users/email?email=user@example.com
+
+### 2.4 Регистрация нового пользователя
+POST http://localhost:8765/api/users/registration
+Content-Type: application/json
+
+{
+  "name": "Пупсик",
+  "secondName": "Пиздос",
+  "password": "11111111",
+  "email": "9197195@mail.ru",
+  "birthDay": "1995-05-15"
+}
+
+### 2.5 Подтверждение регистрации по коду
+POST http://localhost:8765/api/users/confirm-registration?code=123456
+
+### 2.6 Повторная отправка кода подтверждения
+POST http://localhost:8765/api/users/resend-confirm-registration?email=newuser@example.com
+
+### 2.7 Отправка кода для сброса пароля
+POST http://localhost:8765/api/users/send-password-resetCode?email=user@example.com
+
+### 2.8 Сброс пароля с использованием кода
+POST http://localhost:8765/api/users/reset-password-with-code?email=user@example.com&code=123456&newPassword=newPass123
+
+### 2.9 Отправка кода для смены email (требуется авторизация)
+POST http://localhost:8765/api/users/send-email-reset-code?email=current@example.com&newEmail=new@example.com
+Authorization: Bearer {{token}}
+
+### 2.10 Повторная отправка кода для смены email (по ожидающему email)
+POST http://localhost:8765/api/users/resend-email-resetCode?pendingEmail=new@example.com
+
+### 2.11 Обновление пароля (требуется авторизация)
+PUT http://localhost:8765/api/users/update-user-password/1?newPassword=newPass&currenPassword=oldPass
+Authorization: Bearer {{token}}
+
+### 2.12 Подтверждение смены email по коду (требуется авторизация)
+POST http://localhost:8765/api/users/confirm-email-change/1?code=123456
+Authorization: Bearer {{token}}
+
+### 2.13 Обновление ролей пользователя (требуется авторизация)
+PUT http://localhost:8765/api/users/update-roles/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+["ROLE_ADMIN"]
+
+### 2.14 Получить всех пользователей (только для ADMIN)
+GET http://localhost:8765/api/users/get-all-users
+Authorization: Bearer {{token}}
+
+### 2.15 Изменить статус аккаунта (вкл/выкл) (только для ADMIN)
+PUT http://localhost:8765/api/users/changeAccountStatus/1?newAccountStatus=false
+Authorization: Bearer {{token}}
+
+### 2.16 Блокировка аккаунта (только для ADMIN)
+PUT http://localhost:8765/api/users/accountBlocking/1?newAccountStatus=true
+Authorization: Bearer {{token}}
+
+### 2.17 Обновить имя (требуется авторизация)
+PUT http://localhost:8765/api/users/updateName/1?newName=Пётр
+Authorization: Bearer {{token}}
+
+### 2.18 Обновить фамилию (требуется авторизация)
+PUT http://localhost:8765/api/users/updateSecondName/1?newSecondName=Сидоров
+Authorization: Bearer {{token}}
+
+### 3. Профиль (ProfileController)
+
+### 3.1 Получить свой профиль (требуется авторизация)
+GET http://localhost:8765/profile/api/profile/myProfile/2
+Authorization: Bearer {{token}}
+
+### 3.2 Добавить аватар (требуется авторизация)
+POST http://localhost:8765/profile/api/profile/addAvatar/1/newAvatar
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test-avatar.jpg"
+Content-Type: image/jpeg
+
+< ./test-avatar.jpg
+--WebAppBoundary--
+
+### 3.3 Добавить несколько фотографий (требуется авторизация)
+POST http://localhost:8765/profile/api/profile/addPhotos/1
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="files"; filename="test-photo1.jpg"
+Content-Type: image/jpeg
+
+< ./test-photo1.jpg
+--WebAppBoundary
+Content-Disposition: form-data; name="files"; filename="test-photo2.jpg"
+Content-Type: image/jpeg
+
+< ./test-photo2.jpg
+--WebAppBoundary--
+
+### 3.4 Обновить аватар (указать ID новой аватарки) (требуется авторизация)
+PUT http://localhost:8765/profile/api/profile/updateAvatar/1/5
+Authorization: Bearer {{token}}
+
+### 3.5 Удалить фотографию (требуется авторизация)
+DELETE http://localhost:8765/profile/api/profile/delete-photo/1/10
+Authorization: Bearer {{token}}

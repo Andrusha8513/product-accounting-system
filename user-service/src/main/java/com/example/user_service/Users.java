@@ -1,7 +1,7 @@
 package com.example.user_service;
 
 import com.example.support_module.jwt.Role;
-import com.example.user_service.image.Image;
+//import com.example.user_service.image.Image;
 //import com.example.user_service.security.jwt.JwtToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -62,8 +62,8 @@ public class Users {
     private Integer loginAttempts = 0;
     private String refreshToken;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
-    private List<Image> photos  = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
+//    private List<Image> photos  = new ArrayList<>();
 
     @ElementCollection(targetClass = Role.class , fetch = FetchType.EAGER)
     @CollectionTable(name = "users_role" , joinColumns = @JoinColumn(name = "users_id"))

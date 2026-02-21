@@ -1,7 +1,8 @@
-package com.example.user_service.controller;
+package com.example.profile_service.controller;
 
-import com.example.user_service.image.Image;
-import com.example.user_service.image.ImageRepository;
+
+import com.example.profile_service.image.Image;
+import com.example.profile_service.image.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -30,3 +31,4 @@ public class ImageController {
                 .body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
     }
 }
+

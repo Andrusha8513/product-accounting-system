@@ -8,18 +8,13 @@ import com.example.support_module.redis.RedisJwtService;
 import com.example.user_service.dto.*;
 import com.example.user_service.dto.mapping.UserMapper;
 import com.example.user_service.dto.mapping.UserMapperNew;
-import com.example.user_service.image.Image;
-import com.example.user_service.image.ImageRepository;
-import com.example.user_service.image.ImageService;
 import com.example.user_service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import javax.naming.AuthenticationException;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -29,8 +24,6 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ImageService imageService;
-    private final ImageRepository imageRepository;
     private final UserMapper userMapper;
     private final UserMapperNew userMapperNew;
     private final JwtService jwtService;
@@ -344,62 +337,10 @@ public class UserService {
         userRepository.save(users);
     }
 
-    @Transactional
-    public void addAvatar(Long id, MultipartFile file) throws IOException {
-        Users users = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Пользователь с таким " + id + " не найден"));
-
-        Image image = imageService.toImageEntity(file);
-        image.setUsers(users);
-        imageRepository.save(image);
-        users.setAvatarId(image.getId());
-        userRepository.save(users);
-    }
-
-    @Transactional
-    public void addPhotos(Long id, List<MultipartFile> files) throws IOException {
-        Users users = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Пользователь с таким " + id + " не найден"));
-
-        List<Image> images = users.getPhotos();
-        if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                Image image = imageService.toImageEntity(file);
-                image.setUsers(users);
-                images.add(image);
-            }
-        }
-        userRepository.save(users);
-    }
-
-    @Transactional
-    public void updateAvatar(Long id, Long newAvatar) {
-        Users users = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Пользователь с таким " + id + " не найден"));
-        users.setAvatarId(newAvatar);
-        userRepository.save(users);
-    }
-
-
     private Users findByEmail(String email) throws Exception {
         return userRepository.findByEmail(email).orElseThrow(() -> new Exception(String.format("Пользователя с такой почтой %s не найдено", email)));
     }
 
-    @Transactional
-    public void deletePhoto(Long id, Long photoId) {
-        Users users = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Пользователя с таким " + id + " не найдено"));
-
-        Image imageFomDeleta = imageRepository.findById(photoId)
-                .orElseThrow(() -> new IllegalArgumentException("Фото с таким " + id + " не найдно"));
-
-        if (!imageFomDeleta.getUsers().getId().equals(id)) {
-            throw new IllegalArgumentException("Фотография не принадлежит пользователю");
-        }
-        users.getPhotos().remove(imageFomDeleta);
-        imageRepository.delete(imageFomDeleta);
-        userRepository.save(users);
-    }
 
     @Transactional
     public void updateRoles(Long id, Set<Role> newRole) {
@@ -450,22 +391,6 @@ public class UserService {
             redisJwtService.unblockUserId(id);
         }
     }
-
-    @Transactional(readOnly = true)
-    public PrivetUserProfileDto getPrivetProfile(Long id) {
-        Users users = userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-        return userMapper.toPrivetProfielDto(users);
-    }
-
-    @Transactional(readOnly = true)
-    public PublicUserProfileDto findPublicProfile(String email) {
-        Users users = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-
-        return userMapper.toPublicProfileDto(users);
-    }
-
     @Transactional
     public void updateName(Long id, String newName) {
         Users users = userRepository.findById(id)
@@ -496,5 +421,9 @@ public class UserService {
         kafkaProducer.sendUserToKafka(userDto);
     }
 
-
 }
+
+
+
+
+

@@ -19,10 +19,10 @@ public class ProfileConsumerKafka {
     public void consumerProfile(PrivetUserProfileDto profileDto){
         log.info("Принял профиль из кафки {}" , profileDto.getId());
 
-        Profile profile = profileRepository.findByUserId(profileDto.getId())
+        Profile profile = profileRepository.findById(profileDto.getId())
                         .orElse(new Profile());
 
-        profile.setUserId(profileDto.getId());
+        profile.setId(profileDto.getId());
         profile.setName(profileDto.getName());
         profile.setSecondName(profileDto.getSecondName());
         profile.setEmail(profileDto.getEmail());

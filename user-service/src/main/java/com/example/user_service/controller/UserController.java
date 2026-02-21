@@ -4,8 +4,6 @@ package com.example.user_service.controller;
 import com.example.support_module.jwt.Role;
 import com.example.user_service.UserRepository;
 import com.example.user_service.UserService;
-import com.example.user_service.dto.PrivetUserProfileDto;
-import com.example.user_service.dto.PublicUserProfileDto;
 import com.example.user_service.dto.UserDto;
 import com.example.user_service.dto.UserRegistrationDTO;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -43,29 +38,6 @@ public class UserController {
     @GetMapping("/email")
     public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.getUserByEmail(email));
-    }
-
-    @GetMapping("/me/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<PrivetUserProfileDto> getMyProfile(@PathVariable Long id) {
-        try {
-            PrivetUserProfileDto privetUserProfileDto = userService.getPrivetProfile(id);
-            return ResponseEntity.ok(privetUserProfileDto);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @GetMapping("/profile")
-    public ResponseEntity<PublicUserProfileDto> findProfile(@RequestParam String email) {
-        try {
-            PublicUserProfileDto profileDto = userService.findPublicProfile(email);
-            return ResponseEntity.ok(profileDto);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 
 
@@ -171,54 +143,6 @@ public class UserController {
         }
     }
 
-
-    @PostMapping("/addAvatar/{id}/newAvatar")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> addAvatar(@PathVariable Long id,
-                                            @RequestPart("file") MultipartFile file) {
-        try {
-            userService.addAvatar(id, file);
-            return ResponseEntity.ok("Аватарка успешно добавлена");
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/addPhotos/{id}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> addPhotos(@PathVariable Long id,
-                                            @RequestPart("files") List<MultipartFile> files) {
-        try {
-            userService.addPhotos(id, files);
-            return ResponseEntity.ok("Фотографии успешно добавлены");
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/updateAvatar/{id}/{newAvatar}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> updateAvatar(@PathVariable Long id,
-                                               @PathVariable Long newAvatar) {
-        try {
-            userService.updateAvatar(id, newAvatar);
-            return ResponseEntity.ok("Аватарка успешно обновлена");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/delete-photo/{id}/{photoId}")
-    @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<String> deletePhoto(@PathVariable Long id,
-                                              @PathVariable Long photoId) {
-        try {
-            userService.deletePhoto(id, photoId);
-            return ResponseEntity.ok("Фото успешно удалены");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
     @PutMapping("/update-roles/{id}")
     @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')") //  ПОКА ДЛЯ ТЕСТОВ OR
