@@ -1,6 +1,6 @@
 package com.example.profile_service.controller;
 
-import com.example.profile_service.Profile;
+import com.example.profile_service.entity.Profile;
 import com.example.profile_service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

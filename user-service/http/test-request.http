@@ -198,8 +198,8 @@ POST http://localhost:8765/users/auth/sing-in
 Content-Type: application/json
 
 {
-  "email": "pavelsevruk5@gmail.com",
-  "password": "Fuckman5"
+  "email": "4057163@mail.ru",
+  "password": "11111111"
 }
 
 > {%

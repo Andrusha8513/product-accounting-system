@@ -1,8 +1,5 @@
-package com.example.profile_service.image;
+package com.example.profile_service.entity;
 
-
-import com.example.profile_service.entity.Profile;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "images_profile")
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "images_post")
 @Getter
 @Setter
-public class Image {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ImagePost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,14 +20,10 @@ public class Image {
     private String originalFileName;
     private Long size;
     private String contentType;
-
+    private boolean isPreviewImages;
     @Lob
-    @JsonIgnore
+    @Column(name = "bytes")
     private byte[] bytes;
-
     @ManyToOne(cascade = CascadeType.REFRESH , fetch = FetchType.EAGER)
-    @JoinColumn(name = "profile_id")
-    @JsonIgnore
-    private Profile profile;
-
+    private PostProfile post;
 }

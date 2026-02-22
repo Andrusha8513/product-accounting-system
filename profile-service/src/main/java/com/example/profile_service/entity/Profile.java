@@ -1,4 +1,4 @@
-package com.example.profile_service;
+package com.example.profile_service.entity;
 
 import com.example.profile_service.image.Image;
 import jakarta.persistence.*;
@@ -33,4 +33,7 @@ public class Profile {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "profile")
     private List<Image> photos  = new ArrayList<>();
 
+
+    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER , mappedBy = "profile")
+    private List<PostProfile> postProfiles = new ArrayList<>();
 }
