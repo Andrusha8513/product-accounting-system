@@ -1,13 +1,17 @@
 package com.example.profile_service.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class ImageDto {
+@Getter
+@Setter
+public class ImagePostDto {
     private Long id;
     private String name;
     private String originalFileName;
     private Long size;
     private String contentType;
-
+    private boolean isPreviewImages;
+    private String base64;
+    private Long postId;
 }

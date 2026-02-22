@@ -11,7 +11,7 @@ public class PostDto {
     private Long id;
     private String description;
     private Long userId;
-    private List<ImageDto> images;
+    private List<ImagePostDto> images;
     private List<CommentDto> comments;
     private Long communityId;
 }

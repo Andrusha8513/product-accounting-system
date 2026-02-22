@@ -9,7 +9,7 @@ public class PostProfileDto {
     private Long id;
     private String description;
     private Long userId;
-    private List<ImageDto> images;
+    private List<ImagePostDto> images;
     private List<CommentDto> comments;
     private ProfileActionType actionType;
 }

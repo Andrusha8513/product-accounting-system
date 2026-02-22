@@ -1,5 +1,6 @@
 package com.example.profile_service.controller;
 
+import com.example.profile_service.dto.ProfileResponseDto;
 import com.example.profile_service.entity.Profile;
 import com.example.profile_service.ProfileService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ public class ProfileController {
 
     @GetMapping("/myProfile/{id}")
     @PreAuthorize("@securityService.isOwner(#id) or hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Profile> getMyProfile(@PathVariable Long id){
+    public ResponseEntity<ProfileResponseDto> getMyProfile(@PathVariable Long id){
         try {
-          Profile profile =  profileService.getProfile(id);
+            ProfileResponseDto profile =  profileService.getProfile(id);
             return ResponseEntity.ok(profile);
         }catch (Exception e){
             log.info("Причина ошибки " + e);

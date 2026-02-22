@@ -34,6 +34,6 @@ public class Profile {
     private List<Image> photos  = new ArrayList<>();
 
 
-    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER , mappedBy = "profile")
+    @OneToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER ,orphanRemoval = true, mappedBy = "profile")
     private List<PostProfile> postProfiles = new ArrayList<>();
 }

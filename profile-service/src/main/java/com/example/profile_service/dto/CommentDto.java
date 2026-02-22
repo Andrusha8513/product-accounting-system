@@ -10,7 +10,7 @@ import java.util.List;
 public class CommentDto {
     private Long id;
     private String text;
-    private Long ProfileId;
+    private Long UserId;
     private PostDto post;
     private List<SubCommentDto> subcomments;
 }

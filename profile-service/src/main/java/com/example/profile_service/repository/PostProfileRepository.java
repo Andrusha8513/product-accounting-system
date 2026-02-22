@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface PostProfileRepository extends JpaRepository<PostProfile , Long> {
     Optional<PostProfile> findById(Long id);
+
 }

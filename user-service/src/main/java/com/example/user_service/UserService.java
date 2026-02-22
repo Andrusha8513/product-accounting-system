@@ -312,6 +312,14 @@ public class UserService {
         users.setPendingEmail(null);
         users.setEmailChangeCode(null);
         userRepository.save(users);
+
+        TestProfileDto profileDto  = new TestProfileDto();
+        profileDto.setEmail(users.getEmail());
+        kafkaProducer.sendPrivetProfileToKafka(profileDto);
+
+        UserDto userDto = new UserDto();
+        userDto.setEmail(users.getEmail());
+        kafkaProducer.sendUserToKafka(userDto);
     }
 
 
@@ -335,6 +343,12 @@ public class UserService {
             users.setPassword(passwordEncoder.encode(newPassword));
         }
         userRepository.save(users);
+
+        TestProfileDto profileDto  = new TestProfileDto();
+        profileDto.setPassword(users.getPassword());
+        kafkaProducer.sendPrivetProfileToKafka(profileDto);
+
+
     }
 
     private Users findByEmail(String email) throws Exception {

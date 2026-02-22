@@ -111,7 +111,7 @@ Authorization: Bearer {{token}}
 ### 3. Профиль (ProfileController)
 
 ### 3.1 Получить свой профиль (требуется авторизация)
-GET http://localhost:8765/profile/api/profile/myProfile/1
+GET http://localhost:8765/profile/api/profile/myProfile/2
 Authorization: Bearer {{token}}
 
 ### 3.2 Добавить аватар (требуется авторизация)
@@ -201,11 +201,11 @@ Content-Type: image/jpeg
 
 
 ### 4.6 Удалить пост по ID
-DELETE http://localhost:8765/posts/api/post/25
+DELETE http://localhost:8765/posts/api/post/33
 Authorization: Bearer {{token}}
 
-### 4.7 Обновить пост по ID (с новыми файлами)
-POST http://localhost:8765/posts/api/post/update/21
+### 4.7 Обновить пост по ID
+POST http://localhost:8765/posts/api/post/update/34
 Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 

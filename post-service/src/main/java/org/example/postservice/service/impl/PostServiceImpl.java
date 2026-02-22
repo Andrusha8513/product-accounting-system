@@ -123,6 +123,7 @@ public class PostServiceImpl implements PostService {
 //                null,ActionType.DELETE, "POST"));
         PostProfileDto profileDto = new PostProfileDto();
         profileDto.setId(id);
+        profileDto.setUserId(post.getUserId());
         profileDto.setActionType(ProfileActionType.DELETE);
         profileKafkaProducer.sendPostToKafka(profileDto);
         postRepository.deleteById(id);

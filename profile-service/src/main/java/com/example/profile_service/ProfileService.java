@@ -1,6 +1,9 @@
 package com.example.profile_service;
 
 import com.example.profile_service.dto.PostProfileDto;
+import com.example.profile_service.dto.ProfileResponseDto;
+import com.example.profile_service.entity.Comment;
+import com.example.profile_service.entity.ImagePost;
 import com.example.profile_service.entity.PostProfile;
 import com.example.profile_service.entity.Profile;
 import com.example.profile_service.image.Image;
@@ -8,6 +11,7 @@ import com.example.profile_service.image.ImageRepository;
 import com.example.profile_service.image.ImageService;
 import com.example.profile_service.mapper.CommentMapper;
 import com.example.profile_service.mapper.ImageMapper;
+import com.example.profile_service.mapper.ProfileMapper;
 import com.example.profile_service.repository.PostProfileRepository;
 import com.example.profile_service.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +32,12 @@ public class ProfileService {
     private final PostProfileRepository postProfileRepository;
     private final ImageMapper imageMapper;
     private final CommentMapper commentMapper;
+    private final ProfileMapper profileMapper;
 
-    public Profile getProfile(Long id){
-        return profileRepository.findById((id))
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден. "));
+    public ProfileResponseDto getProfile(Long id){
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Профиль с таким id= " + id + " не найден!"));
+        return profileMapper.toDto(profile);
     }
 
     @Transactional
@@ -104,24 +110,49 @@ public class ProfileService {
 
     @Transactional
     public PostProfile updatePost(PostProfileDto profileDto){
-        PostProfile profile = postProfileRepository.findById(profileDto.getId())
+        PostProfile postProfile = postProfileRepository.findById(profileDto.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Пост не найден: " + profileDto.getId()));
 
         Profile owner = profileRepository.findById(profileDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("Профиль для пользователя userId не найден: " + profileDto.getUserId()));
 
+        postProfile.getComments().clear();
+        postProfile.getImages().clear();
 
-        profile.setProfile(owner);
-        profile.setId(profileDto.getId());
-        profile.setDescription(profileDto.getDescription());
-        profile.setComments(profileDto.getComments().stream().map(commentMapper::toEntity).toList());
-        profile.setImages(profileDto.getImages().stream().map(imageMapper::toEntity).toList());
-       return postProfileRepository.save(profile);
+        if (profileDto.getComments() != null) {
+            profileDto.getComments().forEach(commentDto -> {
+                Comment comment = commentMapper.toEntity(commentDto);
+                comment.setPost(postProfile);
+                postProfile.getComments().add(comment);
+            });
+        }
+
+        if (profileDto.getImages() != null) {
+            profileDto.getImages().forEach(imageDto -> {
+                ImagePost image = imageMapper.toEntity(imageDto);
+                image.setPost(postProfile);
+                postProfile.getImages().add(image);
+            });
+        }
+
+        postProfile.setProfile(owner);
+        postProfile.setId(profileDto.getId());
+        postProfile.setDescription(profileDto.getDescription());
+       return postProfileRepository.save(postProfile);
     }
 
     @Transactional
     public void deletePost(Long id){
-        postProfileRepository.deleteById(id);
+        PostProfile postProfile = postProfileRepository.findById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Пост не найден: " + id));
+
+        Profile profile = postProfile.getProfile();
+        if(profile != null){
+            profile.getPostProfiles().remove(postProfile);
+
+            postProfile.setProfile(null);
+        }
+        postProfileRepository.delete(postProfile);
     }
 
 }

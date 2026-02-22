@@ -1,5 +1,6 @@
 package com.example.profile_service.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +26,6 @@ public class ImagePost {
     @Column(name = "bytes")
     private byte[] bytes;
     @ManyToOne(cascade = CascadeType.REFRESH , fetch = FetchType.EAGER)
+    @JsonIgnore
     private PostProfile post;
 }
