@@ -1,13 +1,9 @@
-package com.example.profile_service.image;
+package com.example.profile_service.entity;
 
 
-import com.example.profile_service.entity.Profile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "images_profile")
@@ -27,6 +23,7 @@ public class Image {
     @Lob
     @JsonIgnore
     private byte[] bytes;
+
 
     @ManyToOne(cascade = CascadeType.REFRESH , fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")

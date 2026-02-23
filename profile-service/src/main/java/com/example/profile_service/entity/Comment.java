@@ -1,10 +1,7 @@
 package com.example.profile_service.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +17,10 @@ public class Comment {
     private Long id;
     private String text;
     private Long userID;
+
+
     @ManyToOne
     private PostProfile post;
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SubComment> subComments = new ArrayList<>();
 }

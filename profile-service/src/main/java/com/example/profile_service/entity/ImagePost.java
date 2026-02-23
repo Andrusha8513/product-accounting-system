@@ -2,10 +2,7 @@ package com.example.profile_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "images_post")
@@ -25,6 +22,8 @@ public class ImagePost {
     @Lob
     @Column(name = "bytes")
     private byte[] bytes;
+
+
     @ManyToOne(cascade = CascadeType.REFRESH , fetch = FetchType.EAGER)
     @JsonIgnore
     private PostProfile post;

@@ -1,10 +1,7 @@
 package com.example.profile_service.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "subcomments")
@@ -17,6 +14,8 @@ public class SubComment {
     private Long id;
     private String text;
     private Long userId;
+
+
     @ManyToOne
     private Comment comment;
 }

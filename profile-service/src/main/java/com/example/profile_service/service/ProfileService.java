@@ -1,14 +1,16 @@
-package com.example.profile_service;
+package com.example.profile_service.service;
 
 import com.example.profile_service.dto.PostProfileDto;
 import com.example.profile_service.dto.ProfileResponseDto;
+import com.example.profile_service.dto.ProfileSummaryDto;
 import com.example.profile_service.entity.Comment;
 import com.example.profile_service.entity.ImagePost;
 import com.example.profile_service.entity.PostProfile;
 import com.example.profile_service.entity.Profile;
-import com.example.profile_service.image.Image;
-import com.example.profile_service.image.ImageRepository;
-import com.example.profile_service.image.ImageService;
+import com.example.profile_service.entity.Image;
+import com.example.profile_service.mapper.SummeryMapper;
+import com.example.profile_service.redis.ProfileRedisRepository;
+import com.example.profile_service.repository.ImageRepository;
 import com.example.profile_service.mapper.CommentMapper;
 import com.example.profile_service.mapper.ImageMapper;
 import com.example.profile_service.mapper.ProfileMapper;
@@ -20,8 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +37,37 @@ public class ProfileService {
     private final ImageMapper imageMapper;
     private final CommentMapper commentMapper;
     private final ProfileMapper profileMapper;
+    private final ProfileRedisRepository profileRedisRepository;
+    private final SummeryMapper summeryMapper;
+
+
+    @Transactional
+    public ProfileResponseDto getProfile(Long id){
+        Optional<ProfileSummaryDto> cash = profileRedisRepository.getProfileSummery(id);
+
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с таким id= " + id + " не найден"));
+
+
+       ProfileResponseDto response = profileMapper.toDto(profile);
+
+        if (cash.isPresent()) {
+            ProfileSummaryDto summary = cash.get();
+            response.setName(summary.getName());
+            response.setSecondName(summary.getSecondName());
+            response.setEmail(summary.getEmail());
+            response.setBirthday(summary.getBirthday());
+        } else {
+            profileRedisRepository.saveProfileSummery(id, summeryMapper.toDto(profile));
+        }
+       return response;
+    }
+
 
     @Transactional(readOnly = true)
-    public ProfileResponseDto getProfile(Long id){
-        Profile profile = profileRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("Профиль с таким id= " + id + " не найден!"));
+    public ProfileResponseDto findProfilee(String email){
+        Profile profile = profileRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Профиля с такой почтой " + email + " не найдено!"));
         return profileMapper.toDto(profile);
     }
 

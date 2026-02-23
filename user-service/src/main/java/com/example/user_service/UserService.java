@@ -85,7 +85,7 @@ public class UserService {
         profileDto.setName(userDto.getName());
         profileDto.setSecondName(userDto.getSecondName());
         profileDto.setEmail(users.getEmail());
-        profileDto.setPassword(users.getPassword());
+//        profileDto.setPassword(users.getPassword());
         profileDto.setBirthday(userDto.getBirthDay());
         kafkaProducer.sendPrivetProfileToKafka(profileDto);
     }
@@ -343,12 +343,6 @@ public class UserService {
             users.setPassword(passwordEncoder.encode(newPassword));
         }
         userRepository.save(users);
-
-        TestProfileDto profileDto  = new TestProfileDto();
-        profileDto.setPassword(users.getPassword());
-        kafkaProducer.sendPrivetProfileToKafka(profileDto);
-
-
     }
 
     private Users findByEmail(String email) throws Exception {

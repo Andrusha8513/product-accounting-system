@@ -1,6 +1,8 @@
 package com.example.profile_service.kafka;
 
-import com.example.profile_service.ProfileService;
+import com.example.profile_service.dto.ProfileSummaryDto;
+import com.example.profile_service.redis.ProfileRedisRepository;
+import com.example.profile_service.service.ProfileService;
 import com.example.profile_service.dto.PostProfileDto;
 import com.example.profile_service.entity.Profile;
 import com.example.profile_service.dto.PrivetUserProfileDto;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileConsumerKafka {
     private final ProfileRepository profileRepository;
     private final ProfileService profileService;
+    private final ProfileRedisRepository profileRedisRepository;
 
     @Transactional
     @KafkaListener(topics = "profile",
@@ -31,8 +34,14 @@ public class ProfileConsumerKafka {
         profile.setName(profileDto.getName());
         profile.setSecondName(profileDto.getSecondName());
         profile.setEmail(profileDto.getEmail());
-        profile.setPassword(profileDto.getPassword());
         profile.setBirthday(profileDto.getBirthday());
+
+        ProfileSummaryDto profileSummaryDto = new ProfileSummaryDto();
+        profileSummaryDto.setName(profileDto.getName());
+        profileSummaryDto.setSecondName(profileDto.getSecondName());
+        profileSummaryDto.setEmail(profileDto.getEmail());
+        profileRedisRepository.saveProfileSummery(profile.getId() , profileSummaryDto);
+        log.info("Кеш для профиля {} обновлён", profile.getId());
         profileRepository.save(profile);
     }
 

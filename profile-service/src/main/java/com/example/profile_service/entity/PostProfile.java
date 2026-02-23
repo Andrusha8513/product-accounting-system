@@ -1,14 +1,17 @@
 package com.example.profile_service.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "profile_post")
-@Data
+@Getter
+@Setter
 public class PostProfile {
     @Id
     @Column(name = "post_id")
@@ -20,6 +23,7 @@ public class PostProfile {
     private List<ImagePost> images = new ArrayList<>();
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profile_id")

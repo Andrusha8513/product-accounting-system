@@ -3,7 +3,7 @@ package com.example.profile_service.mapper;
 import com.example.profile_service.dto.ImageDto;
 import com.example.profile_service.dto.ImagePostDto;
 import com.example.profile_service.entity.ImagePost;
-import com.example.profile_service.image.Image;
+import com.example.profile_service.entity.Image;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;

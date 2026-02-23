@@ -1,8 +1,7 @@
 package com.example.profile_service.controller;
 
 import com.example.profile_service.dto.ProfileResponseDto;
-import com.example.profile_service.entity.Profile;
-import com.example.profile_service.ProfileService;
+import com.example.profile_service.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +26,17 @@ public class ProfileController {
     public ResponseEntity<ProfileResponseDto> getMyProfile(@PathVariable Long id){
         try {
             ProfileResponseDto profile =  profileService.getProfile(id);
+            return ResponseEntity.ok(profile);
+        }catch (Exception e){
+            log.info("Причина ошибки " + e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/findProfile")
+    public ResponseEntity<ProfileResponseDto> findProfile(@RequestParam String email){
+        try {
+            ProfileResponseDto profile =  profileService.findProfilee(email);
             return ResponseEntity.ok(profile);
         }catch (Exception e){
             log.info("Причина ошибки " + e);

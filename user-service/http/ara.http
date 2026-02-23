@@ -98,20 +98,24 @@ Authorization: Bearer {{token}}
 
 ### 2.16 Блокировка аккаунта (только для ADMIN)
 PUT http://localhost:8765/api/users/accountBlocking/2?newAccountStatus=true
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzE3MTE4MTgsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.E0GNWopA0nR7DATG2ZYCJVYj-BK4kzgoP-Y3APy1z11nzAvRhgwD6uvo64lDd6wS
+Authorization: Bearer {{token}}
 
 ### 2.17 Обновить имя (требуется авторизация)
-PUT http://localhost:8765/api/users/updateName/1?newName=Пётр
+PUT http://localhost:8765/api/users/updateName/2?newName=Текхн
 Authorization: Bearer {{token}}
 
 ### 2.18 Обновить фамилию (требуется авторизация)
-PUT http://localhost:8765/api/users/updateSecondName/1?newSecondName=Сидоров
+PUT http://localhost:8765/api/users/updateSecondName/2?newSecondName=Паша
 Authorization: Bearer {{token}}
 
 ### 3. Профиль (ProfileController)
 
 ### 3.1 Получить свой профиль (требуется авторизация)
 GET http://localhost:8765/profile/api/profile/myProfile/2
+Authorization: Bearer {{token}}
+
+### 3.1.2 Найту профиль друга поп почте
+GET http://localhost:8765/profile/api/profile/findProfile?email=9197195@mail.ru
 Authorization: Bearer {{token}}
 
 ### 3.2 Добавить аватар (требуется авторизация)

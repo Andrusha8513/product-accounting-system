@@ -2,8 +2,8 @@ package com.example.profile_service.controller;
 
 
 import com.example.profile_service.entity.ImagePost;
-import com.example.profile_service.image.Image;
-import com.example.profile_service.image.ImageRepository;
+import com.example.profile_service.entity.Image;
+import com.example.profile_service.repository.ImageRepository;
 import com.example.profile_service.repository.PostImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
