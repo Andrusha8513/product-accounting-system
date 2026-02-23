@@ -15,6 +15,5 @@ public class ProfileResponseDto {
  private LocalDate birthday;
  private Long avatarId;
  private List<ImageDto> photos;
- private List<ImagePostDto> photosPost;
  private List<PostDto> posts;
 }

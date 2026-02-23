@@ -45,9 +45,9 @@ public class ImageMapper {
         dto.setPreviewImages(image.isPreviewImages());
         dto.setPostId(image.getPost() != null ? image.getPost().getId() : null);
 
-        if (image.getBytes() != null) {
-            dto.setBase64(Base64.getEncoder().encodeToString(image.getBytes()));
-        }
+//        if (image.getBytes() != null) {
+//            dto.setBase64(Base64.getEncoder().encodeToString(image.getBytes()));
+//        }
 
         return dto;
     }

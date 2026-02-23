@@ -171,7 +171,7 @@ GET http://localhost:8765/posts/api/post/api/post/2
 Authorization: Bearer {{token}}
 
 ### 4.4 Получить пост по ID
-GET http://localhost:8765/posts/api/post/1
+GET http://localhost:8765/posts/api/post/7
 Authorization: Bearer {{token}}
 
 ### 4.5 Создать новый пост (с файлами)
@@ -201,7 +201,7 @@ Content-Type: image/jpeg
 
 
 ### 4.6 Удалить пост по ID
-DELETE http://localhost:8765/posts/api/post/33
+DELETE http://localhost:8765/posts/api/post/7
 Authorization: Bearer {{token}}
 
 ### 4.7 Обновить пост по ID
@@ -258,3 +258,10 @@ Content-Disposition: form-data; name="description"
 
 Хуй
 --WebAppBoundary--
+###
+GET http://localhost:8765/profile/image/1
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:8765/profile/image-post/50
+Authorization: Bearer {{token}}

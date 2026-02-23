@@ -1,8 +1,10 @@
 package com.example.profile_service.controller;
 
 
+import com.example.profile_service.entity.ImagePost;
 import com.example.profile_service.image.Image;
 import com.example.profile_service.image.ImageRepository;
+import com.example.profile_service.repository.PostImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -18,6 +20,7 @@ import java.io.ByteArrayInputStream;
 @RequiredArgsConstructor
 public class ImageController {
     private final ImageRepository imageRepository;
+    private final PostImageRepository postImageRepository;
 
     @GetMapping("/image/{id}")
     public ResponseEntity<Resource> getImages(@PathVariable Long id){
@@ -29,6 +32,18 @@ public class ImageController {
                 .contentType(MediaType.valueOf(image.getContentType()))
                 .contentLength(image.getSize())
                 .body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
+    }
+
+    @GetMapping("/image-post/{id}")
+    public ResponseEntity<Resource> getImagesPost(@PathVariable Long id){
+        ImagePost imagePost = postImageRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Фотография не найдена"));
+
+        return ResponseEntity.ok()
+                .header("fileNmae" , imagePost.getOriginalFileName())
+                .contentType(MediaType.valueOf(imagePost.getContentType()))
+                .contentLength(imagePost.getSize())
+                .body(new InputStreamResource(new ByteArrayInputStream(imagePost.getBytes())));
     }
 }
 

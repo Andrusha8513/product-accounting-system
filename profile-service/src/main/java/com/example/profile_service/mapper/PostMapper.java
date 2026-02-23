@@ -15,7 +15,7 @@ public class PostMapper {
         PostDto postDto = new PostDto();
         postDto.setId(profile.getId());
         postDto.setDescription(profile.getDescription());
-        postDto.setUserId(postDto.getUserId());
+        postDto.setUserId(profile.getProfile().getId());
         postDto.setImages(profile.getImages().stream().map(imageMapper::toImagePostDto).toList());
         postDto.setComments(profile.getComments().stream().map(commentMapper::toDto).toList());
         return postDto;

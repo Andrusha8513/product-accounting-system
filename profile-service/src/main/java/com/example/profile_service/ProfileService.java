@@ -34,11 +34,14 @@ public class ProfileService {
     private final CommentMapper commentMapper;
     private final ProfileMapper profileMapper;
 
+    @Transactional(readOnly = true)
     public ProfileResponseDto getProfile(Long id){
         Profile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Профиль с таким id= " + id + " не найден!"));
         return profileMapper.toDto(profile);
     }
+
+
 
     @Transactional
     public void addAvatar(Long id, MultipartFile file) throws IOException {
@@ -103,8 +106,22 @@ public class ProfileService {
         profile.setProfile(owner);
         profile.setId(profileDto.getId());
         profile.setDescription(profileDto.getDescription());
-        profile.setComments(profileDto.getComments().stream().map(commentMapper::toEntity).toList());
-        profile.setImages(profileDto.getImages().stream().map(imageMapper::toEntity).toList());
+
+        if (profileDto.getComments() != null) {
+            profileDto.getComments().forEach(commentDto -> {
+                Comment comment = commentMapper.toEntity(commentDto);
+                comment.setPost(profile);
+                profile.getComments().add(comment);
+            });
+        }
+
+        if (profileDto.getImages() != null) {
+            profileDto.getImages().forEach(imageDto -> {
+                ImagePost image = imageMapper.toEntity(imageDto);
+                image.setPost(profile);
+                profile.getImages().add(image);
+            });
+        }
         postProfileRepository.save(profile);
     }
 
