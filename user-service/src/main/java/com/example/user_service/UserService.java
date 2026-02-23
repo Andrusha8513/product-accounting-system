@@ -4,10 +4,12 @@ import com.example.support_module.jwt.JwtAuthenticationDto;
 import com.example.support_module.jwt.JwtService;
 import com.example.support_module.jwt.RefreshTokenDto;
 import com.example.support_module.jwt.Role;
+import com.example.support_module.redis.RedisEmailService;
 import com.example.support_module.redis.RedisJwtService;
 import com.example.user_service.dto.*;
 import com.example.user_service.dto.mapping.UserMapper;
 import com.example.user_service.dto.mapping.UserMapperNew;
+import com.example.user_service.exeptionHandler.TooManyRequestsException;
 import com.example.user_service.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +31,7 @@ public class UserService {
     private final JwtService jwtService;
     private final RedisJwtService redisJwtService;
     private final KafkaProducer kafkaProducer;
+    private final RedisEmailService redisEmailService;
 
 
     public UserDto getUserBySecondName(String secondName) {
@@ -66,7 +69,7 @@ public class UserService {
         users.setConfirmationCode(code);
         userRepository.save(users);
 
-        redisJwtService.saveEmailConfirmation(code);
+        redisEmailService.saveEmailConfirmation(code);
 
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
@@ -94,13 +97,13 @@ public class UserService {
     public boolean confirmRegistration(String code) {
         Optional<Users> usersOptional = userRepository.findByConfirmationCode(code);
 
-        if (usersOptional.isPresent() && redisJwtService.isCodeAlive(code)) {
+        if (usersOptional.isPresent() && redisEmailService.isCodeAlive(code)) {
             Users users = usersOptional.get();
             users.setEnable(true);
             users.setAccountNonLocked(true);
             users.setConfirmationCode(null);
             userRepository.save(users);
-            redisJwtService.deleteConfirmationCode(code);
+            redisEmailService.deleteConfirmationCode(code);
             return true;
         }
         return false;
@@ -190,6 +193,7 @@ public class UserService {
 
     @Transactional
     public void resendConfirmationCode(String email) {
+        checkEmailRateLimit(email);
         Users users = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Пользователь с такой почтой не найден"));
 
@@ -197,12 +201,11 @@ public class UserService {
             throw new IllegalArgumentException("Аккаунт уже активирован");
         }
         if (users.getConfirmationCode() != null) {
-            redisJwtService.deleteConfirmationCode(users.getConfirmationCode());
+            redisEmailService.deleteConfirmationCode(users.getConfirmationCode());
         }
 
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-
-        redisJwtService.saveEmailConfirmation(code);
+        redisEmailService.saveEmailConfirmation(code);
 
         users.setConfirmationCode(code);
         userRepository.save(users);
@@ -212,6 +215,13 @@ public class UserService {
         emailRequestDto.setCode(users.getConfirmationCode());
         emailRequestDto.setType(EmailRequestDto.EmailType.CONFIRMATION);
         kafkaProducer.sendEmailToKafka(emailRequestDto);
+    }
+
+    private void checkEmailRateLimit(String email){
+        long count = redisEmailService.incrementEmailCount(email);
+        if(count > 3){
+            throw new TooManyRequestsException("Слишком много запросов. Попробуйте через 15 минут.");
+        }
     }
 
     @Transactional
@@ -227,7 +237,7 @@ public class UserService {
         users.setPasswordResetCode(code);
         userRepository.save(users);
 
-        redisJwtService.saveResetCode(code);
+        redisEmailService.saveResetCode(code);
 
         EmailRequestDto emailRequestDto = new EmailRequestDto();
         emailRequestDto.setTo(users.getEmail());
@@ -248,7 +258,7 @@ public class UserService {
             throw new IllegalArgumentException("Пароля не должен быть короче восьми символов!");
         }
 
-        redisJwtService.deleteResetCode(code);
+        redisEmailService.deleteResetCode(code);
         users.setPassword(passwordEncoder.encode(newPassword));
         users.setPasswordResetCode(null);
         users.setPasswordResetCodeExpiryDate(null);
@@ -279,13 +289,16 @@ public class UserService {
 
     @Transactional
     public void resendEmailResetCode(String pendingEmail) {
+        checkEmailRateLimit(pendingEmail);
         Users users = userRepository.findByPendingEmail(pendingEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Почта не найдена"));
 
         String code = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
 
-        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
-        users.setTtlEmailCode(time);
+//        LocalDateTime time = LocalDateTime.now().plusMinutes(15);
+//        users.setTtlEmailCode(time);
+
+        redisEmailService.saveEmailConfirmation(code);
 
         users.setEmailChangeCode(code);
         userRepository.save(users);

@@ -50,7 +50,7 @@ Content-Type: application/json
   "name": "ARa",
   "secondName": "qwe",
   "password": "11111111",
-  "email": "4057163@mail.ru",
+  "email": "djkslsdkmds@mail.ru",
   "birthDay": "1995-05-15"
 }
 
@@ -58,7 +58,7 @@ Content-Type: application/json
 POST http://localhost:8765/api/users/confirm-registration?code=6B99FF
 
 ### 2.6 Повторная отправка кода подтверждения
-POST http://localhost:8765/api/users/resend-confirm-registration?email=newuser@example.com
+POST http://localhost:8765/api/users/resend-confirm-registration?email=djkslsdkmds@mail.ru
 
 ### 2.7 Отправка кода для сброса пароля
 POST http://localhost:8765/api/users/send-password-resetCode?email=user@example.com

@@ -16,11 +16,6 @@ public class RedisJwtService {
 
     private static final String USER_BLOCKLIST_PREFIX ="blk:user:";
 
-    private static final String CONFIRMATION_CODE_PREFIX="blk:email_code:";
-
-    private static final String RESET_PASSWORD_CODE = "blk:res_pass_code:";
-
-
     public void saveTokenToBlackList(String token , long ttlMillis){
         if(ttlMillis > 0){
             redisTemplate.opsForValue().set(
@@ -48,7 +43,6 @@ public class RedisJwtService {
         return Boolean.TRUE.equals(redisTemplate.hasKey(TOKEN_BLACK_LIST + token));
     }
 
-//короче написла бан юзеров , но пока не решил как там все реализовать буду. Есть мысли  как улучшить  то что есть сейчас , но пока трогать не буду
     public boolean isUserBlocked(Long userId){
         return Boolean.TRUE.equals(redisTemplate.hasKey(USER_BLOCKLIST_PREFIX + userId));
     }
@@ -59,39 +53,6 @@ public class RedisJwtService {
     }
 
 
-    public void saveEmailConfirmation(String code){
-        redisTemplate.opsForValue().set(
-                CONFIRMATION_CODE_PREFIX + code,
-                "active",
-                15,
-                TimeUnit.MINUTES
-        );
-    }
-
-    public boolean isCodeAlive(String code){
-        return Boolean.TRUE.equals(redisTemplate.hasKey(CONFIRMATION_CODE_PREFIX + code));
-    }
-
-    public void deleteConfirmationCode(String code){
-        redisTemplate.delete(CONFIRMATION_CODE_PREFIX + code);
-    }
-
-    public void saveResetCode(String code){
-        redisTemplate.opsForValue().set(
-                RESET_PASSWORD_CODE + code,
-                "active",
-                15,
-                TimeUnit.MINUTES
-        );
-    }
-
-    public boolean isResetCodeAlive(String code){
-        return Boolean.TRUE.equals(redisTemplate.hasKey(RESET_PASSWORD_CODE + code));
-    }
-
-    public void deleteResetCode(String code){
-        redisTemplate.delete(RESET_PASSWORD_CODE + code);
-    }
 }
 
 
