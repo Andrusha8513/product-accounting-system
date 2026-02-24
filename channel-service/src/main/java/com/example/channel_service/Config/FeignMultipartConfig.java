@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-@Configuration
-public class FeignMultipartConfig {
-    @Bean
-    public Encoder multipartFormEncoder() {
-        return new SpringFormEncoder(new SpringEncoder(() -> new HttpMessageConverters(new RestTemplate().getMessageConverters())));
-    }
-}
+//@Configuration
+//public class FeignMultipartConfig {
+//    @Bean
+//    public Encoder multipartFormEncoder() {
+//        return new SpringFormEncoder(new SpringEncoder(() -> new HttpMessageConverters(new RestTemplate().getMessageConverters())));
+//    }
+//}

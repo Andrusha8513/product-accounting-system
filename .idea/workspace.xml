@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8610dc0e-ca4e-475d-a6da-9e358a2f9ef1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Dto/ActionType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Dto/CommunityPostEventDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Dto/FileContentDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Kafka/KafkaProducerConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Security/Jwt/JwtFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Security/SecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/CommunityPostEventDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/CommunityRole.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/FileContentDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/kafka/CommunityPostConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/ChannelServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/ChannelServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/FeignMultipartConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/FeignMultipartConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/PostClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/PostClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Controller/CommunityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Controller/CommunityController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/CommunityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/CommunityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/impl/CommunityServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/impl/CommunityServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/channel-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/CommunityClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/CommunityClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/ActionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/ActionType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/kafka/KafkaConsumerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/kafka/KafkaConsumerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/security/FeignConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/security/FeignConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/CommentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/PostService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/SubCommentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/SubCommentsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/CommentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/CommentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/PostServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/SubCommentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/SubCommentsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/post-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/user_service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/user_service/UserService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="39tL8dNQBYpAD6Hj8Bj4iiaSeVd" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;run.configurations.included.in.services&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="KtorApplicationConfigurationType" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+    <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="api-gateway" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.api_gateway.ApiGatewayApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ChannelServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="channel-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.channel_service.ChannelServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EmailServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="email-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.email_service.EmailServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EurekaServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="eureka-server" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.eureka_server.EurekaServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MessageServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="message-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.messageservice.MessageServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PostServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="post-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.postservice.PostServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ProfileServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="profile-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.profile_service.ProfileServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="user-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.user_service.UserServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.131" />
+        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.131" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8610dc0e-ca4e-475d-a6da-9e358a2f9ef1" name="Changes" comment="" />
+      <created>1771510262961</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1771510262961</updated>
+      <workItem from="1771510264262" duration="242000" />
+      <workItem from="1771524617553" duration="1390000" />
+      <workItem from="1771529110684" duration="2261000" />
+      <workItem from="1771601623180" duration="6899000" />
+      <workItem from="1771611369308" duration="1117000" />
+      <workItem from="1771621571945" duration="464000" />
+      <workItem from="1771684789032" duration="8320000" />
+      <workItem from="1771869359714" duration="1808000" />
+      <workItem from="1771951129199" duration="1944000" />
+      <workItem from="1771955171167" duration="475000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

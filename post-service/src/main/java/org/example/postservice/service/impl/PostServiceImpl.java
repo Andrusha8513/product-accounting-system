@@ -1,12 +1,11 @@
 package org.example.postservice.service.impl;
 
 import jakarta.transaction.Transactional;
-import org.example.postservice.CommunityClient;
+import lombok.extern.slf4j.Slf4j;
 import org.example.postservice.Model.Image;
 import org.example.postservice.Model.Post;
 import org.example.postservice.Model.UserCache;
-import org.example.postservice.dto.ActionType;
-import org.example.postservice.dto.PostDto;
+import org.example.postservice.dto.*;
 //import org.example.postservice.dto.UserActivityEventDto;
 import org.example.postservice.mapper.PostMapper;
 import org.example.postservice.repository.PostRepository;
@@ -19,19 +18,18 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+@Slf4j
 @Service
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final UserCacheRepository userCacheRepository;
-    private final CommunityClient communityClient;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     public PostServiceImpl(PostRepository postRepository, PostMapper postMapper,
-                           CommunityClient communityClient , UserCacheRepository userCacheRepository,
+                           UserCacheRepository userCacheRepository,
                            KafkaTemplate<String, Object> kafkaTemplate) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
-        this.communityClient = communityClient;
         this.userCacheRepository = userCacheRepository;
         this.kafkaTemplate = kafkaTemplate;
     }
@@ -57,13 +55,15 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostDto createPost(PostDto postDto, MultipartFile file1, MultipartFile file2,
                               MultipartFile file3 , String email) {
+        if (postDto.getCommunityId() != null){
+            throw new RuntimeException("нет доступа");
+        }
         UserCache userCache = userCacheRepository.findByEmail(email).orElseThrow();
         Post post = postMapper.toEntity(postDto);
         post.setCommunityId(postDto.getCommunityId());
         if (userCache != null) {
             post.setUserId(userCache.getId());
         }
-
         List<MultipartFile> files = new ArrayList<>();
         boolean previewSet = false;
         if (file1 != null) {
@@ -103,19 +103,8 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePostById(Long id , String email) {
         Post post = postRepository.findById(id).orElseThrow();
-        UserCache currentUser = userCacheRepository.findByEmail(email).orElseThrow();
-        boolean isOwner = post.getUserId().equals(currentUser.getId());
-        boolean isCommunityAdmin = false;
         if (post.getCommunityId() != null) {
-            try{
-                isCommunityAdmin = communityClient
-                        .checkPermission(post.getCommunityId(),currentUser.getId() , "DELETE");
-            } catch (Exception e){
-                isCommunityAdmin = false;
-            }
-        }
-        if (!isOwner && !isCommunityAdmin) {
-            throw new RuntimeException("Вы не имеете право удалять пост");
+            throw new RuntimeException("нет доступа");
         }
 //        kafkaTemplate.send("post-events", new UserActivityEventDto(id , post.getUserId(),
 //                null,ActionType.DELETE, "POST"));
@@ -124,21 +113,10 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     public PostDto updatePost(Long id, PostDto postDto, MultipartFile file1, MultipartFile file2, MultipartFile file3, String email) {
+        if (postDto.getCommunityId() != null){
+            throw new RuntimeException("нет доступа");
+        }
         Post post = postRepository.findById(id).orElseThrow();
-        UserCache currentUser = userCacheRepository.findByEmail(email).orElseThrow();
-        boolean isOwner = post.getUserId().equals(currentUser.getId());
-        boolean isCommunityAdmin = false;
-        if (post.getCommunityId() != null) {
-            try {
-                isCommunityAdmin = communityClient
-                        .checkPermission(post.getCommunityId(),currentUser.getId() , "EDIT");
-            }catch (Exception e){
-                isCommunityAdmin = false;
-            }
-        }
-        if (!isOwner && !isCommunityAdmin) {
-            throw new RuntimeException("У вас нету права редактировать пост");
-        }
         post.setDescription(postDto.getDescription());
         post.getImages().clear();
 
@@ -176,5 +154,71 @@ public class PostServiceImpl implements PostService {
 //        kafkaTemplate.send("post-events" , new UserActivityEventDto(updatedPost.getId() ,
 //                updatedPost.getUserId(),null ,ActionType.UPDATE, "POST"));
         return postMapper.toDto(updatedPost);
+    }
+
+    @Transactional
+    public void createPostFromKafka(CommunityPostEventDto event) {
+        Post post  = new Post();
+        boolean isPriviliged = CommunityRole.ADMIN.name().equalsIgnoreCase(event.getActorRole()) || CommunityRole.EDITOR.name().equalsIgnoreCase(event.getActorRole());
+        if (!isPriviliged) {
+            log.error("Отказ доступа");
+            return;
+        }
+        post.setDescription(event.getDescription());
+        post.setCommunityId(event.getCommunityId());
+        post.setUserId(event.getUserId());
+        if (event.getFile1() != null) {
+            post.getImages().add(buildImage(event.getFile1(),post , true));
+        }
+        if (event.getFile2() != null) {
+            post.getImages().add(buildImage(event.getFile2(),post , true));
+        }
+        if (event.getFile3() != null) {
+            post.getImages().add(buildImage(event.getFile3(),post , true));
+               }
+        postRepository.save(post);
+
+    }
+    @Transactional
+    public void updatePostFromKafka(CommunityPostEventDto event) {
+        Post post = postRepository.findById(event.getPostId()).orElseThrow();
+        boolean isPriviliged = CommunityRole.ADMIN.name().equalsIgnoreCase(event.getActorRole())  || CommunityRole.EDITOR.name().equalsIgnoreCase(event.getActorRole());
+        if (!isPriviliged) {
+            log.error("отказ доступа");
+        }
+        post.setDescription(event.getDescription());
+        if  (event.getFile1() != null || event.getFile2() != null || event.getFile3() != null) {
+            post.getImages().clear();
+        }
+        if (event.getFile1() != null) {
+            post.getImages().add(buildImage(event.getFile1(),post , true));
+        }
+        if (event.getFile2() != null) {
+            post.getImages().add(buildImage(event.getFile2(),post , true));
+        }
+        if (event.getFile3() != null) {
+            post.getImages().add(buildImage(event.getFile3(),post , true));
+        }
+        postRepository.save(post);
+    }
+    @Transactional
+    public void deletePostFromKafka(CommunityPostEventDto event) {
+        Post post = postRepository.findById(event.getPostId()).orElseThrow();
+        boolean isPriviliged = "ADMIN".equalsIgnoreCase(event.getActorRole()) || "EDITOR".equalsIgnoreCase(event.getActorRole());
+        if (isPriviliged) {
+            postRepository.delete(post);
+        }else {
+            log.error("Отказ в доступе");
+        }
+    }
+    private Image buildImage(FileContentDto fileDto, Post post, boolean isPreview) {
+        Image image = new Image();
+        image.setName(fileDto.getOriginalFileName());
+        image.setContentType(fileDto.getContentType());
+        image.setSize((long) fileDto.getContent().length);
+        image.setBytes(fileDto.getContent());
+        image.setPreviewImages(isPreview);
+        image.setPost(post);
+        return image;
     }
 }

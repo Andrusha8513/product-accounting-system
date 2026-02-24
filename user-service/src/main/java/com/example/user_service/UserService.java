@@ -495,6 +495,4 @@ public class UserService {
         UserDto userDto = userMapperNew.toDto(users);
         kafkaProducer.sendUserToKafka(userDto);
     }
-
-
 }

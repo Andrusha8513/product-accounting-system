@@ -1,4 +1,4 @@
-package org.example.postservice.dto;
+package com.example.channel_service.Dto;
 
 public enum ActionType {
     CREATE_POST,

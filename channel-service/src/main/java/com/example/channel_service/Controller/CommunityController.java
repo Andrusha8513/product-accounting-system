@@ -22,59 +22,121 @@ public class CommunityController {
     }
     @GetMapping
     public ResponseEntity<List<CommunityDto>> findAllCommunities(){
-        List<CommunityDto> communities = communityService.findAllCommunity();
-        return ResponseEntity.ok(communities);
+        return ResponseEntity.ok(communityService.findAllCommunity());
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getCommunityById(@PathVariable Long id){
         return ResponseEntity.ok(communityService.getCommunityById(id));
     }
+
     @PostMapping("/create")
-    private ResponseEntity<?> createCommunity(@RequestParam String name ,
-                                              @RequestParam String description , Principal principal) {
-        return ResponseEntity.ok(communityService.createCommunity(name , description , principal.getName()));
+    public ResponseEntity<?> createCommunity(@RequestParam String name,
+                                             @RequestParam String description) {
+        return ResponseEntity.ok(communityService.createCommunity(name, description));
     }
+
     @PostMapping("/{communityId}/join")
-    public ResponseEntity<Void> joinCommunity(@PathVariable Long communityId , Principal principal) {
-        communityService.join(communityId, principal.getName());
-        return ResponseEntity.ok().build();
-    }
-    @PostMapping("/{communityId}/unjoin")
-    public ResponseEntity<Void> unJoinCommunity(@PathVariable Long communityId , Principal principal) {
-        communityService.unJoin(communityId, principal.getName());
-        return ResponseEntity.ok().build();
-    }
-    @PostMapping("/{communityId}/role")
-    public ResponseEntity<Void> changeRole(@PathVariable Long communityId ,
-                                           @RequestParam Long userId , @RequestParam CommunityRole role , Principal principal) {
-        communityService.changeRole(communityId, userId, role, principal.getName());
-        return ResponseEntity.ok().build();
-    }
-    @PostMapping("{communityId}/posts")
-    public ResponseEntity<?> createPost(@PathVariable Long communityId , @ModelAttribute PostDto postDto,
-                                        @RequestPart(required = false) MultipartFile f1 ,
-                                        @RequestPart(required = false) MultipartFile f2 ,
-                                        @RequestPart(required = false) MultipartFile f3,Principal principal) {
-        return ResponseEntity.ok(communityService.createPostInCommunity(communityId, postDto, f1, f2, f3, principal.getName()));
-    }
-    @DeleteMapping("/{communityId}/posts/{postId}/delete")
-    public ResponseEntity<Void> deletePostById(@PathVariable Long communityId, @PathVariable Long postId,
-                                                Principal principal) {
-        communityService.deletePostById(communityId, postId, principal.getName());
+    public ResponseEntity<Void> joinCommunity(@PathVariable Long communityId) {
+        communityService.join(communityId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{communityId}/posts/{postId}/update")
-    public ResponseEntity<?> updatePost(@PathVariable Long communityId ,@PathVariable Long postId,
-                                        @ModelAttribute PostDto postDto, @RequestPart(required = false) MultipartFile f1,
-                                        @RequestPart(required = false) MultipartFile f2 ,
-                                        @RequestPart(required = false) MultipartFile f3,
-                                        Principal principal) {
-        return ResponseEntity.ok(communityService.updatePostInCommunity(communityId, postId, postDto, f1, f2, f3, principal.getName()));
+    @PostMapping("/{communityId}/unjoin")
+    public ResponseEntity<Void> unJoinCommunity(@PathVariable Long communityId) {
+        communityService.unJoin(communityId);
+        return ResponseEntity.ok().build();
     }
-    @GetMapping("/{id}/check-permission")
-    public boolean checkPermission(@PathVariable Long id , @RequestParam Long userId ,
-                                   @RequestParam String action) {
-        return communityService.checkPermission(id, userId, action);
+
+    @PostMapping("/{communityId}/role")
+    public ResponseEntity<Void> changeRole(@PathVariable Long communityId,
+                                           @RequestParam("userId") Long userId, // Явно указываем имя
+                                           @RequestParam CommunityRole role) {
+        communityService.changeRole(communityId, userId, role);
+        return ResponseEntity.ok().build();
+    }
+
+    /// KAFKA
+    @PostMapping("/{communityId}/posts")
+    public ResponseEntity<String> createPost(@PathVariable Long communityId,
+                                             @ModelAttribute PostDto postDto,
+                                             @RequestPart(required = false) MultipartFile f1,
+                                             @RequestPart(required = false) MultipartFile f2,
+                                             @RequestPart(required = false) MultipartFile f3) {
+        communityService.createPostInCommunity(communityId, postDto, f1, f2, f3);
+        return ResponseEntity.accepted().body("Запрос на создание поста отправлен в очередь");
+    }
+    /// KAFKA
+    @PutMapping("/{communityId}/posts/{postId}")
+    public ResponseEntity<String> updatePost(@PathVariable Long communityId,
+                                             @PathVariable Long postId,
+                                             @ModelAttribute PostDto postDto,
+                                             @RequestPart(required = false) MultipartFile f1,
+                                             @RequestPart(required = false) MultipartFile f2,
+                                             @RequestPart(required = false) MultipartFile f3) {
+        communityService.updatePostInCommunity(postId, communityId, postDto, f1, f2, f3);
+        return ResponseEntity.accepted().body("Запрос на обновление поста отправлен в очередь");
+    }
+    /// KAFKA
+    @DeleteMapping("/{communityId}/posts/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long communityId,
+                                             @PathVariable Long postId) {
+        communityService.deletePostById(communityId, postId);
+        return ResponseEntity.accepted().body("Запрос на удаление поста отправлен в очередь");
+    }
+
+    /// KAFKA
+    @PostMapping("/{communityId}/posts/{postId}/comments")
+    public ResponseEntity<String> createComment(@PathVariable Long communityId,
+                                                @PathVariable Long postId,
+                                                @RequestParam String text) {
+        communityService.createCommentInPostOnCommunity(communityId, postId, text);
+        return ResponseEntity.accepted().body("Запрос на создание комментария отправлен");
+    }
+    /// KAFKA
+    @PutMapping("/{communityId}/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<String> updateComment(@PathVariable Long communityId,
+                                                @PathVariable Long postId,
+                                                @PathVariable Long commentId,
+                                                @RequestParam String text) {
+        communityService.updateCommentInPostOnCommunity(postId, communityId, commentId, text);
+        return ResponseEntity.accepted().body("Запрос на изменение комментария отправлен");
+    }
+    /// KAFKA
+    @DeleteMapping("/{communityId}/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long communityId,
+                                                @PathVariable Long postId,
+                                                @PathVariable Long commentId) {
+        communityService.deleteCommentInPostOnCommunity(postId, communityId, commentId);
+        return ResponseEntity.accepted().body("Запрос на удаление комментария отправлен");
+    }
+
+    /// KAFKA
+    @PostMapping("/{communityId}/posts/{postId}/comments/{commentId}/replies")
+    public ResponseEntity<String> createReply(@PathVariable Long communityId,
+                                              @PathVariable Long postId,
+                                              @PathVariable Long commentId,
+                                              @RequestParam String text) {
+        communityService.createReplyToCommentInPostOnCommunity(postId, communityId, commentId, text);
+        return ResponseEntity.accepted().body("Запрос на ответ отправлен");
+    }
+    /// KAFKA
+    @PutMapping("/{communityId}/posts/{postId}/comments/{commentId}/replies/{replyId}")
+    public ResponseEntity<String> updateReply(@PathVariable Long communityId,
+                                              @PathVariable Long postId,
+                                              @PathVariable Long commentId,
+                                              @PathVariable Long replyId,
+                                              @RequestParam String text) {
+        communityService.updateReplyToCommentInPostOnCommunity(postId, communityId, commentId, replyId, text);
+        return ResponseEntity.accepted().body("Запрос на изменение ответа отправлен");
+    }
+    /// KAFKA
+    @DeleteMapping("/{communityId}/posts/{postId}/comments/{commentId}/replies/{replyId}")
+    public ResponseEntity<String> deleteReply(@PathVariable Long communityId,
+                                              @PathVariable Long postId,
+                                              @PathVariable Long commentId,
+                                              @PathVariable Long replyId) {
+        communityService.deleteReplyToCommentInPostOnCommunity(postId, communityId, commentId, replyId);
+        return ResponseEntity.accepted().body("Запрос на удаление ответа отправлен");
     }
 }

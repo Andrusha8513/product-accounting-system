@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.support.mapping.DefaultJackson2JavaTypeMapper;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
@@ -20,27 +21,26 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfig {
     @Bean
-    public ConsumerFactory<String , UserDto> consumerFactory(ObjectMapper objectMapper){
-       Map<String , Object> properties = new HashMap<>();
-       properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG , "localhost:9092");
-       properties.put(ConsumerConfig.GROUP_ID_CONFIG , "users");
+    public ConsumerFactory<String, Object> consumerFactory(ObjectMapper objectMapper) {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "post_group");
 
-        JsonDeserializer<UserDto> jsonDeserializer = new JsonDeserializer<>(UserDto.class ,objectMapper);
-        jsonDeserializer.addTrustedPackages("*");
+        JsonDeserializer<Object> jsonDeserializer = new JsonDeserializer<>(objectMapper);
+        jsonDeserializer.addTrustedPackages("*"); // Доверяем всем пакетам
+        jsonDeserializer.setTypeMapper(new DefaultJackson2JavaTypeMapper());
 
-
-        return  new DefaultKafkaConsumerFactory<>(
-                properties ,
+        return new DefaultKafkaConsumerFactory<>(
+                config,
                 new StringDeserializer(),
                 jsonDeserializer);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String , UserDto> kafkaListenerContainerFactory(
-            ConsumerFactory<String , UserDto> consumerFactory){
-        var containerFactory = new ConcurrentKafkaListenerContainerFactory<String , UserDto>();
-        containerFactory.setConcurrency(1);
-        containerFactory.setConsumerFactory(consumerFactory);
-        return containerFactory;
+    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(
+            ConsumerFactory<String, Object> consumerFactory) {
+        var factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
+        factory.setConsumerFactory(consumerFactory);
+        return factory;
     }
 }

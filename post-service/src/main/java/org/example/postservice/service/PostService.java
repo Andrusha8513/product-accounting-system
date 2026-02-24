@@ -1,4 +1,5 @@
 package org.example.postservice.service;
+import org.example.postservice.dto.CommunityPostEventDto;
 import org.example.postservice.dto.PostDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,4 +14,7 @@ public interface PostService {
     PostDto createPost(PostDto postDto , MultipartFile file1 , MultipartFile file2, MultipartFile file3 , String email);
     void deletePostById(Long id , String email);
     PostDto updatePost(Long id,PostDto postDto ,MultipartFile file1, MultipartFile file2, MultipartFile file3, String email);
+    void createPostFromKafka(CommunityPostEventDto event);
+    void updatePostFromKafka(CommunityPostEventDto event);
+    void deletePostFromKafka(CommunityPostEventDto event);
 }
