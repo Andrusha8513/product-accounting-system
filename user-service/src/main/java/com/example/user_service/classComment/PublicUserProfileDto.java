@@ -1,0 +1,19 @@
+//package com.example.user_service.dto;
+//
+//import com.example.user_service.image.Image;
+//import lombok.Data;
+//
+//import java.time.LocalDate;
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//@Data
+//public class PublicUserProfileDto {
+//    private Long id;
+//    private String name;
+//    private String secondName;
+//    private LocalDate birthday;
+//    private String email;
+//    private Long avatarId;
+//    private List<ImageDto> images = new ArrayList<>();
+//}

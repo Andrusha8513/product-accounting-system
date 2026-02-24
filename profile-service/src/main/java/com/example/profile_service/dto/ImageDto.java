@@ -1,4 +1,4 @@
-package com.example.user_service.dto;
+package com.example.profile_service.dto;
 
 import lombok.Data;
 
@@ -9,5 +9,5 @@ public class ImageDto {
     private String originalFileName;
     private Long size;
     private String contentType;
-    private String url;
+
 }

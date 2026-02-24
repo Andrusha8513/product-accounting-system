@@ -1,0 +1,37 @@
+//package com.example.user_service.image;
+//
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.security.core.parameters.P;
+//import org.springframework.stereotype.Service;
+//import org.springframework.web.multipart.MultipartFile;
+//
+//import java.io.IOException;
+//import java.util.UUID;
+//
+//@Service
+//@RequiredArgsConstructor
+//public class ImageService {
+//    private final ImageRepository imageRepository;
+//    public  Image toImageEntity(MultipartFile file) throws IOException{
+//        if(file == null || file.isEmpty()) {
+//            return null;
+//        }
+//
+//        Image image = new Image();
+//        image.setName(UUID.randomUUID().toString());
+//        image.setOriginalFileName(file.getOriginalFilename());
+//        image.setContentType(file.getContentType());
+//        image.setSize(file.getSize());
+//
+//        if(!file.getContentType().startsWith("image/")){
+//            throw new IllegalArgumentException("Фаойл должен быть изображением");
+//        }
+//
+//        if(file.getSize() > 50_000_000){
+//            throw new IllegalArgumentException("Размер файла не должен превышать 50 Мб!");
+//        }
+//
+//        image.setBytes(file.getBytes());
+//        return imageRepository.save(image);
+//    }
+//}

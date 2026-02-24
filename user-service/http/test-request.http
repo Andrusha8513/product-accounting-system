@@ -31,7 +31,7 @@ Content-Type: application/json
 ###
 
 ### 2. Подтверждение регистрации (код нужно взять из логов/письма)
-POST http://localhost:8765/users/api/users/confirm-registration?code=DD5463
+POST http://localhost:8765/users/api/users/confirm-registration?code=8F5F61
 
 ###
 
@@ -185,13 +185,6 @@ Content-Type: application/json
   "password": "11111111"
 }
 
-> {%
-    client.global.set("access_token", response.body.token);
-    client.global.set("refresh_token", response.body.refreshToken);
-    client.log("Access Token: " + response.body.token);
-    client.log("Refresh Token: " + response.body.refreshToken);
-%}
-
 ###
 POST http://localhost:8765/users/auth/refresh
 Content-Type: application/json
@@ -205,8 +198,8 @@ POST http://localhost:8765/users/auth/sing-in
 Content-Type: application/json
 
 {
-  "email": "pavelsevruk5@gmail.com",
-  "password": "Fuckman5"
+  "email": "4057163@mail.ru",
+  "password": "11111111"
 }
 
 > {%
@@ -230,13 +223,13 @@ Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJle
 
 ### 32. Проверка метода getAllUsers с JWT
 GET http://localhost:8765/users/api/users/get-all-users
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzA1OTMyNTksInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.-MmhQWlDa17qrRZKwSkUcML4d0HR47T4cdnYi_cjhU0Ea4YPoAf6U44mP2RdDBrI
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzE3MDA2NDcsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.UPOSUFEiwihHf6smHfwsTR7zqPce-XhhfUgn2a2rnBcf9tbr31qY5IJZVv9q8bpY
 
 ###
 
 ### 33. Обновление ролей пользователя на ADMIN (через JWT)
 PUT http://localhost:8765/users/api/users/update-roles/1
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzE0NzIyMDksInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.QiyHXJXlKqMEzvBW90oNjMx-jcrQ5aqW8gcA7k2m2rtq1JWoN09nt-YyiGkBTZqD
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzE3MDA1ODIsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9VU0VSIl0sImlzRW5hYmxlZCI6dHJ1ZSwiYWNjb3VudE5vbkxvY2tlZCI6dHJ1ZX0.tYNce8aH3msuXXLdNhezaTYmYVP7wEOsRAqm8j6VogwHgflhPWKtiF8GFGrIfN5v
 Content-Type: application/json
 
 ["ROLE_ADMIN"]
@@ -321,8 +314,8 @@ Accept: application/json
 
 ###
 ### 2. Проверить мой профиль через Profile Service (правильный путь)
-GET http://localhost:8765/profile/api/profile/myProfile/?email=4057163@mail.ru
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI0MDU3MTYzQG1haWwucnUiLCJleHAiOjE3NzE0NzIyNjUsInVzZXJJZCI6MSwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.h1G9VNjzVuY_ShXYZDgp8yMbyG3DjgtbrHfteMfM8N0aCGwwcDlBA3Ub5bkka_eE
+GET http://localhost:8765/profile/api/profile/myProfile/2
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI5MTk3MTk1QG1haWwucnUiLCJleHAiOjE3NzE3MDEzNjcsInVzZXJJZCI6Miwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc0VuYWJsZWQiOnRydWUsImFjY291bnROb25Mb2NrZWQiOnRydWV9.GJFa6nRwlSoAclMyLCxoKcSlpiLZ6FfCRxwcOunYVh1o4Co-fSoVtuEsm_egmgnC
 Accept: application/json
 
 ###

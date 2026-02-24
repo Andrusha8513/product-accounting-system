@@ -1,7 +1,8 @@
-package com.example.user_service.image;
+package com.example.profile_service.service;
 
+import com.example.profile_service.entity.Image;
+import com.example.profile_service.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,9 +11,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ImageService {
+public  class ImageService {
     private final ImageRepository imageRepository;
-    public  Image toImageEntity(MultipartFile file) throws IOException{
+    public Image toImageEntity(MultipartFile file) throws IOException {
         if(file == null || file.isEmpty()) {
             return null;
         }

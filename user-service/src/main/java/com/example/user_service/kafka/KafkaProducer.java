@@ -1,7 +1,6 @@
 package com.example.user_service.kafka;
 
 import com.example.user_service.dto.EmailRequestDto;
-import com.example.user_service.dto.PrivetUserProfileDto;
 import com.example.user_service.dto.TestProfileDto;
 import com.example.user_service.dto.UserDto;
 import lombok.RequiredArgsConstructor;

@@ -1,0 +1,271 @@
+### 1. Аутентификация и управление токенами
+
+### 1.1 Вход в систему (получение JWT)
+POST http://localhost:8765/auth/sign-in
+Content-Type: application/json
+
+{
+  "email": "4057163@mail.ru",
+  "password": "11111111"
+}
+
+> {% client.global.set("token", response.body.token);
+    client.global.set("refreshToken", response.body.refreshToken);
+    client.log("Access Token: " + response.body.token);
+    client.log("Refresh Token: " + response.body.refreshToken);
+%}
+
+### 1.2 Обновление access token
+POST http://localhost:8765/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### 1.3 Выход (инвалидация текущего access token)
+POST http://localhost:8765/auth/logout
+Authorization: Bearer {{token}}
+
+### 1.4 Полный выход со всех устройств (инвалидация всех refresh токенов пользователя)
+POST http://localhost:8765/auth/fullLogout/1
+Authorization: Bearer {{token}}
+
+### 2. Пользователи (UserController)
+
+### 2.1 Получить пользователя по фамилии (для внутренних сервисов)
+GET http://localhost:8765/api/users/secondName?secondName=Иванов
+
+### 2.2 Получить пользователя по ID (некорректное использование @RequestParam, но по коду)
+GET http://localhost:8765/api/users/1?id=1
+
+### 2.3 Получить пользователя по email
+GET http://localhost:8765/api/users/email?email=user@example.com
+
+### 2.4 Регистрация нового пользователя
+POST http://localhost:8765/api/users/registration
+Content-Type: application/json
+
+{
+  "name": "ARa",
+  "secondName": "qwe",
+  "password": "11111111",
+  "email": "djkslsdkmds@mail.ru",
+  "birthDay": "1995-05-15"
+}
+
+### 2.5 Подтверждение регистрации по коду
+POST http://localhost:8765/api/users/confirm-registration?code=6B99FF
+
+### 2.6 Повторная отправка кода подтверждения
+POST http://localhost:8765/api/users/resend-confirm-registration?email=djkslsdkmds@mail.ru
+
+### 2.7 Отправка кода для сброса пароля
+POST http://localhost:8765/api/users/send-password-resetCode?email=user@example.com
+
+### 2.8 Сброс пароля с использованием кода
+POST http://localhost:8765/api/users/reset-password-with-code?email=user@example.com&code=123456&newPassword=newPass123
+
+### 2.9 Отправка кода для смены email (требуется авторизация)
+POST http://localhost:8765/api/users/send-email-reset-code?email=current@example.com&newEmail=new@example.com
+Authorization: Bearer {{token}}
+
+### 2.10 Повторная отправка кода для смены email (по ожидающему email)
+POST http://localhost:8765/api/users/resend-email-resetCode?pendingEmail=new@example.com
+
+### 2.11 Обновление пароля (требуется авторизация)
+PUT http://localhost:8765/api/users/update-user-password/1?newPassword=newPass&currenPassword=oldPass
+Authorization: Bearer {{token}}
+
+### 2.12 Подтверждение смены email по коду (требуется авторизация)
+POST http://localhost:8765/api/users/confirm-email-change/1?code=123456
+Authorization: Bearer {{token}}
+
+### 2.13 Обновление ролей пользователя (требуется авторизация)
+PUT http://localhost:8765/api/users/update-roles/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+["ROLE_ADMIN"]
+
+### 2.14 Получить всех пользователей (только для ADMIN)
+GET http://localhost:8765/api/users/get-all-users
+Authorization: Bearer {{token}}
+
+### 2.15 Изменить статус аккаунта (вкл/выкл) (только для ADMIN)
+PUT http://localhost:8765/api/users/changeAccountStatus/1?newAccountStatus=false
+Authorization: Bearer {{token}}
+
+### 2.16 Блокировка аккаунта (только для ADMIN)
+PUT http://localhost:8765/api/users/accountBlocking/2?newAccountStatus=true
+Authorization: Bearer {{token}}
+
+### 2.17 Обновить имя (требуется авторизация)
+PUT http://localhost:8765/api/users/updateName/2?newName=Текхн
+Authorization: Bearer {{token}}
+
+### 2.18 Обновить фамилию (требуется авторизация)
+PUT http://localhost:8765/api/users/updateSecondName/2?newSecondName=Паша
+Authorization: Bearer {{token}}
+
+### 3. Профиль (ProfileController)
+
+### 3.1 Получить свой профиль (требуется авторизация)
+GET http://localhost:8765/profile/api/profile/myProfile/2
+Authorization: Bearer {{token}}
+
+### 3.1.2 Найту профиль друга поп почте
+GET http://localhost:8765/profile/api/profile/findProfile?email=9197195@mail.ru
+Authorization: Bearer {{token}}
+
+### 3.2 Добавить аватар (требуется авторизация)
+POST http://localhost:8765/profile/api/profile/addAvatar/2/newAvatar
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test-avatar.jpg"
+Content-Type: image/jpeg
+
+< ./test-avatar.jpg
+--WebAppBoundary--
+
+### 3.3 Добавить несколько фотографий (требуется авторизация)
+POST http://localhost:8765/profile/api/profile/addPhotos/2
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="files"; filename="test-photo1.jpg"
+Content-Type: image/jpeg
+
+< ./test-photo1.jpg
+--WebAppBoundary
+Content-Disposition: form-data; name="files"; filename="test-photo2.jpg"
+Content-Type: image/jpeg
+
+< ./test-photo2.jpg
+--WebAppBoundary--
+
+### 3.4 Обновить аватар (указать ID новой аватарки) (требуется авторизация)
+PUT http://localhost:8765/profile/api/profile/updateAvatar/1/5
+Authorization: Bearer {{token}}
+
+### 3.5 Удалить фотографию (требуется авторизация)
+DELETE http://localhost:8765/profile/api/profile/delete-photo/2/10
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:8765/profile/image/11
+Authorization: Bearer {{token}}
+
+
+### 4. Посты (PostController)
+
+### 4.1 Получить все посты
+GET http://localhost:8765/posts/api/post
+Authorization: Bearer {{token}}
+
+### 4.2 Получить посты сообщества по ID
+GET http://localhost:8765/posts/api/post/community/1
+Authorization: Bearer {{token}}
+
+### 4.3 Получить посты пользователя по ID (внимание: нестандартный путь, возможно ошибка в контроллере)
+GET http://localhost:8765/posts/api/post/api/post/2
+Authorization: Bearer {{token}}
+
+### 4.4 Получить пост по ID
+GET http://localhost:8765/posts/api/post/7
+Authorization: Bearer {{token}}
+
+### 4.5 Создать новый пост (с файлами)
+POST http://localhost:8765/posts/api/post/createpost
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Мой первый пост
+--WebAppBoundary
+Content-Disposition: form-data; name="communityId"
+
+5
+--WebAppBoundary
+Content-Disposition: form-data; name="file1"; filename="photo1.jpg"
+Content-Type: image/jpeg
+
+< ./test-photo1.jpg
+--WebAppBoundary
+Content-Disposition: form-data; name="file2"; filename="photo2.jpg"
+Content-Type: image/jpeg
+
+< ./test-photo2.jpg
+--WebAppBoundary
+
+
+### 4.6 Удалить пост по ID
+DELETE http://localhost:8765/posts/api/post/7
+Authorization: Bearer {{token}}
+
+### 4.7 Обновить пост по ID
+POST http://localhost:8765/posts/api/post/update/34
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Обновлённое описание поста
+--WebAppBoundary
+
+
+### 5. Комментарии (CommentController)
+
+### 5.1 Получить все комментарии к посту
+GET http://localhost:8765/posts/api/post/comment/1
+Authorization: Bearer {{token}}
+
+### 5.2 Добавить комментарий к посту
+POST http://localhost:8765/posts/api/post/comment/create/24?text=Отличный пост!
+Authorization: Bearer {{token}}
+
+### 5.3 Удалить комментарий по ID
+DELETE http://localhost:8765/posts/api/post/comment/1
+Authorization: Bearer {{token}}
+
+### 5.4 Обновить текст комментария
+POST http://localhost:8765/posts/api/post/comment/update/1?text=Обновлённый комментарий
+Authorization: Bearer {{token}}
+
+### 6. Ответы на комментарии (SubCommentController)
+
+### 6.1 Добавить ответ на комментарий
+POST http://localhost:8765/posts/api/subcomment/add/1?text=Согласен!
+Authorization: Bearer {{token}}
+
+### 6.2 Удалить ответ по ID
+DELETE http://localhost:8765/posts/api/subcomment/delete/1
+Authorization: Bearer {{token}}
+
+### 6.3 Обновить текст ответа
+POST http://localhost:8765/post/api/subcomment/update/1?text=Обновлённый ответ
+Authorization: Bearer {{token}}
+
+### Создание поста без файлов
+POST http://localhost:8765/posts/api/post/createpost
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="description"
+
+Хуй
+--WebAppBoundary--
+###
+GET http://localhost:8765/profile/image/1
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:8765/profile/image-post/50
+Authorization: Bearer {{token}}

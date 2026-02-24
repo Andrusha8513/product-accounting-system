@@ -11,5 +11,5 @@ public class TestProfileDto {
     private String secondName;
     private String email;
     private LocalDate birthday;
-    private String password;
+//    private String password;
 }
