@@ -204,7 +204,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePostFromKafka(CommunityPostEventDto event) {
         Post post = postRepository.findById(event.getPostId()).orElseThrow();
-        boolean isPriviliged = "ADMIN".equalsIgnoreCase(event.getActorRole()) || "EDITOR".equalsIgnoreCase(event.getActorRole());
+        boolean isPriviliged = CommunityRole.ADMIN.name().equalsIgnoreCase(event.getActorRole()) || CommunityRole.EDITOR.name().equalsIgnoreCase(event.getActorRole());
         if (isPriviliged) {
             postRepository.delete(post);
         }else {

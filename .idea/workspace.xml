@@ -5,36 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8610dc0e-ca4e-475d-a6da-9e358a2f9ef1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Dto/ActionType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Dto/CommunityPostEventDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Dto/FileContentDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Kafka/KafkaProducerConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Security/Jwt/JwtFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Security/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/CommunityPostEventDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/CommunityRole.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/FileContentDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/kafka/CommunityPostConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/ChannelServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/ChannelServiceApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/FeignMultipartConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/FeignMultipartConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/PostClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Config/PostClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Controller/CommunityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Controller/CommunityController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/CommunityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/CommunityService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/impl/CommunityServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/java/com/example/channel_service/Service/impl/CommunityServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/channel-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/channel-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/CommunityClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/CommunityClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/ActionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/dto/ActionType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/kafka/KafkaConsumerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/kafka/KafkaConsumerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/security/FeignConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/security/FeignConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/CommentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/PostService.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/PostService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/SubCommentsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/SubCommentsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/CommentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/CommentServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/PostServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/PostServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/SubCommentsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/java/org/example/postservice/service/impl/SubCommentsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/post-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/post-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/user-service/src/main/java/com/example/user_service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/user-service/src/main/java/com/example/user_service/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +23,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
